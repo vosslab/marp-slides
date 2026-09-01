@@ -73,6 +73,12 @@ content or contained component images. `gallery` accepts a slide title and two t
 component images; use `title-content` for one image. Layout validation reports unsupported or
 overflowing source rather than emitting a raster fallback.
 
+An `_class` directive may also contain one bounded title-size modifier: `font-size-64`,
+`font-size-80`, `font-size-96`, `font-size-120`, `font-size-160`, or `font-size-200`. The parser
+stores it as a source-located typed request and the layout writer applies it only to the top-level
+editable H1. It never changes subtitles, bodies, cells, links, or pagination. An explicit request
+that cannot fit its assigned native title region fails at the H1 source line instead of shrinking.
+
 ## Marp-language boundary
 
 The repository retains Marp for its mature language specification. Repository-owned Python handles

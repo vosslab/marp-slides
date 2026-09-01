@@ -49,6 +49,39 @@ def test_parses_typed_slide_semantics_and_source_lines(tmp_path: pathlib.Path) -
 
 
 #============================================
+@pytest.mark.parametrize("directive", [
+	"centered-text font-size-64", "font-size-80 centered-text", "centered-text font-size-96",
+	"font-size-120 centered-text", "centered-text font-size-160", "font-size-200 centered-text",
+])
+def test_parses_typed_h1_size_modifier_in_either_marp_class_order(tmp_path: pathlib.Path,
+		directive: str) -> None:
+	"""A bounded native Marp class becomes one source-located H1 size request."""
+	deck = parse(tmp_path, f"<!-- _class: {directive} -->\n# Display title\n")
+	override = deck.slides[0].title_size_override
+	assert override is not None
+	assert override.preset.value == int(next(token.removeprefix("font-size-") for token in directive.split()
+		if token.startswith("font-size-")))
+	assert override.location.path.name == "deck.md" and override.location.line == 8
+
+
+#============================================
+@pytest.mark.parametrize(("body", "message"), [
+	("<!-- _class: title-content centered-text -->\n# Title\n", "exactly one canonical layout"),
+	("<!-- _class: centered-text font-size-64 font-size-80 -->\n# Title\n", "zero or one font-size"),
+	("<!-- _class: centered-text font-size-72 -->\n# Title\n", "unsupported font-size modifier"),
+	("<!-- _class: centered-text typography-large -->\n# Title\n", "unsupported Marp slide class"),
+	("<!-- _class: blank font-size-200 -->\n", "blank slides do not accept"),
+	("<!-- _class: centered-text font-size-200 -->\n## Not an H1\n", "font-size modifier requires exactly one top-level H1"),
+])
+def test_rejects_invalid_h1_size_modifier_at_its_source_location(tmp_path: pathlib.Path, body: str,
+		message: str) -> None:
+	"""Class errors cite the directive or the offending authored heading."""
+	with pytest.raises(marp_lib.marp_parser.MarpParseError, match=message) as raised:
+		parse(tmp_path, body)
+	assert "deck.md:" in str(raised.value)
+
+
+#============================================
 def test_parses_standalone_notes_and_autolinks(tmp_path: pathlib.Path) -> None:
 	"""Standalone ordinary comments become presenter notes and URL text becomes a link."""
 	deck = parse(tmp_path, "<!-- _class: title-content -->\n<!-- notes: Explain this live -->\n"
@@ -58,6 +91,31 @@ def test_parses_standalone_notes_and_autolinks(tmp_path: pathlib.Path) -> None:
 	paragraph = slide.blocks[1]
 	assert isinstance(paragraph, marp_lib.native_model.Paragraph)
 	assert any(isinstance(item, marp_lib.native_model.Link) for item in paragraph.inlines)
+
+
+#============================================
+@pytest.mark.parametrize("separator", ("\n", "  \n", " \n \n"))
+def test_parses_multiline_image_only_paragraph_as_component_images(tmp_path: pathlib.Path,
+		separator: str) -> None:
+	"""Image-only soft and hard Markdown breaks create separate editable images."""
+	deck = parse(tmp_path, "<!-- _class: gallery -->\n"
+		"![First component](first.png)" + separator +
+		"![Second component](second.png)" + separator +
+		"![Third component](third.png)\n")
+	images = [block for block in deck.slides[0].blocks if isinstance(block, marp_lib.native_model.Image)]
+	assert [image.source for image in images] == ["first.png", "second.png", "third.png"]
+
+
+#============================================
+@pytest.mark.parametrize("mixed", (
+	"![First component](first.png)\nVisible text\n![Second component](second.png)",
+	"![First component](first.png)  \n*Visible text*  \n![Second component](second.png)",
+))
+def test_rejects_visible_text_or_formatting_mixed_with_component_images(tmp_path: pathlib.Path,
+		mixed: str) -> None:
+	"""A component-image paragraph has images and separators, never visible inline content."""
+	with pytest.raises(marp_lib.marp_parser.MarpParseError, match="images cannot be mixed with inline text"):
+		parse(tmp_path, "<!-- _class: gallery -->\n" + mixed + "\n")
 
 
 #============================================
@@ -100,7 +158,7 @@ def test_dividers_inside_fences_and_comments_do_not_split_slides(tmp_path: pathl
 	("<!-- _class: title-content -->\n# Title\n\nText ![Component](part.png)\n", "mixed"),
 	("<!-- _class: title-content -->\n![bg right:30%](part.png)\n", "background-image"),
 	("<!-- _class: title-content -->\n<!-- _backgroundColor: red -->\n# Title\n", "unsupported Marp directive"),
-	("<!-- _class: title-content dense -->\n# Title\n", "exactly one"),
+	("<!-- _class: title-content dense -->\n# Title\n", "unsupported Marp slide class"),
 	("<!-- _class: retired -->\n# Title\n", "unsupported Marp slide class"),
 ])
 def test_rejects_unowned_authoring_features(tmp_path: pathlib.Path, body: str, message: str) -> None:
@@ -133,3 +191,23 @@ def test_bom_and_hidden_provenance_fragment_preserve_real_slide_count(tmp_path: 
 	deck = marp_lib.marp_parser.parse_deck(path)
 	assert len(deck.slides) == 1
 	assert deck.slides[0].blocks[0].location.line == 9
+
+
+#============================================
+def test_crlf_front_matter_preserves_physical_source_locations(tmp_path: pathlib.Path) -> None:
+	"""CRLF canonical Markdown reaches the typed parser without changing line numbers."""
+	path = tmp_path / "crlf.md"
+	path.write_text((HEADER + "<!-- _class: title-content -->\n# CRLF title\n\nParagraph\n").replace("\n", "\r\n"),
+		encoding="utf-8", newline="")
+	deck = marp_lib.marp_parser.parse_deck(path)
+	assert deck.slides[0].blocks[0].location.line == 9
+	assert deck.slides[0].blocks[1].location.line == 11
+
+
+#============================================
+def test_rejects_retired_source_raster_at_the_component_image_line(tmp_path: pathlib.Path) -> None:
+	"""A former full-slide fallback name fails at the typed source boundary."""
+	with pytest.raises(marp_lib.marp_parser.MarpParseError,
+		match=r"deck\.md:11:.*slide_\*_source raster"):
+		parse(tmp_path, "<!-- _class: title-content -->\n# Native slide\n\n"
+			"![Retired source](slide_001_source.png)\n")

@@ -1,6 +1,7 @@
 """Typed, presentation-neutral semantic objects for canonical Marp Markdown."""
 
 # Standard Library
+import enum
 import pathlib
 from dataclasses import dataclass, field
 
@@ -10,6 +11,23 @@ class SourceLocation:
 	"""One physical source position retained through native rendering."""
 	path: pathlib.Path
 	line: int
+
+
+class FontSizePreset(enum.IntEnum):
+	"""Supported explicit H1 display sizes in canonical CSS pixels."""
+	SIZE_64 = 64
+	SIZE_80 = 80
+	SIZE_96 = 96
+	SIZE_120 = 120
+	SIZE_160 = 160
+	SIZE_200 = 200
+
+
+@dataclass(frozen=True)
+class TitleSizeOverride:
+	"""One source-located H1 display-size request."""
+	location: SourceLocation
+	preset: FontSizePreset
 
 
 @dataclass(frozen=True)
@@ -107,6 +125,7 @@ class Slide:
 	"""One canonical source slide, ready for a named native layout builder."""
 	location: SourceLocation
 	layout_class: str
+	title_size_override: TitleSizeOverride | None
 	paginate: bool
 	notes: tuple[str, ...]
 	blocks: tuple[Block, ...]

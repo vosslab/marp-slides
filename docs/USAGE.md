@@ -23,6 +23,20 @@ source source_me.sh && python3 tools/pptx_to_marp.py genetics/lecture.pptx
 Each slide has exactly one explicit Marp class directive. The directive selects a native builder,
 not a CSS renderer. The class must be one of the layout names in [PIPELINE.md](PIPELINE.md).
 
+For an enlarged display title, add one bounded font-size class beside the layout class. The order is
+ordinary Marp multi-class syntax, so either order is valid. The size applies only to the direct H1
+and remains editable in PPTX; `font-size-200` is 200 CSS px (150 Office pt).
+
+```markdown
+<!-- _class: centered-text font-size-200 -->
+# THE END
+```
+
+Use exactly one layout class and zero or one of `font-size-64`, `font-size-80`, `font-size-96`,
+`font-size-120`, `font-size-160`, or `font-size-200`. A requested H1 size must fit its native title
+region; choose a smaller preset, shorter title, or different layout when the source-located export
+diagnostic reports that it does not fit.
+
 ```markdown
 ---
 

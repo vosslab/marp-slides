@@ -342,7 +342,7 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: centered-text -->
+<!-- _class: centered-text font-size-200 -->
 <!-- _paginate: false -->
 # THE END
 

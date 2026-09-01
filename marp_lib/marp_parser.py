@@ -3,7 +3,6 @@
 # Standard Library
 import pathlib
 import re
-from dataclasses import dataclass
 
 # PIP3 modules
 import yaml
@@ -16,11 +15,14 @@ from marp_lib import layouts
 
 
 LAYOUT_CLASSES = frozenset(layouts.LAYOUTS)
+FONT_SIZE_CLASSES = frozenset(f"font-size-{preset.value}" for preset in marp_lib.native_model.FontSizePreset)
 FRONT_MATTER_KEYS = frozenset(("marp", "theme", "size", "paginate", "title"))
 COMMENT_PATTERN = re.compile(r"<!--(.*?)-->", re.DOTALL)
 FENCE_PATTERN = re.compile(r"^\s*(`{3,}|~{3,})")
 DIVIDER_PATTERN = re.compile(r"^ {0,3}---\s*$")
 BACKGROUND_IMAGE_PATTERN = re.compile(r"!\[\s*(?:bg|background)(?:\s|\]|$)", re.IGNORECASE)
+RETIRED_SOURCE_RASTER_PATTERN = re.compile(
+	r"^slide_.*_source\.(?:png|jpe?g|gif|webp|tiff?)$", re.IGNORECASE)
 UNSUPPORTED_DIRECTIVE_PATTERN = re.compile(
 	r"^(?:class|paginate|theme|size|background(?:-|_)?[a-z]*):", re.IGNORECASE)
 
@@ -68,6 +70,8 @@ def parse_front_matter(path: pathlib.Path, source: str) -> tuple[dict[str, objec
 	"""Parse strict opening YAML and return its body with physical start line."""
 	if source.startswith("\ufeff"):
 		source = source.removeprefix("\ufeff")
+	# CRLF is one physical source line, so normalization retains every line number.
+	source = source.replace("\r\n", "\n").replace("\r", "\n")
 	if not source.startswith("---\n"):
 		raise error(path, 1, "Marp Markdown must begin with an opening YAML '---' line")
 	closing = re.search(r"^---\s*$", source[4:], re.MULTILINE)
@@ -79,7 +83,7 @@ def parse_front_matter(path: pathlib.Path, source: str) -> tuple[dict[str, objec
 	if source[body_start:body_start + 1] == "\n":
 		body_start += 1
 	try:
-		loaded = yaml.load(front_text, Loader=UniqueKeyLoader)
+		loaded = yaml.load(front_text, Loader=UniqueKeyLoader)  # nosec B506: SafeLoader subclass
 	except yaml.YAMLError as exc:
 		line = getattr(getattr(exc, "problem_mark", None), "line", 0) + 2
 		raise error(path, line, f"invalid YAML front matter: {exc.problem or str(exc)}") from exc
@@ -141,13 +145,14 @@ def split_slides(path: pathlib.Path, body: str, start_line: int) -> list[tuple[s
 
 #============================================
 def remove_comments(path: pathlib.Path, raw_slide: str, base_line: int,
-		default_paginate: bool) -> tuple[str, str, bool, tuple[str, ...]]:
+		default_paginate: bool) -> tuple[str, str, marp_lib.native_model.TitleSizeOverride | None, bool, tuple[str, ...]]:
 	"""Extract standalone directives and notes while retaining source line offsets."""
 	layout_class: str | None = None
+	title_size_override: marp_lib.native_model.TitleSizeOverride | None = None
 	paginate = default_paginate
 	notes: list[str] = []
 	def replace(match: re.Match[str]) -> str:
-		nonlocal layout_class, paginate
+		nonlocal layout_class, title_size_override, paginate
 		line = base_line + raw_slide[:match.start()].count("\n")
 		before = raw_slide[raw_slide.rfind("\n", 0, match.start()) + 1:match.start()]
 		after_end = raw_slide.find("\n", match.end())
@@ -157,13 +162,24 @@ def remove_comments(path: pathlib.Path, raw_slide: str, base_line: int,
 		comment = match.group(1).strip()
 		if comment.startswith("_class:"):
 			classes = comment.partition(":")[2].split()
-			if len(classes) != 1:
+			layout_tokens = [item for item in classes if item in LAYOUT_CLASSES]
+			size_tokens = [item for item in classes if item.startswith("font-size-")]
+			unknown_tokens = [item for item in classes if item not in LAYOUT_CLASSES and item not in FONT_SIZE_CLASSES]
+			if unknown_tokens:
+				unknown = unknown_tokens[0]
+				if unknown.startswith("font-size-"):
+					raise error(path, line, f"unsupported font-size modifier: {unknown}")
+				raise error(path, line, f"unsupported Marp slide class: {unknown}")
+			if len(layout_tokens) != 1:
 				raise error(path, line, "_class must name exactly one canonical layout")
-			if classes[0] not in LAYOUT_CLASSES:
-				raise error(path, line, f"unsupported Marp slide class: {classes[0]}")
+			if len(size_tokens) > 1:
+				raise error(path, line, "_class accepts zero or one font-size modifier")
 			if layout_class is not None:
 				raise error(path, line, "slide declares _class more than once")
-			layout_class = classes[0]
+			layout_class = layout_tokens[0]
+			if size_tokens:
+				title_size_override = marp_lib.native_model.TitleSizeOverride(location(path, line),
+					marp_lib.native_model.FontSizePreset(int(size_tokens[0].removeprefix("font-size-"))))
 		elif comment.startswith("_paginate:"):
 			value = comment.partition(":")[2].strip()
 			if value not in ("true", "false"):
@@ -181,7 +197,7 @@ def remove_comments(path: pathlib.Path, raw_slide: str, base_line: int,
 	cleaned = COMMENT_PATTERN.sub(replace, raw_slide)
 	if layout_class is None:
 		raise error(path, base_line, "slide must declare exactly one canonical _class directive")
-	return cleaned, layout_class, paginate, tuple(notes)
+	return cleaned, layout_class, title_size_override, paginate, tuple(notes)
 
 
 #============================================
@@ -242,6 +258,8 @@ def parse_image(path: pathlib.Path, line: int, token: Token) -> marp_lib.native_
 		raise error(path, line, "image is missing a source")
 	if source.startswith(("http://", "https://", "data:")):
 		raise error(path, line, "component images must use a repository-relative source")
+	if RETIRED_SOURCE_RASTER_PATTERN.match(pathlib.PurePath(source).name):
+		raise error(path, line, "retired slide_*_source raster images are not component images")
 	if BACKGROUND_IMAGE_PATTERN.search(token.markup + token.content):
 		raise error(path, line, "background-image modifiers are not supported")
 	alt_text = token.content
@@ -311,7 +329,8 @@ def parse_blocks(path: pathlib.Path, tokens: list[Token], base_line: int,
 			children = inline.children or []
 			images = [child for child in children if child.type == "image"]
 			if images:
-				if any(child.type != "image" and not (child.type == "text" and
+				allowed_between_images = {"image", "softbreak", "hardbreak"}
+				if any(child.type not in allowed_between_images and not (child.type == "text" and
 					child.content.isspace()) for child in children):
 					raise error(path, token_line(inline, base_line), "images cannot be mixed with inline text")
 				for image in images:
@@ -351,6 +370,8 @@ def parse_deck(input_path: pathlib.Path) -> marp_lib.native_model.Deck:
 	"""Parse one authoritative Marp Markdown file without Marp runtime code."""
 	path = input_path.resolve()
 	source = path.read_text(encoding="utf-8")
+	# Normalize before the strict YAML boundary while retaining physical line counts.
+	source = source.replace("\r\n", "\n").replace("\r", "\n")
 	front_matter, body, body_line = parse_front_matter(path, source)
 	default_paginate = front_matter.get("paginate", True)
 	parser = MarkdownIt("commonmark", {"breaks": True, "linkify": True}).enable("linkify").enable("table")
@@ -362,12 +383,20 @@ def parse_deck(input_path: pathlib.Path) -> marp_lib.native_model.Deck:
 		if re.fullmatch(r"\s*<!--\s*ODP hidden slide skipped:.*?-->\s*", raw_slide,
 			re.DOTALL):
 			continue
-		cleaned, layout_class, paginate, notes = remove_comments(path, raw_slide, slide_line,
+		cleaned, layout_class, title_size_override, paginate, notes = remove_comments(path, raw_slide, slide_line,
 			default_paginate)
 		if BACKGROUND_IMAGE_PATTERN.search(cleaned):
 			raise error(path, slide_line, "background-image modifiers are not supported")
 		blocks, cells = parse_blocks(path, parser.parse(cleaned), slide_line, True)
-		slides.append(marp_lib.native_model.Slide(location(path, slide_line), layout_class, paginate,
+		if title_size_override is not None:
+			if layout_class == "blank":
+				raise error(path, title_size_override.location.line, "blank slides do not accept a font-size modifier")
+			titles = [block for block in blocks if isinstance(block, marp_lib.native_model.Heading) and block.level == 1]
+			if len(titles) != 1:
+				offending = titles[1].location if len(titles) > 1 else next((block.location for block in blocks
+					if isinstance(block, marp_lib.native_model.Heading)), title_size_override.location)
+				raise error(path, offending.line, "font-size modifier requires exactly one top-level H1 title")
+		slides.append(marp_lib.native_model.Slide(location(path, slide_line), layout_class, title_size_override, paginate,
 			notes, blocks, cells))
 	if not slides:
 		raise error(path, body_line, "Marp Markdown contains no supported slides")

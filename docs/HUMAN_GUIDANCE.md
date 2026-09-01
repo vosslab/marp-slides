@@ -27,6 +27,8 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
   `vertical-title-text-chart`, `title-vertical-text`, `title-two-vertical-text-clipart`, and `gallery`.
 - Give every slide exactly one explicit layout class. Use ordinary blockquotes as multi-cell content
   in the layout's reading order.
+- Use a bounded Marp `font-size-N` companion class when an H1 such as `THE END` should occupy the
+  slide; keep the title editable and leave normal slide text at its layout size.
 - Preserve text, lists, component images, links, layouts, and presenter notes as native objects.
 - Treat every full-slide raster image or raster fallback in generated PPTX, ODP, or PDF production
   as a failed product result. A browser is not a normal build dependency.
@@ -41,6 +43,11 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 - My ODP slides are hand-authored structured documents, not scans; normal conversion uses text and
   image objects rather than OCR.
 - Use OpenDyslexic for ordinary slide text and PT Sans Narrow only when a long URL is displayed.
+- Use OpenDyslexic for ordinary and inline-code runs. Apply PT Sans Narrow only to a displayed
+  literal URL; keep ordinary linked labels in OpenDyslexic with their native hyperlink.
+- Treat `slide_*_source` raster names as retired full-slide fallback evidence, not component images.
+- For `title-vertical-text` and `vertical-title-vertical-text`, author one level-one title and one
+  root body block: one paragraph, one list, or one component image.
 - Use lots of images and aim for a visual image on every slide.
 - Avoid raw HTML or XML in Markdown. Keep preview styling in the shared CSS theme.
 - A normal instructor workflow must not require VS Code, npm, TypeScript, Node, or a Marp server.

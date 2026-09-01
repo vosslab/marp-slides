@@ -91,15 +91,44 @@ def test_inline_runs_keep_native_formatting_and_url_typography(tmp_path: pathlib
 	"""Typed emphasis, code, breaks, and bare URLs remain formatted editable runs."""
 	deck_path = tmp_path / "formatting.md"
 	deck_path.write_text(HEADER + "<!-- _class: title-content -->\n# [Heading](https://example.edu)\n\n"
-		"*Italic* and `code`  \nhttps://example.edu/path\n", encoding="utf-8")
+		"*Italic* and `code` [Course resource](https://example.edu/resource)  \nhttps://example.edu/path\n", encoding="utf-8")
 	output_path = tmp_path / "formatting.pptx"
 	marp_lib.native_export.render_native_pptx(marp_lib.native_export.parse_deck(deck_path), output_path)
 	runs = [run for shape in Presentation(output_path).slides[0].shapes if shape.has_text_frame
 		for paragraph in shape.text_frame.paragraphs for run in paragraph.runs]
 	assert any(run.text == "Italic" and run.font.italic for run in runs)
-	assert any(run.text == "code" and run.font.name == "Courier New" for run in runs)
+	assert any(run.text == "code" and run.font.name == layouts.FONT_NAME for run in runs)
+	assert any(run.text == "Course resource" and run.font.name == layouts.FONT_NAME and
+		run.hyperlink.address == "https://example.edu/resource" for run in runs)
 	assert any(run.text == "https://example.edu/path" and run.font.name == layouts.URL_FONT_NAME
 		and run.hyperlink.address == "https://example.edu/path" for run in runs)
+
+
+#============================================
+def test_h1_size_modifier_writes_150_point_title_without_changing_subtitle_or_pagination(
+		tmp_path: pathlib.Path) -> None:
+	"""font-size-200 remains an editable 150pt H1 and leaves other runs normal."""
+	deck_path = tmp_path / "display-title.md"
+	deck_path.write_text(HEADER + "<!-- _class: font-size-200 centered-text -->\n# THE END\n\n"
+		"## Normal subtitle\n", encoding="utf-8")
+	output_path = tmp_path / "display-title.pptx"
+	marp_lib.native_export.render_native_pptx(marp_lib.native_export.parse_deck(deck_path), output_path)
+	runs = [run for shape in Presentation(output_path).slides[0].shapes if shape.has_text_frame
+		for paragraph in shape.text_frame.paragraphs for run in paragraph.runs]
+	assert next(run for run in runs if run.text == "THE END").font.size.pt == 150
+	assert next(run for run in runs if run.text == "Normal subtitle").font.size.pt == layouts.css_px_to_pt(31)
+	assert next(run for run in runs if run.text == "1").font.size.pt == layouts.css_px_to_pt(18)
+
+
+#============================================
+def test_h1_size_modifier_reports_native_title_capacity(tmp_path: pathlib.Path) -> None:
+	"""A requested display title fails rather than receiving an implicit size reduction."""
+	deck_path = tmp_path / "too-large.md"
+	deck_path.write_text(HEADER + "<!-- _class: title-content font-size-200 -->\n# Too large\n\n"
+		"- Editable body\n", encoding="utf-8")
+	with pytest.raises(ValueError, match=r"too-large\.md:7:.*title-content H1 font-size-200 does not fit"):
+		marp_lib.native_export.render_native_pptx(marp_lib.native_export.parse_deck(deck_path),
+			tmp_path / "too-large.pptx")
 
 
 #============================================
@@ -159,10 +188,71 @@ def test_rejects_wrong_cell_count_and_mixed_cell_content(tmp_path: pathlib.Path)
 	mixed.write_text(HEADER + "<!-- _class: title-two-content -->\n# Mixed\n\n"
 		"> ## First\n>\n> - Text\n>\n> ![Component](component.png)\n\n> ## Second\n>\n> - Text\n",
 		encoding="utf-8")
-	with pytest.raises(ValueError, match="cannot combine text"):
+	with pytest.raises(ValueError, match=r"mixed\.md:13:.*cannot combine text"):
 		marp_lib.native_export.render_native_pptx(marp_lib.native_export.parse_deck(mixed),
 			tmp_path / "mixed.pptx")
 	assert image_path.is_file()
+
+
+#============================================
+def test_missing_component_image_reports_its_authored_image_line(tmp_path: pathlib.Path) -> None:
+	"""Image-resolution failures retain the precise component image location."""
+	deck_path = tmp_path / "missing-image.md"
+	deck_path.write_text(HEADER + "<!-- _class: title-content -->\n# Missing\n\n"
+		"![Absent component](absent.png)\n", encoding="utf-8")
+	with pytest.raises(ValueError, match=r"missing-image\.md:9:.*component image is missing"):
+		marp_lib.native_export.render_native_pptx(marp_lib.native_export.parse_deck(deck_path),
+			tmp_path / "missing-image.pptx")
+
+
+#============================================
+@pytest.mark.parametrize("name", ["title-vertical-text", "vertical-title-vertical-text"])
+@pytest.mark.parametrize("body", ["Vertical paragraph\n", "- Vertical list item\n"])
+def test_vertical_root_body_layouts_accept_one_text_block(tmp_path: pathlib.Path, name: str,
+		body: str) -> None:
+	"""Each root-body vertical layout creates exactly one editable vertical body frame."""
+	deck_path = tmp_path / f"{name}.md"
+	deck_path.write_text(HEADER + f"<!-- _class: {name} -->\n# Vertical\n\n" + body, encoding="utf-8")
+	output_path = tmp_path / f"{name}.pptx"
+	marp_lib.native_export.render_native_pptx(marp_lib.native_export.parse_deck(deck_path), output_path)
+	vertical_frames = [shape for shape in Presentation(output_path).slides[0].shapes if shape.has_text_frame
+		and 'vert="vert"' in shape.element.xml and shape.text != "Vertical"]
+	assert len(vertical_frames) == 1
+
+
+#============================================
+@pytest.mark.parametrize("name", ["title-vertical-text", "vertical-title-vertical-text"])
+def test_vertical_root_body_layouts_accept_one_component_image(tmp_path: pathlib.Path, name: str) -> None:
+	"""A single component image is the legal native picture form of a vertical body."""
+	write_png(tmp_path / "component.png")
+	deck_path = tmp_path / f"{name}-image.md"
+	deck_path.write_text(HEADER + f"<!-- _class: {name} -->\n# Vertical\n\n"
+		"![Vertical component](component.png)\n", encoding="utf-8")
+	output_path = tmp_path / f"{name}-image.pptx"
+	marp_lib.native_export.render_native_pptx(marp_lib.native_export.parse_deck(deck_path), output_path)
+	pictures = [shape for shape in Presentation(output_path).slides[0].shapes
+		if shape.shape_type == MSO_SHAPE_TYPE.PICTURE]
+	assert len(pictures) == 1
+
+
+#============================================
+@pytest.mark.parametrize("name", ["title-vertical-text", "vertical-title-vertical-text"])
+def test_vertical_root_body_layouts_reject_multiple_blocks_at_the_second_block(tmp_path: pathlib.Path,
+		name: str) -> None:
+	"""A second root body block receives its own actionable source location."""
+	deck_path = tmp_path / f"{name}-invalid.md"
+	deck_path.write_text(HEADER + f"<!-- _class: {name} -->\n# Vertical\n\nFirst paragraph\n\n- Second block\n",
+		encoding="utf-8")
+	with pytest.raises(ValueError, match=rf"{name}-invalid\.md:11:.*exactly one root body block"):
+		marp_lib.native_export.render_native_pptx(marp_lib.native_export.parse_deck(deck_path),
+			tmp_path / "invalid.pptx")
+
+
+#============================================
+def test_layout_registry_has_one_individual_builder_per_layout() -> None:
+	"""Every declared layout owns a distinct named native builder boundary."""
+	builders = [spec.builder for spec in layouts.LAYOUTS.values()]
+	assert len(builders) == len(set(builders))
 
 
 #============================================

@@ -5,6 +5,9 @@
 - Replaced the browser-rendered, flattened presentation baseline with the native-output contract:
   repository-owned Python interprets authoritative Marp Markdown into editable PPTX objects, then
   LibreOffice writes editable ODP and PDF from that ODP.
+- Added bounded Marp multi-class H1 display presets (`font-size-64` through `font-size-200`). The
+  source-located typed request applies only to the editable top-level H1, rejects title-region
+  overflow instead of shrinking, and makes `font-size-200` a 150-point native Office title.
 - Split native ownership: `marp_lib/marp_parser.py` interprets the supported Marp language subset,
   `marp_lib/layouts.py` owns layout builders and geometry, and `marp_lib/native_export.py`
   orchestrates native PPTX, notes, pagination, and conversion. The destination-named commands retain
@@ -36,6 +39,14 @@
   image fitting, list construction, and notes while retaining Marp syntax rather than its dialect.
 
 ### Fixes and Maintenance
+
+- Hardened the native typed boundary: CRLF Markdown preserves physical source lines, retired
+  `slide_*_source` raster names fail at their image line, and layout, cell, and overflow errors
+  identify the most precise authored block or cell.
+- Applied OpenDyslexic to ordinary and inline-code native text while reserving PT Sans Narrow for a
+  displayed literal URL; labeled hyperlinks retain their native hyperlink and ordinary typeface.
+- Gave all seventeen registry entries distinct named native builders and aligned the vertical
+  preview contracts with fixed native geometry and one-root-body authoring.
 
 - Corrected the native authoring contract: formatted/link/inline-code runs, nested lists, component
   images, blockquote cells, directives, and presenter-note comments are supported; tables and fenced

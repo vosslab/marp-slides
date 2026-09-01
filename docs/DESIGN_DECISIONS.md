@@ -37,6 +37,22 @@ and does not determine output geometry.
 
 **Owner.** `marp_lib/layouts.py` and `docs/USAGE.md`.
 
+### Bounded H1 display-size classes
+
+**Decision.** Accept one optional Marp multi-class modifier from `font-size-64`, `font-size-80`,
+`font-size-96`, `font-size-120`, `font-size-160`, and `font-size-200` beside exactly one layout
+class.
+
+**Why.** An authored display title needs predictable editable scale without a new repository-only
+numeric directive or a browser-rendered exception.
+
+**Consequence.** The parser retains a typed, source-located H1 request; native layout code applies
+the CSS-pixel value only to the top-level H1 and rejects a title that cannot fit its title region.
+Subtitles, body text, cells, links, notes, and pagination remain layout-defined.
+
+**Owner.** `marp_lib/native_model.py`, `marp_lib/marp_parser.py`, `marp_lib/layouts.py`, and
+`themes/genetics.css`.
+
 ### ODP-derived PDF is the only PDF path
 
 **Decision.** Generate PPTX first, convert it to editable ODP, then have LibreOffice create PDF from
@@ -63,6 +79,20 @@ ownership.
 diagnostic. Temporary visual renders may support QA but never enter canonical Markdown or output.
 
 **Owner.** `marp_lib/layouts.py`, `marp_lib/native_export.py`, and their tests.
+
+### Vertical root-body layouts use one author-visible block
+
+**Decision.** `title-vertical-text` and `vertical-title-vertical-text` accept exactly one root body
+block after the level-one title: a paragraph, list, or component image.
+
+**Why.** The one authored block maps directly to one native vertical text frame or contained image
+region without inventing a repository-specific Markdown wrapper language.
+
+**Consequence.** Preview and native geometry share the fixed 94px title, 24px spacer, and 1042px
+body tracks. `vertical-title-text-chart` uses 94px, 24px, 500px, 42px, and 500px tracks with
+explicit child placement.
+
+**Owner.** `marp_lib/layouts.py`, `themes/genetics.css`, and their contract tests.
 
 ## Canonical source design
 

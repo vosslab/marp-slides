@@ -103,7 +103,7 @@ def write_deck(deck_path: pathlib.Path) -> None:
 		"<!-- _class: title-content -->\n# title-content acceptance\n\n"
 		"- Editable [resource](https://example.edu/title-content)\n  - Nested editable detail\n"
 		"1. Ordered editable step\n\n<!-- notes: Present this native title-content slide. -->",
-		"<!-- _class: centered-text -->\n# centered-text acceptance\n\n## Editable interstitial",
+		"<!-- _class: centered-text font-size-200 -->\n# THE END\n\n## Editable interstitial",
 		multi_cell_slide("title-two-content", 2),
 		multi_cell_slide("title-content-and-two-content", 3),
 		multi_cell_slide("title-two-content-and-content", 3),
@@ -145,8 +145,12 @@ def inspect_pptx(pptx_path: pathlib.Path) -> None:
 	all_xml = "\n".join("".join(shape.element.xml for shape in slide.shapes)
 		for slide in presentation.slides)
 	all_text = "\n".join(slide_text(slide) for slide in presentation.slides)
-	require("title-content acceptance" in all_text and "gallery acceptance" in all_text,
+	require("title-content acceptance" in all_text and "THE END" in all_text and "gallery acceptance" in all_text,
 		"PPTX preserves editable text across the layout catalog")
+	title_runs = [run for shape in presentation.slides[4].shapes if shape.has_text_frame
+		for paragraph in shape.text_frame.paragraphs for run in paragraph.runs if run.text == "THE END"]
+	require(len(title_runs) == 1 and title_runs[0].font.size.pt == 150,
+		"PPTX preserves font-size-200 as an editable 150pt title")
 	require("buChar" in all_xml and "buAutoNum" in all_xml,
 		"PPTX preserves native unordered and ordered list structures")
 	require("hlinkClick" in all_xml, "PPTX preserves native hyperlink relationships")
