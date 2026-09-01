@@ -2,12 +2,15 @@
 .DS_Store
 /node_modules/
 /.env
-report_*.txt
+/report_*.txt
 /output*/
-_temp*.?*
+/generated/
 /graphify-out/
+_temp*.?*
+/temp/
 /OTHER_REPOS/
 /LOCAL_ONLY/
+
 # === LOCAL REPOSITORY RULES === [ADD CUSTOM IGNORES HERE]
 # Propagation preserves this section.
 # Template-only ignores.
