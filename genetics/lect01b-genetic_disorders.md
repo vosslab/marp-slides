@@ -6,7 +6,7 @@ paginate: true
 title: "Lecture 1B"
 ---
 
-<!-- _class: lead -->
+<!-- _class: title-slide -->
 <!-- _paginate: false -->
 # Lecture 1B
 
@@ -16,20 +16,21 @@ title: "Lecture 1B"
 
 ---
 
-<!-- _class: lead -->
+<!-- _class: centered-text -->
 <!-- _paginate: false -->
 # What is a genetic disorder?
 
 
 ---
 
-<!-- _class: lead -->
+<!-- _class: centered-text -->
 <!-- _paginate: false -->
 # What is the difference between a disorder and a disease?
 
 
 ---
 
+<!-- _class: title-content -->
 # Disease vs. Disorder
 
 - A disease is a pathophysiological response to internal or external factors. Have a characteristic set of signs and symptoms. Used as labels for ill health. Such as heart disease.
@@ -38,13 +39,14 @@ title: "Lecture 1B"
 
 ---
 
-<!-- _class: lead -->
+<!-- _class: centered-text -->
 <!-- _paginate: false -->
 # What is a genetic disorder?
 
 
 ---
 
+<!-- _class: title-content -->
 # Genetic Disorder
 
 - A genetic disorder is a genetic problem caused by one or more abnormalities in the genome
@@ -56,26 +58,28 @@ title: "Lecture 1B"
 
 ---
 
-<!-- _class: lead -->
+<!-- _class: centered-text -->
 <!-- _paginate: false -->
 # In terms of genetic disorders, what types of anomalies can happen to your DNA?
 
 
 ---
 
+<!-- _class: title-two-content -->
 # Types of Gene Disorders
 
-- Point mutation
-- Chromosome abnormalities:
-  - Deletion
-  - Duplication
-  - Translocation
-  - Inversion
+> - Point mutation
+> - Chromosome abnormalities:
+>   - Deletion
+>   - Duplication
+>   - Translocation
+>   - Inversion
 
-![bg right:31% contain](assets/lect01b_genetic_disorders/image_001.png)
+> ![Chromosome abnormalities](assets/lect01b_genetic_disorders/image_001.png)
 
 ---
 
+<!-- _class: title-content -->
 # Genetics Disorder Activity
 
 - I will create random breakout rooms of 4-5 students
@@ -87,6 +91,7 @@ title: "Lecture 1B"
 
 ---
 
+<!-- _class: title-content -->
 # Genetics Disorder Activity
 
 - Do the following for each item:
@@ -101,14 +106,14 @@ title: "Lecture 1B"
 
 ---
 
-<!-- _class: figure -->
+<!-- _class: title-content -->
 # Group presentation template
 
 ![Slide image 2](assets/lect01b_genetic_disorders/image_002.png)
 
 ---
 
-<!-- _class: two-pane dense -->
+<!-- _class: title-two-content -->
 # Genetic Disorders
 
 > ## [Primarily monogenic](https://www.genome.gov/10001204/specific-genetic-disorders/)
@@ -158,54 +163,61 @@ title: "Lecture 1B"
 
 ---
 
+<!-- _class: title-two-content -->
 # Fall 2024
 
-- [Locked Group 01](https://docs.google.com/presentation/d/1qx5Qn5MLNHvXJ9lD_VE70a9fnriMF_XgArIAZv_0rs0/edit)
-- [Group 02](https://docs.google.com/presentation/d/1QSwy4dJ1dfHVpKe3vlj0Xmzr1uW1IkkUHXJxGOeAf58/edit)
-- [Group 03](https://docs.google.com/presentation/d/11kf9pG133KFqVbijAqoDBlqw3TvAc7iN1tuiSIUXPwA/edit)
-- [Group 04](https://docs.google.com/presentation/d/1u0ZkkZzxbiUnnMDiFF5ahm-vUUtKUoP2gF8v9PQ8Wwk/edit)
-- [Group 05](https://docs.google.com/presentation/d/1RtHu90bZuE0kQ2NOEMpBw3yn1XtDmD8u0ECWt3OZMZQ/edit)
-- [Group 06](https://docs.google.com/presentation/d/1mzacyNkuHc9akjkJEXG8w9hW4upN1yU6GUb30xLJmTA/edit)
-- [Group 07](https://docs.google.com/presentation/d/1b-n3uqYX1lUL6oyeUAsH6ajImRv7KAqfpkV9Pjzz6m8/edit)
-- [Group 08](https://docs.google.com/presentation/d/1iFZrit0nnDpXCdnPf6UQ05RysWbSW9QbiwK5R7Sc9fQ/edit)
-- [Group 09](https://docs.google.com/presentation/d/1EBzZnAI4Ct6ruT-VVBD9WtQ87Cn1Cc6er9QcNN6ks0w/edit)
-- [Group 10](https://docs.google.com/presentation/d/1XssJC7TVAZ7rMa2nQQO9Cniz2kq0ZMooYwSLqPKRJ8I/edit)
-- Unused: [Group 11](https://docs.google.com/presentation/d/1K1FXiQQT7p-HnoVt_yOz0B-p4By5S5gNl-rbqmnYcpY/edit), [Group 12](https://docs.google.com/presentation/d/1Lzxu6hUobQngrun2K9x9-HUNUfdE3jfWZbMLhJa1Geo/edit)
+> - [Locked Group 01](https://docs.google.com/presentation/d/1qx5Qn5MLNHvXJ9lD_VE70a9fnriMF_XgArIAZv_0rs0/edit)
+> - [Group 02](https://docs.google.com/presentation/d/1QSwy4dJ1dfHVpKe3vlj0Xmzr1uW1IkkUHXJxGOeAf58/edit)
+> - [Group 03](https://docs.google.com/presentation/d/11kf9pG133KFqVbijAqoDBlqw3TvAc7iN1tuiSIUXPwA/edit)
+> - [Group 04](https://docs.google.com/presentation/d/1u0ZkkZzxbiUnnMDiFF5ahm-vUUtKUoP2gF8v9PQ8Wwk/edit)
+> - [Group 05](https://docs.google.com/presentation/d/1RtHu90bZuE0kQ2NOEMpBw3yn1XtDmD8u0ECWt3OZMZQ/edit)
+
+> - [Group 06](https://docs.google.com/presentation/d/1mzacyNkuHc9akjkJEXG8w9hW4upN1yU6GUb30xLJmTA/edit)
+> - [Group 07](https://docs.google.com/presentation/d/1b-n3uqYX1lUL6oyeUAsH6ajImRv7KAqfpkV9Pjzz6m8/edit)
+> - [Group 08](https://docs.google.com/presentation/d/1iFZrit0nnDpXCdnPf6UQ05RysWbSW9QbiwK5R7Sc9fQ/edit)
+> - [Group 09](https://docs.google.com/presentation/d/1EBzZnAI4Ct6ruT-VVBD9WtQ87Cn1Cc6er9QcNN6ks0w/edit)
+> - [Group 10](https://docs.google.com/presentation/d/1XssJC7TVAZ7rMa2nQQO9Cniz2kq0ZMooYwSLqPKRJ8/edit)
+> - Unused: [Group 11](https://docs.google.com/presentation/d/1K1FXiQQT7p-HnoVt_yOz0B-p4By5S5gNl-rbqmnYcpY/edit), [Group 12](https://docs.google.com/presentation/d/1Lzxu6hUobQngrun2K9x9-HUNUfdE3jfWZbMLhJa1Geo/edit)
 
 ---
 
+<!-- _class: title-two-content -->
 # Fall 2023
 
-- [Group 01](https://docs.google.com/presentation/d/1HRMqmihTdeRE9kXulQamlCaALcuiBC4Bqqx5718a2f0/edit?usp=drivesdk)
-- [Group 02](https://docs.google.com/presentation/d/1WOgESPpCSSXHdPnM78HVF39DdvPWr8bkM1k8nztiUwk/edit?usp=drivesdk)
-- [Group 03](https://docs.google.com/presentation/d/1XaRuz2VLm9FpA3q8Hy1OkSuGO-HgYD6hzzJuyHH5e98/edit?usp=drivesdk)
-- [Group 04](https://docs.google.com/presentation/d/1XFuZPw5832x_b8VOV5b86FKlVCaSYLC8FqxGbaFCSMU/edit?usp=drivesdk)
-- [Group 05](https://docs.google.com/presentation/d/19bhG0BTrbD5tk4pEhK1pVdGhOBt7bzQVVbRCTVo6-sU/edit?usp=drivesdk)
-- [Group 06](https://docs.google.com/presentation/d/1FGate-7a75aT8-_bmg-QT8IGWFTuTkZvaqENj-M3BHg/edit?usp=drivesdk)
-- [Group 07](https://docs.google.com/presentation/d/1BDk4VYrwZHruxZ-YJ0-JNXr2RxIIdIiqE6KvSsmqnM4/edit?usp=drivesdk)
-- [Group 08](https://docs.google.com/presentation/d/1wfHMIC6sktHrDG8pIAAkRIm12DgFsccqFbfIYmOO0lM/edit?usp=drivesdk)
-- [Group 09](https://docs.google.com/presentation/d/1F3qNLBL21bBIMjU9Hz6zBeR6J3SMrdzDWSbV8cZLtho/edit?usp=drivesdk)
-- [Group 10](https://docs.google.com/presentation/d/1Tau6QkqvJk_2DHGIzEuLzMVJAE8pqR1NID-txqZ0Sto/edit?usp=drivesdk)
-- [Group 11](https://docs.google.com/presentation/d/1pvAiuiTbSfvfLxxG_Bf8W6OlJwAzinO8A_KmzSsOHR0/edit?usp=drivesdk)
-- [Group 12](https://docs.google.com/presentation/d/1esqMzya94NH3KqglMQAtc2kH0mkrmL9qMe_2EQ6UsWU/edit?usp=drivesdk)
+> - [Group 01](https://docs.google.com/presentation/d/1HRMqmihTdeRE9kXulQamlCaALcuiBC4Bqqx5718a2f0/edit?usp=drivesdk)
+> - [Group 02](https://docs.google.com/presentation/d/1WOgESPpCSSXHdPnM78HVF39DdvPWr8bkM1k8nztiUwk/edit?usp=drivesdk)
+> - [Group 03](https://docs.google.com/presentation/d/1XaRuz2VLm9FpA3q8Hy1OkSuGO-HgYD6hzzJuyHH5e98/edit?usp=drivesdk)
+> - [Group 04](https://docs.google.com/presentation/d/1XFuZPw5832x_b8VOV5b86FKlVCaSYLC8FqxGbaFCSMU/edit?usp=drivesdk)
+> - [Group 05](https://docs.google.com/presentation/d/19bhG0BTrbD5tk4pEhK1pVdGhOBt7bzQVVbRCTVo6-sU/edit?usp=drivesdk)
+> - [Group 06](https://docs.google.com/presentation/d/1FGate-7a75aT8-_bmg-QT8IGWFTuTkZvaqENj-M3BHg/edit?usp=drivesdk)
+
+> - [Group 07](https://docs.google.com/presentation/d/1BDk4VYrwZHruxZ-YJ0-JNXr2RxIIdIiqE6KvSsmqnM4/edit?usp=drivesdk)
+> - [Group 08](https://docs.google.com/presentation/d/1wfHMIC6sktHrDG8pIAAkRIm12DgFsccqFbfIYmOO0lM/edit?usp=drivesdk)
+> - [Group 09](https://docs.google.com/presentation/d/1F3qNLBL21bBIMjU9Hz6zBeR6J3SMrdzDWSbV8cZLtho/edit?usp=drivesdk)
+> - [Group 10](https://docs.google.com/presentation/d/1Tau6QkqvJk_2DHGIzEuLzMVJAE8pqR1NID-txqZ0Sto/edit?usp=drivesdk)
+> - [Group 11](https://docs.google.com/presentation/d/1pvAiuiTbSfvfLxxG_Bf8W6OlJwAzinO8A_KmzSsOHR0/edit?usp=drivesdk)
+> - [Group 12](https://docs.google.com/presentation/d/1esqMzya94NH3KqglMQAtc2kH0mkrmL9qMe_2EQ6UsWU/edit?usp=drivesdk)
 
 ---
 
+<!-- _class: title-two-content -->
 # Fall 2022
 
-- [Group 01](https://docs.google.com/presentation/d/1Jm9kKHhxAHelVOOUqvmAvq2FuvpwMN88Y69y1F7mrN0/edit?usp=sharing)
-- [Group 02](https://docs.google.com/presentation/d/1X_rFKultSN4tAhoAzO0CZA4WW2sgXEQGW4V56v8WvYg/edit?usp=sharing)
-- [Group 03](https://docs.google.com/presentation/d/1wyjM3QWrcerUb_X2iKhobuXGqtc2bYL3u3pZYKXVKzE/edit?usp=sharing)
-- [Group 04](https://docs.google.com/presentation/d/18kqd3neB0FlKO87To7jKbI8mer1AK95QOz7KB89Nfgs/edit?usp=sharing)
-- [Group 05](https://docs.google.com/presentation/d/14rTsJUG5jggOWxYkJMKAF_cSFUoyh69COBLSj3HH404/edit?usp=sharing)
-- [Group 06](https://docs.google.com/presentation/d/1wz4nTliyrDaFKttFrVWBfXM6wNlhsu-LQOQ1TSbKJSg/edit?usp=sharing)
-- [Group 07](https://docs.google.com/presentation/d/1vBEVqmC3jIY3QoAsdi_PM8dTNeJjUeziQ2nGKlV62KE/edit?usp=sharing)
-- [Group 08](https://docs.google.com/presentation/d/1pKWUnrM86M8XpggCFfgoKRHXhqSpSWxEvk82rMNfiDA/edit?usp=sharing)
-- [Group 09](https://docs.google.com/presentation/d/1PIjRxGsIfRVNEQvTN0TlkzYnJ5Vvi5hv50zBbGFEyX8/edit?usp=sharing)
-- [Group 10](https://docs.google.com/presentation/d/1bJql9OS-TPtl28y3PgiVCVqTOvLncy2HEc-HFqsUutE/edit?usp=sharing)
+> - [Group 01](https://docs.google.com/presentation/d/1Jm9kKHhxAHelVOOUqvmAvq2FuvpwMN88Y69y1F7mrN0/edit?usp=sharing)
+> - [Group 02](https://docs.google.com/presentation/d/1X_rFKultSN4tAhoAzO0CZA4WW2sgXEQGW4V56v8WvYg/edit?usp=sharing)
+> - [Group 03](https://docs.google.com/presentation/d/1wyjM3QWrcerUb_X2iKhobuXGqtc2bYL3u3pZYKXVKzE/edit?usp=sharing)
+> - [Group 04](https://docs.google.com/presentation/d/18kqd3neB0FlKO87To7jKbI8mer1AK95QOz7KB89Nfgs/edit?usp=sharing)
+> - [Group 05](https://docs.google.com/presentation/d/14rTsJUG5jggOWxYkJMKAF_cSFUoyh69COBLSj3HH404/edit?usp=sharing)
+
+> - [Group 06](https://docs.google.com/presentation/d/1wz4nTliyrDaFKttFrVWBfXM6wNlhsu-LQOQ1TSbKJSg/edit?usp=sharing)
+> - [Group 07](https://docs.google.com/presentation/d/1vBEVqmC3jIY3QoAsdi_PM8dTNeJjUeziQ2nGKlV62KE/edit?usp=sharing)
+> - [Group 08](https://docs.google.com/presentation/d/1pKWUnrM86M8XpggCFfgoKRHXhqSpSWxEvk82rMNfiDA/edit?usp=sharing)
+> - [Group 09](https://docs.google.com/presentation/d/1PIjRxGsIfRVNEQvTN0TlkzYnJ5Vvi5hv50zBbGFEyX8/edit?usp=sharing)
+> - [Group 10](https://docs.google.com/presentation/d/1bJql9OS-TPtl28y3PgiVCVqTOvLncy2HEc-HFqsUutE/edit?usp=sharing)
 
 ---
 
+<!-- _class: title-content -->
 # Presented Disorders
 
 - Group 1: Huntington's Disease
@@ -220,116 +232,124 @@ title: "Lecture 1B"
 
 ---
 
+<!-- _class: title-two-content -->
 # Fall 2021
 
-- [Group 01](https://docs.google.com/presentation/d/1NXOo8S4uIcPcrpy505T7sElBOZaEDpkTwcBfuBXdRsQ/edit?usp=sharing)
-- [Group 02](https://docs.google.com/presentation/d/1JyrmAI9nEMX3_hv-ghgJzxjpPjw6sMkvLy16GB724lw/edit?usp=sharing)
-- [Group 03](https://docs.google.com/presentation/d/1oVTXVTgQizren00okgqS1mcfJ7wYDL7CqfKFrpTf-f4/edit?usp=sharing)
-- [Group 04](https://docs.google.com/presentation/d/1cUTBGG6gtx0wY_P3aBFaU3wJbgkR-DZONMoo12m2BFU/edit?usp=sharing)
-- [Group 05](https://docs.google.com/presentation/d/1_fUAyYmjuUNlcA3haskNPkhte27vjUDDtzV0SHvjUGQ/edit?usp=sharing)
-- [Group 06](https://docs.google.com/presentation/d/1-B0CLnXYw-vKxhaQ020ax1DblTkCn-eqQRdhYchGFxg/edit?usp=sharing)
-- [Group 07](https://docs.google.com/presentation/d/1RDV0xvO-YO0LUIyEeyPNXpaljKjaReSrpdBCZGLrO08/edit?usp=sharing)
-- [Group 08](https://docs.google.com/presentation/d/1VNjyE4otMOuiieyyNeSpbVgNYdOvUHq9HPLOLEhalCU/edit?usp=sharing)
+> - [Group 01](https://docs.google.com/presentation/d/1NXOo8S4uIcPcrpy505T7sElBOZaEDpkTwcBfuBXdRsQ/edit?usp=sharing)
+> - [Group 02](https://docs.google.com/presentation/d/1JyrmAI9nEMX3_hv-ghgJzxjpPjw6sMkvLy16GB724lw/edit?usp=sharing)
+> - [Group 03](https://docs.google.com/presentation/d/1oVTXVTgQizren00okgqS1mcfJ7wYDL7CqfKFrpTf-f4/edit?usp=sharing)
+> - [Group 04](https://docs.google.com/presentation/d/1cUTBGG6gtx0wY_P3aBFaU3wJbgkR-DZONMoo12m2BFU/edit?usp=sharing)
+
+> - [Group 05](https://docs.google.com/presentation/d/1_fUAyYmjuUNlcA3haskNPkhte27vjUDDtzV0SHvjUGQ/edit?usp=sharing)
+> - [Group 06](https://docs.google.com/presentation/d/1-B0CLnXYw-vKxhaQ020ax1DblTkCn-eqQRdhYchGFxg/edit?usp=sharing)
+> - [Group 07](https://docs.google.com/presentation/d/1RDV0xvO-YO0LUIyEeyPNXpaljKjaReSrpdBCZGLrO08/edit?usp=sharing)
+> - [Group 08](https://docs.google.com/presentation/d/1VNjyE4otMOuiieyyNeSpbVgNYdOvUHq9HPLOLEhalCU/edit?usp=sharing)
 
 ---
 
+<!-- _class: title-content -->
 # List of Diseases (Shared)
 
 - [Shared presentation](https://docs.google.com/presentation/d/1csn9cWgYEWm2j8dqmAqa6wmfaKF93ovJqGqsOzuJb1k/edit?usp=sharing)
 
 ---
 
-<!-- _class: figure -->
+<!-- _class: title-two-content -->
 # 23andMe Carrier Status Report
 
-![Carrier status results, first page](assets/lect01b_genetic_disorders/image_003.png)
-![bg right:50% contain](assets/lect01b_genetic_disorders/image_004.png)
+> ![Carrier status results, first page](assets/lect01b_genetic_disorders/image_003.png)
+
+> ![Carrier status results, second page](assets/lect01b_genetic_disorders/image_004.png)
 
 ---
 
-<!-- _class: figure -->
+<!-- _class: title-two-content -->
 <!-- Continuation: 23andMe Carrier Status Report -->
+# 23andMe Carrier Status Report
 
-![Carrier status results, third page](assets/lect01b_genetic_disorders/image_005.png)
-![bg right:50% contain](assets/lect01b_genetic_disorders/image_006.png)
+> ![Carrier status results, third page](assets/lect01b_genetic_disorders/image_005.png)
+
+> ![Carrier status results, fourth page](assets/lect01b_genetic_disorders/image_006.png)
 
 ---
 
-<!-- _class: list-columns -->
+<!-- _class: title-two-content -->
 # Human Viruses
 
-- Chickenpox
-- Common cold
-  - over 200 types: adenoviruses, coronaviruses (SARS), and rhinoviruses
-- Cytomegalovirus (CMV Herpes)
-- Dengue fever
-- Ebola
-- Hand, foot and mouth disease
-- Hantavirus
-- Herpes (HSV)
-- Human T-cell leukemia virus (HTLV)
-- HIV/AIDS
-- Influenza
-- Measles &amp; Mumps
-- Mononucleosis (Epstein-Barr)
-- Newcastle disease
-- Norwalk virus (Noroviruses)
-- Papilllomavirus (HPV); warts
-- Parvovirus or Fifth Disease
-- Poliovirus
-- Rabies
-- Respiratory Syncytial Virus (RSV)
-- Rotavirus
-- Rubella
-- Shingles
-- Smallpox
-- Viral Encephalitis
-- Hepatitis A,B,C,delta,E
-- Viral Meningitis
-- Viral Pneumonia
-- West Nile virus
-- Yellow fever
-- Zika virus
+> - Chickenpox
+> - Common cold
+>   - over 200 types: adenoviruses, coronaviruses (SARS), and rhinoviruses
+> - Cytomegalovirus (CMV Herpes)
+> - Dengue fever
+> - Ebola
+> - Hand, foot and mouth disease
+> - Hantavirus
+> - Herpes (HSV)
+> - Human T-cell leukemia virus (HTLV)
+> - HIV/AIDS
+> - Influenza
+> - Measles &amp; Mumps
+> - Mononucleosis (Epstein-Barr)
+> - Newcastle disease
+> - Norwalk virus (Noroviruses)
+> - Papilllomavirus (HPV); warts
+
+> - Parvovirus or Fifth Disease
+> - Poliovirus
+> - Rabies
+> - Respiratory Syncytial Virus (RSV)
+> - Rotavirus
+> - Rubella
+> - Shingles
+> - Smallpox
+> - Viral Encephalitis
+> - Hepatitis A,B,C,delta,E
+> - Viral Meningitis
+> - Viral Pneumonia
+> - West Nile virus
+> - Yellow fever
+> - Zika virus
 
 ---
 
-<!-- _class: list-columns -->
+<!-- _class: title-two-content -->
 # Bacterial Diseases (not viruses)
 
-- Anthrax
-- Botulism or BoTox
-- Bronchitis, bacterial
-- Chlamydia or The Clap
-- Cholera
-- Conjunctivitis, pink eye
-- DTaP or Tdap vaccine
-  - Tetanus
-  - Diphtheria
-  - Pertussis (whooping cough)
-- Dysentery
-- Ear infections
-- Encephalitis, bacterial
-- Food poisoning
-  - Escherichia coli and Salmonella
-- Gonorrhea
-- Impetigo
-- Legionnaire's disease
-- Leprosy
-- Lyme disease
-- Meningitis, bacterial
-- Plague, Bubonic and Black
-- Pneumonia, bacterial
-- Rheumatic fever
-- Scarlet fever
-- Staph infection
-- Strep throat
-- Syphilis
-- Tuberculosis
-- Typhoid fever
-- Ulcers
+> - Anthrax
+> - Botulism or BoTox
+> - Bronchitis, bacterial
+> - Chlamydia or The Clap
+> - Cholera
+> - Conjunctivitis, pink eye
+> - DTaP or Tdap vaccine
+>   - Tetanus
+>   - Diphtheria
+>   - Pertussis (whooping cough)
+> - Dysentery
+> - Ear infections
+> - Encephalitis, bacterial
+> - Food poisoning
+>   - Escherichia coli and Salmonella
+> - Gonorrhea
+
+> - Impetigo
+> - Legionnaire's disease
+> - Leprosy
+> - Lyme disease
+> - Meningitis, bacterial
+> - Plague, Bubonic and Black
+> - Pneumonia, bacterial
+> - Rheumatic fever
+> - Scarlet fever
+> - Staph infection
+> - Strep throat
+> - Syphilis
+> - Tuberculosis
+> - Typhoid fever
+> - Ulcers
 
 ---
 
-<!-- _class: lead -->
+<!-- _class: centered-text -->
 <!-- _paginate: false -->
 # THE END

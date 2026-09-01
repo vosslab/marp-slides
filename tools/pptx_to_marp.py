@@ -392,21 +392,26 @@ def render_slide(slide: SlideData, slide_width: int, is_first: bool) -> tuple[li
 	heading_lines = [f"# {' '.join(title_lines)}"]
 	images = list(slide.images)
 	if not images:
-		lead = is_first or not texts
-		prefix = ["<!-- _class: lead -->", "<!-- _paginate: false -->"] if lead else []
-		return [*prefix, *heading_lines, "", *texts], "lead" if lead else "default"
+		if is_first and (not texts or all(text.startswith("## ") for text in texts)):
+			return ["<!-- _class: title-slide -->", *heading_lines, "", *texts], "title-slide"
+		if not texts:
+			return ["<!-- _class: title-only -->", *heading_lines], "title-only"
+		return ["<!-- _class: title-content -->", *heading_lines, "", *texts], "title-content"
 	if len(images) == 1 and not texts:
-		return ["<!-- _class: figure -->", *heading_lines, "", image_markdown(images[0])], "figure"
+		return ["<!-- _class: title-content -->", *heading_lines, "", image_markdown(images[0])], "title-content"
 	if len(images) == 1:
 		image = images[0]
 		center = (image.left + image.width / 2) / slide_width
-		pane_percent = max(28, min(55, round(100 * image.width / slide_width)))
 		if center >= 0.55:
-			directive = f"![bg right:{pane_percent}% contain]({image.markdown_path})"
-			return [*heading_lines, "", *texts, "", directive], "right-image"
+			return [
+				"<!-- _class: title-two-content -->", *heading_lines, "",
+				*quoted(texts), "", *quoted([image_markdown(image)]),
+			], "title-two-content"
 		if center <= 0.45:
-			directive = f"![bg left:{pane_percent}% contain]({image.markdown_path})"
-			return [*heading_lines, "", *texts, "", directive], "left-image"
+			return [
+				"<!-- _class: title-two-content -->", *heading_lines, "",
+				*quoted([image_markdown(image)]), "", *quoted(texts),
+			], "title-two-content"
 	image_lines = [image_markdown(image) for image in images]
 	if not texts:
 		return [
@@ -416,13 +421,13 @@ def render_slide(slide: SlideData, slide_width: int, is_first: bool) -> tuple[li
 			" ".join(image_lines),
 		], "gallery"
 	return [
-		"<!-- _class: two-pane -->",
+		"<!-- _class: title-two-content -->",
 		*heading_lines,
 		"",
 		*quoted(texts),
 		"",
 		*quoted([" ".join(image_lines)]),
-	], "two-pane"
+	], "title-two-content"
 
 
 #============================================

@@ -6,7 +6,7 @@ paginate: true
 title: "Lecture 01A"
 ---
 
-<!-- _class: lead -->
+<!-- _class: title-slide -->
 <!-- _paginate: false -->
 # Lecture 01A
 ## BIOL 351/451 Genetics
@@ -16,26 +16,27 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: lead -->
+<!-- _class: centered-text -->
 <!-- _paginate: false -->
 # Instructor Information
 
 ---
 
-<!-- _class: url-list -->
+<!-- _class: title-two-content -->
 # Professor Neil R. Voss
 
-- **Dr. Neil Voss**, Associate Professor
-- Email: nvoss@roosevelt.edu
-- Office hours via Zoom: https://zoom.us/j/97638754024
-  - Meeting ID: 976 3875 4024
-  - Password: voss
-- Favorite biology subjects: Biophysics, Structural Biology, and Electron Microscopy
+> - **Dr. Neil Voss**, Associate Professor
+> - Email: nvoss@roosevelt.edu
+> - Office hours via Zoom: https://zoom.us/j/97638754024
+>   - Meeting ID: 976 3875 4024
+>   - Password: voss
+> - Favorite biology subjects: Biophysics, Structural Biology, and Electron Microscopy
 
-![bg right:38% contain](assets/lect01a_course_intro/image_001.png)
+> ![Professor Neil Voss portrait](assets/lect01a_course_intro/image_001.png)
 
 ---
 
+<!-- _class: title-content -->
 # Ways to Contact Dr. Voss
 
 1. **Attend office hours**
@@ -50,99 +51,105 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: url-list -->
+<!-- _class: title-two-content -->
 # Dr. Voss YouTube Channel
 
-- https://www.youtube.com/c/NeilVossLab/videos
-- a few videos for hard problems
-![bg right:42% contain](assets/lect01a_course_intro/image_002.png)
+> - https://www.youtube.com/c/NeilVossLab/videos
+> - a few videos for hard problems
+
+> ![Neil Voss Lab YouTube channel page](assets/lect01a_course_intro/image_002.png)
 
 ---
 
+<!-- _class: title-two-content -->
 # Discord Server
 
-- I created a Discord Server called Neil Voss Lab
-  - Participation in Discord is technically not required, but I give you are required to sign up
-- Sign-up link is available on Blackboard
-  - It is available as a mobile app, a desktop app, and a website
-  - Be sure to connect to my server, you should not create your own server
+> - I created a Discord Server called Neil Voss Lab
+>   - Participation in Discord is technically not required, but I give you are required to sign up
+> - Sign-up link is available on Blackboard
+>   - It is available as a mobile app, a desktop app, and a website
+>   - Be sure to connect to my server, you should not create your own server
 
-![bg right:38% contain](assets/lect01a_course_intro/image_003.png)
+> ![Neil Voss Lab Discord server invite screen](assets/lect01a_course_intro/image_003.png)
 
 ---
 
+<!-- _class: title-two-content -->
 # Discord Signup
 
-- In Blackboard, open **Important Links**.
-- Select **Join Discord Server Invite Link**.
+> - In Blackboard, open **Important Links**.
+> - Select **Join Discord Server Invite Link**.
 
-![bg right:64% contain](assets/lect01a_course_intro/image_005.png)
+> ![Blackboard Important Links menu with Discord invite link](assets/lect01a_course_intro/image_005.png)
 
 ---
 
-<!-- _class: url-list -->
+<!-- _class: title-two-content -->
 # Anonymous Message Form
 
-- Send an anonymous message to the instructor.
-- Use the new Google Form to send me an anonymous message.
-- I took great care to make sure it is completely anonymous.
-- The form sends your message directly to my email.
-- https://forms.gle/gZ8nx28q9YDwSy8g7
+> - Send an anonymous message to the instructor.
+> - Use the new Google Form to send me an anonymous message.
+> - I took great care to make sure it is completely anonymous.
+> - The form sends your message directly to my email.
+> - https://forms.gle/gZ8nx28q9YDwSy8g7
 
-![bg right:50% contain](assets/lect01a_course_intro/image_006.png)
+> ![Anonymous Google Form for messages to the instructor](assets/lect01a_course_intro/image_006.png)
 
 ---
 
-<!-- _class: url-list -->
+<!-- _class: title-two-content -->
 # Office Hours
 
-- Via Zoom Video Conference:
-- https://zoom.us/j/97638754024
-- Meeting ID:
-  - 976 3875 4024
-- Password: voss
-- To be determined
-- also available by appointment
+> - Via Zoom Video Conference:
+> - https://zoom.us/j/97638754024
+> - Meeting ID:
+>   - 976 3875 4024
+> - Password: voss
+> - To be determined
+> - also available by appointment
 
-![bg right:38% contain](assets/lect01a_course_intro/image_007.png)
+> ![Zoom office hours meeting information](assets/lect01a_course_intro/image_007.png)
 
 ---
 
-<!-- _class: lead -->
+<!-- _class: centered-text -->
 <!-- _paginate: false -->
 # Course Information
 
 ---
 
+<!-- _class: title-two-content -->
 # Textbooks for class
 
-- **Do not buy** the eighth or ninth edition of Hartl and Ruvolo.
-- We will use the free OER textbook on the next slide.
+> - **Do not buy** the eighth or ninth edition of Hartl and Ruvolo.
+> - We will use the free OER textbook on the next slide.
 
-![bg right:38% contain](assets/lect01a_course_intro/image_010.png)
+> ![Hartl and Ruvolo genetics textbook cover](assets/lect01a_course_intro/image_010.png)
 
 ---
 
-<!-- _class: url-list -->
+<!-- _class: title-two-content -->
 # New, Free OER Textbook for 2025
 
-- Advanced Genetics: Mechanisms of Inheritance and Analysis
-  - https://bio.libretexts.org/Courses/Roosevelt_University/Advanced_Genetics%3A_Mechanisms_of_Inheritance_and_Analysis
-- Dr. Voss is creating his own custom textbook but it will take some time.
-![bg right:42% contain](assets/lect01a_course_intro/image_011.png)
+> - Advanced Genetics: Mechanisms of Inheritance and Analysis
+>   - https://bio.libretexts.org/Courses/Roosevelt_University/Advanced_Genetics%3A_Mechanisms_of_Inheritance_and_Analysis
+> - Dr. Voss is creating his own custom textbook but it will take some time.
+
+> ![Advanced Genetics LibreTexts textbook website](assets/lect01a_course_intro/image_011.png)
 
 ---
 
-<!-- _class: url-list -->
+<!-- _class: title-two-content -->
 # Idiom: "build the plane while flying it"
 
-- This idiom can also be applied in education when teachers try out new teaching methods or curriculums during actual classes with students. They may experiment with different approaches until they find what works best for their students.
-- https://crossidiomas.com/build-the-plane-while-flying-it/
-![bg right:42% contain](assets/lect01a_course_intro/image_012.png)
+> - This idiom can also be applied in education when teachers try out new teaching methods or curriculums during actual classes with students. They may experiment with different approaches until they find what works best for their students.
+> - https://crossidiomas.com/build-the-plane-while-flying-it/
+
+> ![Illustration for the build the plane while flying it idiom](assets/lect01a_course_intro/image_012.png)
 
 ---
 
-<!-- _class: url-list -->
+<!-- _class: title-content -->
 # Other Resources and Materials
 
 - Khan Academy:
@@ -152,6 +159,7 @@ title: "Lecture 01A"
 
 ---
 
+<!-- _class: title-content -->
 # How to be successful
 
 - Attend class and arrive on time.
@@ -163,13 +171,13 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: lead -->
+<!-- _class: centered-text -->
 <!-- _paginate: false -->
 # Blackboard
 
 ---
 
-<!-- _class: figure url-list -->
+<!-- _class: title-content -->
 
 # Website: http://blackboard.roosevelt.edu
 
@@ -177,18 +185,19 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: lead -->
+<!-- _class: centered-text -->
 <!-- _paginate: false -->
 # Course Policies
 
 ---
 
-<!-- _class: lead -->
+<!-- _class: centered-text -->
 <!-- _paginate: false -->
 # Other Required Credit
 
 ---
 
+<!-- _class: title-content -->
 # Discord Server
 
 - Discord Server:
@@ -199,54 +208,59 @@ title: "Lecture 01A"
 
 ---
 
+<!-- _class: title-two-content -->
 # Discord Server
 
-- I created a Discord Server called Neil Voss Lab
-  - Participation in Discord is technically not required, but I give you are required to sign up
-- Sign-up link is available on Blackboard
-  - It is available as a mobile app, a desktop app, and a website
-  - Be sure to connect to my server, you should not create your own server
+> - I created a Discord Server called Neil Voss Lab
+>   - Participation in Discord is technically not required, but I give you are required to sign up
+> - Sign-up link is available on Blackboard
+>   - It is available as a mobile app, a desktop app, and a website
+>   - Be sure to connect to my server, you should not create your own server
 
-![bg right:38% contain](assets/lect01a_course_intro/image_003.png)
+> ![Neil Voss Lab Discord server invite screen](assets/lect01a_course_intro/image_003.png)
 
 ---
 
+<!-- _class: title-two-content -->
 # Discord Signup
 
-- In Blackboard, open **Important Links**.
-- Select **Join Discord Server Invite Link**.
+> - In Blackboard, open **Important Links**.
+> - Select **Join Discord Server Invite Link**.
 
-![bg right:64% contain](assets/lect01a_course_intro/image_005.png)
+> ![Blackboard Important Links menu with Discord invite link](assets/lect01a_course_intro/image_005.png)
 
 ---
 
+<!-- _class: title-two-content -->
 # Student Profile
 
-- Earn **3 points** for uploading your profile to Blackboard.
-- Include a picture of your face.
-- I will not publish it; I, tutors, and TAs use it to learn your name.
-- Answer the questions on the next slide.
+> - Earn **3 points** for uploading your profile to Blackboard.
+> - Include a picture of your face.
+> - I will not publish it; I, tutors, and TAs use it to learn your name.
+> - Answer the questions on the next slide.
 
-![bg right:32% contain](assets/lect01a_course_intro/image_019.jpg)
+> ![Example Blackboard student profile page](assets/lect01a_course_intro/image_019.jpg)
 
 ---
 
+<!-- _class: title-two-content -->
 # Student Profile
 
-- Include a picture of your face.
-- Answer these questions about yourself:
-  - What are your career goals?
-  - What is your favorite biology subject?
-  - What would you like to learn in this class?
-  - What are you nervous about in this class?
-  - What is your favorite local restaurant?
-  - What is one interesting thing you did over the break?
-- The Blackboard link is due **September 21**; no points are awarded after the deadline.
+> - Include a picture of your face.
+> - Answer these questions about yourself:
+>   - What are your career goals?
+>   - What is your favorite biology subject?
+>   - What would you like to learn in this class?
+>   - What are you nervous about in this class?
+>   - What is your favorite local restaurant?
+>   - What is one interesting thing you did over the break?
+> - The Blackboard link is due **September 21**; no points are awarded after the deadline.
 
-![bg right:24% contain](assets/lect01a_course_intro/image_014.png)
+> ![Blackboard student profile question form](assets/lect01a_course_intro/image_014.png)
 
 ---
 
+<!-- _class: title-content -->
 # Dr. Voss Profile
 
 - Got my undergraduate degrees in Physics and Mathematics at Iowa State University. Really got into using physics techniques to solve biological questions.
@@ -264,6 +278,7 @@ title: "Lecture 01A"
 
 ---
 
+<!-- _class: title-content -->
 # Dr. Voss profile
 
 - My favorite restaurant for a long time was India House at Golf and Higgins, but they closed.
@@ -274,7 +289,7 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: two-pane -->
+<!-- _class: title-two-content -->
 
 # Dr. Voss's Best Movies of the Decade
 
@@ -308,25 +323,26 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: lead -->
+<!-- _class: centered-text -->
 <!-- _paginate: false -->
 # General Announcements
 
 ---
 
-<!-- _class: url-list -->
+<!-- _class: title-two-content -->
 # Graduating Students
 
-- Last day to apply for graduation is:
-  - September 2, 2025
-- Late applications will cost you a $100 late fee
+> - Last day to apply for graduation is:
+>   - September 2, 2025
+> - Late applications will cost you a $100 late fee
+>
+> https://www.roosevelt.edu/current-students/academics/grad-prep
 
-https://www.roosevelt.edu/current-students/academics/grad-prep
-![bg right:42% contain](assets/lect01a_course_intro/image_023.png)
+> ![Roosevelt University graduation application information](assets/lect01a_course_intro/image_023.png)
 
 ---
 
-<!-- _class: lead -->
+<!-- _class: centered-text -->
 <!-- _paginate: false -->
 # THE END
 

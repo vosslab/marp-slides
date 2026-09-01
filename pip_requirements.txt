@@ -1,3 +1,5 @@
 defusedxml  # Safe XML parsing for ODP slide imports
 Pillow  # Validate extracted raster image dimensions and content
 python-pptx  # Extract normalized slide text, images, notes, and geometry
+markdown-it-py[linkify]>=4.0,<5.0  # Repository-owned Marp-subset token parsing
+PyYAML>=6.0,<7.0  # Strict canonical Marp front-matter parsing

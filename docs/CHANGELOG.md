@@ -1,33 +1,56 @@
 ## 2026-09-01
 
-### Behavior Changes
+### Behavior or Interface Changes
 
-- Replaced the documented browser-rendered, flattened presentation baseline with the native-output
-  product contract: repository-owned Python maps authoritative Marp Markdown into editable PPTX
-  objects, then LibreOffice creates editable ODP.
-- Made `marp_lib/native_export.py` the direct owner of native Marp parsing, PPTX writing, layout
-  templates, and output selection, with `marp_lib/__init__.py` as its package boundary. The
-  destination-named commands retain single-deck command ownership, and `build_slides.sh` retains
-  folder-level command ownership.
-- Defined title slide, section header, title-only, title/body, two-content, gallery, and
-  multi-content as the supported native layout vocabulary, using the LibreOffice layout grid as the
-  visual target.
+- Replaced the browser-rendered, flattened presentation baseline with the native-output contract:
+  repository-owned Python interprets authoritative Marp Markdown into editable PPTX objects, then
+  LibreOffice writes editable ODP and PDF from that ODP.
+- Split native ownership: `marp_lib/marp_parser.py` interprets the supported Marp language subset,
+  `marp_lib/layouts.py` owns layout builders and geometry, and `marp_lib/native_export.py`
+  orchestrates native PPTX, notes, pagination, and conversion. The destination-named commands retain
+  single-deck ownership, while `build_slides.sh` retains folder-level ownership.
+- Implemented every LibreOffice layout-grid pattern as a distinct native builder: `blank`,
+  `title-only`, `title-slide`, `title-content`, `centered-text`, `title-two-content`,
+  `title-content-and-two-content`, `title-two-content-and-content`, `title-content-over-content`,
+  `title-two-content-over-content`, `title-four-content`, `title-six-content`,
+  `vertical-title-vertical-text`, `vertical-title-text-chart`, `title-vertical-text`, and
+  `title-two-vertical-text-clipart`, plus the repository `gallery` layout.
+- Made one explicit native layout class mandatory per canonical slide and established top-level
+  blockquotes as multi-cell content in layout reading order.
+- Defined Marp as an authoring-language specification only. The newly added local `marp-core` and
+  `marp-cli` clones provide conformance evidence outside the production dependency/runtime graph.
 - Added destination-named `tools/marp_to_pptx.py` and `tools/marp_to_odp.py` commands backed by one
   validated `marp_lib/native_export.py` implementation.
+- Calibrated native Office typography from CSS pixels and fitted native text to its assigned layout
+  region; balanced nested-list columns by height and restored paragraph separation in native cells.
+- Preserved Markdown links, slide title metadata, and component-image descriptions in native
+  PPTX and ODP output.
+- Added deterministic per-layout source validation that rejects blocks which a layout would omit
+  or place in overlap, with a clear diagnostic for the source author.
 
 ### Design Decisions
 
 - Recorded full-slide rasterization and raster fallbacks as failed presentation results. Normal
-  presentation builds require no browser.
+  presentation builds require no browser, Marp code, Marp CLI, Node, or rendering engine.
 - Recorded the heavily edited local `md2pptx` clone as implementation prior art for native objects,
   image fitting, list construction, and notes while retaining Marp syntax rather than its dialect.
 
-### Current native export verification
+### Fixes and Maintenance
+
+- Corrected the native authoring contract: formatted/link/inline-code runs, nested lists, component
+  images, blockquote cells, directives, and presenter-note comments are supported; tables and fenced
+  or indented code report a source location until native editable-object owners are implemented.
+  Documented `gallery` as two through six component images and `title-content` as the one-image
+  layout.
+
+### Developer Tests and Notes
 
 - Added the native semantic E2E gate. Run
   `source source_me.sh && python3 tests/e2e/e2e_native_odp_semantics.py` from a macOS GUI-capable
   host session outside the restricted execution sandbox. It inspects native PPTX and editable ODP
   text, lists, links, notes, component images, slide count, and full-slide-image absence.
+- Hardened the ODP E2E gate with `defusedxml`, numeric page-relative full-slide-image detection,
+  and verification that component-image descriptions survive editable ODP conversion.
 
 ## Historical renderer and migration records
 

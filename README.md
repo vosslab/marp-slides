@@ -1,30 +1,32 @@
 # marp-slides
 
-Convert legacy biology lectures into simple, reviewable Marp Markdown and regenerate native,
-editable PowerPoint and LibreOffice classroom presentations.
+Build editable classroom presentations from authoritative Marp Markdown.
 
-## One source, classroom-ready outputs
+## One source, native outputs
 
-The migration deliberately closes the old editing loop:
+The repeatable production chain is:
 
 ```text
-legacy ODP -> one-time import -> authoritative Marp Markdown -> generated ODP for class
+canonical Marp Markdown
+  -> repository-owned Python Marp-subset parser
+  -> typed native slide-object model
+  -> marp_lib.layouts native layout builders
+  -> python-pptx editable PPTX
+  -> LibreOffice editable ODP
+  -> LibreOffice PDF from that ODP
 ```
 
-- Simple title, bullet, and figure slides become editable Markdown.
-- Structured text, images, notes, visibility, and geometry survive through a temporary PPTX.
-- One command rebuilds PDF, native PPTX, and editable ODP from the same Markdown source.
-- Repository-owned Python maps the supported Marp vocabulary to native slide objects without a
-  browser or rendered-slide fallback.
-- `marp_lib` provides the shared native-export implementation; the commands in `tools/` remain
-  small executable entry points.
+Every generated slide uses editable text, lists, shapes, component images, links, and presenter
+notes. `marp_lib.layouts` implements all sixteen LibreOffice layout-grid patterns plus the
+repository `gallery` layout. The LibreOffice grid is a catalog and visual target; Python builds the
+objects.
 
-The two migrated genetics examples preserve their original 31-slide and 23-slide teaching
-sequences without embedding a rendered source slide as converted content.
+Marp supplies the mature authoring-language specification only. The production graph contains no
+Marp CLI, Marp Core, Node, browser, rendered-slide stage, or full-slide raster fallback.
 
 ## Quick start
 
-Install the system and Python dependencies, then build the migrated example:
+Install the system and Python dependencies, then build one editable deck:
 
 ```bash
 brew bundle
@@ -32,42 +34,36 @@ source source_me.sh && python3 -m pip install -r pip_requirements.txt
 source source_me.sh && python3 tools/marp_to_odp.py genetics/lect01b-genetic_disorders.md
 ```
 
-The conversion writes the classroom file under `output/odp/` and its native PPTX source under
-`output/pptx/`. Use `./build_slides.sh genetics` to rebuild PDF, PPTX, and ODP files for every
-Marp deck in that folder. See [docs/INSTALL.md](docs/INSTALL.md) for supported tools and the
-local-file security boundary.
+This writes native PPTX and editable ODP artifacts. Build all three artifacts, including the
+ODP-derived PDF, for every deck directly in a folder:
 
-## Import another lecture
+```bash
+./build_slides.sh genetics
+```
 
-Run the importer once on a legacy ODP:
+See [docs/INSTALL.md](docs/INSTALL.md) for setup and [docs/USAGE.md](docs/USAGE.md) for source
+syntax, layouts, imports, and commands.
+
+## One-time migration
+
+Import an instructor-owned legacy ODP once, then edit the resulting Markdown and assets:
 
 ```bash
 source source_me.sh && python3 tools/odp_to_marp.py genetics/lecture.odp
 source source_me.sh && python3 tools/marp_to_odp.py genetics/lecture.md
 ```
 
-After import, edit the Markdown and its assets rather than the generated ODP. The importer refuses
-to overwrite an existing Markdown deck or asset directory. See [docs/USAGE.md](docs/USAGE.md) for
-the direct trusted-PPTX importer, ODP visibility report, defensive limits, auto-fitting layouts,
-and click-to-reveal build slides.
+The importer preserves structured content for human cleanup. It does not make legacy ODP a second
+authoring source.
 
 ## Documentation
 
-- [docs/PIPELINE.md](docs/PIPELINE.md) - component architecture and transformation boundaries.
-- [docs/INSTALL.md](docs/INSTALL.md) - Homebrew and Python setup.
-- [docs/USAGE.md](docs/USAGE.md) - migration, cleanup, builds, and classroom presentation.
+- [docs/PIPELINE.md](docs/PIPELINE.md) - component architecture and boundaries.
+- [docs/INSTALL.md](docs/INSTALL.md) - macOS dependencies and trust boundary.
+- [docs/USAGE.md](docs/USAGE.md) - authoring, layouts, migration, and builds.
 - [docs/HUMAN_GUIDANCE.md](docs/HUMAN_GUIDANCE.md) - durable instructor requirements.
-- [docs/DESIGN_DECISIONS.md](docs/DESIGN_DECISIONS.md) - source ownership and fallback rationale.
-- [docs/RELATED_PROJECTS.md](docs/RELATED_PROJECTS.md) - local prior art and ideas to adapt.
-- [docs/PALETTE_CONTRAST_AUDIT.md](docs/PALETTE_CONTRAST_AUDIT.md) - measured theme contrast.
-
-## Status and limitations
-
-The importer is a migration aid, not a general ODP layout engine. It maps structured objects into a
-small layout vocabulary and flags dense text or unsupported drawing geometry for post-conversion
-polish. The native exporter creates editable text, list, shape, and component-image objects; it
-rejects unsupported constructs rather than replacing a slide with a raster image. Use successive
-build slides for classroom reveals.
+- [docs/DESIGN_DECISIONS.md](docs/DESIGN_DECISIONS.md) - settled architecture decisions.
+- [docs/RELATED_PROJECTS.md](docs/RELATED_PROJECTS.md) - local reference projects and limits.
 
 ## License
 

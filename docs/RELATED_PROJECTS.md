@@ -1,10 +1,10 @@
 # Related projects
 
-This guide records the 14 repositories evaluated on 2026-09-01 while designing this
+This guide records the 16 repositories evaluated on 2026-09-01 while designing this
 repository's instructor-owned Markdown-to-classroom-slide workflow. They are idea
 libraries, not dependencies or an adopted implementation. The product contract is authoritative
-Marp Markdown with native editable PPTX and ODP output. The repository-owned Python exporter owns
-that contract.
+Marp Markdown with native editable PPTX, editable ODP, and an ODP-derived PDF. The repository-owned
+Python exporter owns that contract.
 
 ## At-a-glance inventory
 
@@ -13,6 +13,8 @@ that contract.
 | ai-lesson-planner | Course planner | Course to lessons | Agent prompts | Separate planning |
 | awesome-marp | Ecosystem index | Marp discovery | Markdown catalog | Curated discovery |
 | deck2video | Video companion | Marp to narrated MP4 | Python, Marp, ffmpeg | Notes to narration |
+| marp-core | Language engine | Marp/Marpit language interpretation | TypeScript, Marpit | Conformance evidence |
+| marp-cli | Renderer CLI | Marp output orchestration | TypeScript, Node, browser tools | Boundary evidence |
 | marp-community-themes | Themes | CSS for Marp | CSS, Quarto | Theme previews and provenance |
 | marp-deck-directory | Deck template | Markdown to deck site | Marp, Nix | Reproducible checks |
 | marp-slides | Authoring examples | Prompt to Marp deck | Claude, SVG, HTML | Visual patterns |
@@ -26,6 +28,36 @@ that contract.
 | slide-ai-agent | Deck builder | Sources to Marp/export | Python, TypeScript, Marp | Human review |
 
 ## Likely related projects
+
+### marp-core
+
+- Relationship: Language-specification reference.
+- Link: [Official repository](https://github.com/marp-team/marp-core).
+- Why visitors may care: The local clone records the Marp Core and Marpit interpretation of front
+  matter, directives, CommonMark behavior, classes, linkification, tables, code, and comments.
+- Evidence: `src/marp.ts`, `src/size/size.ts`, themes, and tests document parser defaults and
+  directive behavior used to build local Python conformance fixtures.
+- Activity and license: The checked-out clone is source evidence; consult its top-level license and
+  Git history for its snapshot details.
+- Adaptation idea: Translate selected language semantics into explicit Python parser behavior and
+  tests with source-line diagnostics.
+- Limitation: It is not imported, executed, packaged, or rendered in this project. Its JavaScript
+  engine remains outside the production dependency and runtime graph.
+
+### marp-cli
+
+- Relationship: Language-conformance and renderer-boundary reference.
+- Link: [Official repository](https://github.com/marp-team/marp-cli).
+- Why visitors may care: The local clone shows Marp CLI metadata handling, BOM behavior, comment
+  collection, and the upstream browser/PDF/image/PPTX routes this repository replaces.
+- Evidence: `src/converter.ts` and engine metadata tests identify behavior useful for local parser
+  fixtures and show that ordinary upstream PPTX output routes through rendered slide images.
+- Activity and license: The checked-out clone is source evidence; consult its top-level license and
+  Git history for its snapshot details.
+- Adaptation idea: Use it to compare accepted Marp language behavior and speaker-note treatment.
+- Limitation: Its Node, browser, PDF, HTML, and raster conversion machinery is not a production
+  dependency or runtime here. This repository creates native PPTX objects before LibreOffice writes
+  editable ODP and then PDF from ODP.
 
 ### awesome-marp
 
@@ -59,8 +91,9 @@ that contract.
   layout variants in a CSS-centered Marp workflow.
 - Evidence: Its README describes a Marp theme suite and documents semantic classes and layouts.
 - Activity and license: The local clone's latest commit is 2026-08-12; it is MIT licensed.
-- Adaptation idea: Define a small, biology-teaching-specific vocabulary of stable layout classes.
-- Limitation: Many examples use raw HTML; retain the local Markdown-first two-pane convention.
+- Adaptation idea: Compare names and semantic cues while keeping the local full native layout
+  registry as the authoritative class vocabulary.
+- Limitation: Many examples use raw HTML; retain the local Markdown-first blockquote-cell convention.
 
 ### my-marp-themes
 
@@ -145,8 +178,9 @@ inner workings are confined to four reusable ideas:
 | `createSlideNotes()` writes `notes_text_frame` | Preserve Marp presenter-note comments as editable speaker notes. |
 
 This repository adapts the techniques, not the source or its Markdown dialect.
-`marp_lib/native_export.py` uses small explicit templates matching the LibreOffice layout grid: title
-slide, section header, title-only, title/body, two-content, gallery, and multi-content.
+`marp_lib/layouts.py` owns one explicit native builder for every LibreOffice layout-grid entry plus
+the repository `gallery` layout. `marp_lib/native_export.py` orchestrates parser input, PPTX output,
+notes, pagination, and the downstream conversion chain.
 
 ### odpdown
 
@@ -241,9 +275,10 @@ Two bounded discovery rounds supplemented the clone evidence. The seed round che
 [md2pptx](https://github.com/MartinPacker/md2pptx). The widening round checked
 [deck2video](https://github.com/pjdoland/deck2video),
 [Marp documentation](https://github.com/marp-team/marp), and related format-conversion leads.
-Marp's official documentation confirms CLI output includes HTML, PDF, PPTX, and images. This
-repository retains Marp syntax for authoring but intentionally owns native presentation output in
-Python so the classroom files preserve editable slide objects.
+Marp's documentation confirms a broader HTML, PDF, PPTX, and image ecosystem. This repository
+retains Marp syntax for authoring but intentionally owns native presentation output in Python so
+classroom files preserve editable objects. The local `marp-core` and `marp-cli` clones are
+conformance evidence only; they supply no production runtime code or renderer.
 
 The widening round also found additional untraced projects, including `marp2pptx`, `marp-pptx`,
 and `MarpToPptx`. They are deliberately excluded from the candidate list because they were not

@@ -3,15 +3,16 @@
 
 # Standard Library
 import pathlib
+import re
 import shutil
 import subprocess
 import sys
 import tempfile
 import uuid
 import zipfile
-import xml.etree.ElementTree as element_tree
 
 # PIP3 modules
+import defusedxml.ElementTree
 import PIL.Image
 from pptx import Presentation
 from pptx.enum.shapes import MSO_SHAPE_TYPE
@@ -19,11 +20,24 @@ from pptx.enum.shapes import MSO_SHAPE_TYPE
 
 NAMESPACES = {
 	"draw": "urn:oasis:names:tc:opendocument:xmlns:drawing:1.0",
+	"fo": "urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0",
 	"office": "urn:oasis:names:tc:opendocument:xmlns:office:1.0",
 	"presentation": "urn:oasis:names:tc:opendocument:xmlns:presentation:1.0",
 	"svg": "urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0",
+	"style": "urn:oasis:names:tc:opendocument:xmlns:style:1.0",
 	"text": "urn:oasis:names:tc:opendocument:xmlns:text:1.0",
 	"xlink": "http://www.w3.org/1999/xlink",
+}
+
+# Two percent allows writer rounding while rejecting a full-slide raster frame.
+MAX_COMPONENT_PAGE_FRACTION = 0.98
+ODF_LENGTH_TO_CENTIMETERS = {
+	"cm": 1.0,
+	"mm": 0.1,
+	"in": 2.54,
+	"pt": 2.54 / 72.0,
+	"pc": 2.54 / 6.0,
+	"px": 2.54 / 96.0,
 }
 
 
@@ -49,17 +63,21 @@ def write_component_image(image_path: pathlib.Path) -> None:
 
 #============================================
 def write_deck(deck_path: pathlib.Path) -> None:
-	"""Create a two-slide canonical deck that covers editable components."""
+	"""Create a three-slide canonical deck that covers editable components."""
 	deck_path.write_text(
 		"---\nmarp: true\ntheme: genetics\nsize: 16:10\n---\n"
+		"<!-- _class: title-content -->\n"
 		"# Native semantics\n\n"
 		"- Linked [resource](https://example.edu/native-export)\n"
 		"  - Nested editable detail\n"
 		"1. Ordered editable step\n\n"
-		"![bg right:35% contain](component.png)\n\n"
 		"<!-- notes: Explain the editable component image. -->\n"
 		"---\n"
-		"<!-- _class: lead -->\n"
+		"<!-- _class: title-content -->\n"
+		"# Component image\n\n"
+		"![Native component image: blue calibration swatch](component.png)\n"
+		"---\n"
+		"<!-- _class: centered-text -->\n"
 		"# Second native slide\n",
 		encoding="utf-8",
 	)
@@ -69,14 +87,15 @@ def write_deck(deck_path: pathlib.Path) -> None:
 def inspect_pptx(pptx_path: pathlib.Path) -> None:
 	"""Confirm native PPTX objects preserve every authored component."""
 	presentation = Presentation(pptx_path)
-	require(len(presentation.slides) == 2, "PPTX contains the expected two native slides")
+	require(len(presentation.slides) == 3, "PPTX contains the expected three native slides")
 	first_slide = presentation.slides[0]
 	shape_xml = "".join(shape.element.xml for shape in first_slide.shapes)
 	shape_text = "\n".join(
 		shape.text for shape in first_slide.shapes if shape.has_text_frame
 	)
+	component_slide = presentation.slides[1]
 	pictures = [
-		shape for shape in first_slide.shapes
+		shape for shape in component_slide.shapes
 		if shape.shape_type == MSO_SHAPE_TYPE.PICTURE
 	]
 	require("Native semantics" in shape_text, "PPTX includes editable title text")
@@ -93,18 +112,74 @@ def inspect_pptx(pptx_path: pathlib.Path) -> None:
 
 
 #============================================
-def text_content(element: element_tree.Element) -> str:
+def text_content(element: object) -> str:
 	"""Return all text nodes in one ODF element."""
 	return "".join(element.itertext())
+
+
+#============================================
+def parse_odf_length(length_text: str) -> float:
+	"""Return an ODF length in centimeters for supported physical units.
+
+	Args:
+		length_text: ODF length text using cm, mm, in, pt, pc, or px.
+
+	Returns:
+		Length in centimeters.
+	"""
+	match = re.fullmatch(r"([+-]?(?:\d+(?:\.\d*)?|\.\d+))(cm|mm|in|pt|pc|px)", length_text)
+	require(match is not None,
+		f"ODP length {length_text!r} uses one of cm, mm, in, pt, pc, or px")
+	value = float(match.group(1))
+	require(value >= 0.0, f"ODP length {length_text!r} is non-negative")
+	unit = match.group(2)
+	centimeters = value * ODF_LENGTH_TO_CENTIMETERS[unit]
+	return centimeters
+
+
+#============================================
+def page_dimensions(styles_root: object, page: object) -> tuple[float, float]:
+	"""Return the named ODP master page dimensions in centimeters.
+
+	Args:
+		styles_root: Parsed ODP styles.xml root element.
+		page: Parsed draw:page element from content.xml.
+
+	Returns:
+		Page width and height in centimeters.
+	"""
+	draw_master_page_name = f"{{{NAMESPACES['draw']}}}master-page-name"
+	style_name = f"{{{NAMESPACES['style']}}}name"
+	style_page_layout_name = f"{{{NAMESPACES['style']}}}page-layout-name"
+	fo_page_width = f"{{{NAMESPACES['fo']}}}page-width"
+	fo_page_height = f"{{{NAMESPACES['fo']}}}page-height"
+	master_page_name = page.attrib[draw_master_page_name]
+	master_pages = styles_root.findall(".//style:master-page", NAMESPACES)
+	master_page = next(
+		candidate for candidate in master_pages
+		if candidate.attrib[style_name] == master_page_name
+	)
+	page_layout_name = master_page.attrib[style_page_layout_name]
+	page_layouts = styles_root.findall(".//style:page-layout", NAMESPACES)
+	page_layout = next(
+		candidate for candidate in page_layouts
+		if candidate.attrib[style_name] == page_layout_name
+	)
+	properties = page_layout.find("style:page-layout-properties", NAMESPACES)
+	require(properties is not None, "ODP page layout defines page dimensions")
+	page_width = parse_odf_length(properties.attrib[fo_page_width])
+	page_height = parse_odf_length(properties.attrib[fo_page_height])
+	return page_width, page_height
 
 
 #============================================
 def inspect_odp(odp_path: pathlib.Path) -> None:
 	"""Confirm ODP retains editable text, lists, links, notes, and image frames."""
 	with zipfile.ZipFile(odp_path) as archive:
-		content_root = element_tree.fromstring(archive.read("content.xml"))
+		content_root = defusedxml.ElementTree.fromstring(archive.read("content.xml"))
+		styles_root = defusedxml.ElementTree.fromstring(archive.read("styles.xml"))
 	pages = content_root.findall("./office:body/office:presentation/draw:page", NAMESPACES)
-	require(len(pages) == 2, "ODP contains the expected two editable slides")
+	require(len(pages) == 3, "ODP contains the expected three editable slides")
 	first_page = pages[0]
 	page_text = text_content(first_page)
 	require("Native semantics" in page_text, "ODP includes editable title text")
@@ -120,16 +195,24 @@ def inspect_odp(odp_path: pathlib.Path) -> None:
 	notes_text = text_content(first_page.find("presentation:notes", NAMESPACES))
 	require("Explain the editable component image." in notes_text,
 		"ODP includes presenter-note text")
-	frames = first_page.findall(".//draw:frame", NAMESPACES)
+	component_page = pages[1]
+	page_width, page_height = page_dimensions(styles_root, component_page)
+	frames = component_page.findall(".//draw:frame", NAMESPACES)
 	image_frames = [
 		frame for frame in frames if frame.find(".//draw:image", NAMESPACES) is not None
 	]
 	require(len(image_frames) == 1, "ODP keeps the component image in one frame")
 	for frame in image_frames:
-		width = frame.get(f"{{{NAMESPACES['svg']}}}width", "")
-		height = frame.get(f"{{{NAMESPACES['svg']}}}height", "")
-		require(width != "33.866cm" or height != "21.166cm",
-			"ODP component image frame is smaller than the complete slide canvas")
+		width = parse_odf_length(frame.attrib[f"{{{NAMESPACES['svg']}}}width"])
+		height = parse_odf_length(frame.attrib[f"{{{NAMESPACES['svg']}}}height"])
+		is_full_slide = (width >= page_width * MAX_COMPONENT_PAGE_FRACTION and
+			height >= page_height * MAX_COMPONENT_PAGE_FRACTION)
+		require(not is_full_slide,
+			"ODP component image frame occupies essentially the complete slide canvas")
+		descriptions = frame.findall(".//svg:desc", NAMESPACES)
+		require(any(text_content(description) ==
+			"Native component image: blue calibration swatch" for description in descriptions),
+			"ODP preserves the authored component-image description")
 
 
 #============================================

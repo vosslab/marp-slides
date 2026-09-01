@@ -80,11 +80,6 @@ section a {
 	text-underline-offset: 0.12em;
 }
 
-section.url-list a[href^="http://"],
-section.url-list a[href^="https://"] {
-	font-family: var(--slide-url-font-family);
-}
-
 section code,
 section kbd,
 section pre,
@@ -107,7 +102,53 @@ section::after {
 	right: 28px;
 }
 
-section.lead {
+/* The layout vocabulary mirrors marp_lib.layouts. Blockquotes are ordered cells. */
+section.blank {
+	padding: 0;
+}
+
+section.title-only,
+section.title-two-content,
+section.title-content-and-two-content,
+section.title-two-content-and-content,
+section.title-content-over-content,
+section.title-two-content-over-content,
+section.title-four-content,
+section.title-six-content,
+section.title-vertical-text,
+section.title-two-vertical-text-clipart,
+section.gallery {
+	align-content: stretch;
+	display: grid;
+	gap: 18px 42px;
+	grid-template-rows: auto minmax(0, 1fr);
+}
+
+/* Root-body layouts use a continuous authoring flow after their title. */
+section.title-content {
+	align-content: stretch;
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+}
+
+section.title-only > h1,
+section.title-content > h1,
+section.title-two-content > h1,
+section.title-content-and-two-content > h1,
+section.title-two-content-and-content > h1,
+section.title-content-over-content > h1,
+section.title-two-content-over-content > h1,
+section.title-four-content > h1,
+section.title-six-content > h1,
+section.title-vertical-text > h1,
+section.title-two-vertical-text-clipart > h1,
+section.gallery > h1 {
+	margin-bottom: 0;
+}
+
+section.title-slide,
+section.centered-text {
 	align-content: center;
 	display: flex;
 	flex-direction: column;
@@ -115,157 +156,338 @@ section.lead {
 	text-align: center;
 }
 
-section.lead h1 {
+section.title-slide h1 {
 	font-size: 60px;
 	margin-bottom: 28px;
 }
 
-section.lead h2 {
+section.title-slide h2 {
 	max-width: 1000px;
 }
 
-section.figure {
+section.centered-text h1 {
+	font-size: 60px;
+	margin-bottom: 0;
+}
+
+section.title-content > :not(h1) {
+	flex: 0 0 auto;
+	min-height: 0;
+	min-width: 0;
+}
+
+section.title-content > h1 + p:last-child:has(> img) {
+	align-items: center;
+	display: flex;
+	flex: 1 1 auto;
+	justify-content: center;
+	margin-bottom: 0;
+}
+
+section.title-content > h1 + p:last-child:has(> img) img {
+	height: 100%;
+	width: 100%;
+}
+
+section.title-two-content {
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+section.title-two-content > h1,
+section.title-content-and-two-content > h1,
+section.title-two-content-and-content > h1,
+section.title-content-over-content > h1,
+section.title-two-content-over-content > h1,
+section.title-four-content > h1,
+section.title-six-content > h1,
+section.title-vertical-text > h1,
+section.title-two-vertical-text-clipart > h1 {
+	grid-column: 1 / -1;
+}
+
+section.title-content-and-two-content {
+	grid-template-areas:
+		"title title"
+		"content first"
+		"content second";
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr);
+}
+
+section.title-content-and-two-content > h1 {
+	grid-area: title;
+}
+
+section.title-content-and-two-content > blockquote:nth-of-type(1) {
+	grid-area: content;
+}
+
+section.title-content-and-two-content > blockquote:nth-of-type(2) {
+	grid-area: first;
+}
+
+section.title-content-and-two-content > blockquote:nth-of-type(3) {
+	grid-area: second;
+}
+
+section.title-two-content-and-content {
+	grid-template-areas:
+		"title title"
+		"first content"
+		"second content";
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr);
+}
+
+section.title-two-content-and-content > h1 {
+	grid-area: title;
+}
+
+section.title-two-content-and-content > blockquote:nth-of-type(1) {
+	grid-area: first;
+}
+
+section.title-two-content-and-content > blockquote:nth-of-type(2) {
+	grid-area: second;
+}
+
+section.title-two-content-and-content > blockquote:nth-of-type(3) {
+	grid-area: content;
+}
+
+section.title-content-over-content {
+	grid-template-columns: minmax(0, 1fr);
+}
+
+section.title-two-content-over-content {
+	grid-template-areas:
+		"title title"
+		"first second"
+		"content content";
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr);
+}
+
+section.title-two-content-over-content > h1 {
+	grid-area: title;
+}
+
+section.title-two-content-over-content > blockquote:nth-of-type(1) {
+	grid-area: first;
+}
+
+section.title-two-content-over-content > blockquote:nth-of-type(2) {
+	grid-area: second;
+}
+
+section.title-two-content-over-content > blockquote:nth-of-type(3) {
+	grid-area: content;
+}
+
+section.title-four-content {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	grid-template-rows: auto repeat(2, minmax(0, 1fr));
+}
+
+section.title-six-content {
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	grid-template-rows: auto repeat(2, minmax(0, 1fr));
+}
+
+/* Root body blocks share the row below the title instead of making grid rows. */
+section.title-vertical-text {
 	align-content: stretch;
-	display: grid;
-	grid-template-rows: auto minmax(0, 1fr);
+	display: flex;
+	flex-wrap: wrap;
+	gap: 18px 42px;
 }
 
-section.figure > h1 {
-	background: var(--slide-background, rgb(255 255 255));
-	grid-column: 1;
-	grid-row: 1;
-	margin-bottom: 8px;
-	position: relative;
-	z-index: 1;
+section.title-vertical-text > h1 {
+	flex: 0 0 100%;
 }
 
-section.figure > p {
+section.title-vertical-text > :not(h1) {
+	flex: 1 1 0;
+	min-height: 0;
+	min-width: 0;
+	overflow: auto;
+}
+
+section.title-vertical-text > :not(h1),
+section.vertical-title-vertical-text > :not(h1),
+section.title-two-vertical-text-clipart > blockquote:nth-of-type(3) {
 	align-items: center;
 	display: flex;
 	justify-content: center;
-	grid-column: 1;
-	grid-row: 2;
-	margin: 0;
-	min-height: 0;
-	overflow: hidden;
+	writing-mode: vertical-rl;
 }
 
-section.figure > p img {
-	height: 100%;
-	max-height: 100%;
+section.title-two-vertical-text-clipart {
+	grid-template-areas:
+		"title title"
+		"first vertical"
+		"second vertical";
+	grid-template-columns: minmax(0, 1.94fr) minmax(0, 1fr);
+	grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr);
+}
+
+section.title-two-vertical-text-clipart > h1 {
+	grid-area: title;
+}
+
+section.title-two-vertical-text-clipart > blockquote:nth-of-type(1) {
+	grid-area: first;
+}
+
+section.title-two-vertical-text-clipart > blockquote:nth-of-type(2) {
+	grid-area: second;
+}
+
+section.title-two-vertical-text-clipart > blockquote:nth-of-type(3) {
+	grid-area: vertical;
+}
+
+section.vertical-title-vertical-text,
+section.vertical-title-text-chart {
+	align-content: stretch;
+	display: grid;
+	gap: 18px 28px;
+	grid-template-columns: minmax(120px, 0.25fr) minmax(0, 1fr);
+}
+
+section.vertical-title-vertical-text > h1,
+section.vertical-title-text-chart > h1 {
+	align-items: center;
+	display: flex;
+	justify-content: center;
+	margin: 0;
+	writing-mode: vertical-rl;
+}
+
+/* Every root body block stays in the semantic body column beside the title. */
+section.vertical-title-vertical-text > :not(h1) {
+	grid-column: 2;
+	min-width: 0;
+}
+
+section.vertical-title-vertical-text > blockquote,
+section.vertical-title-text-chart > blockquote {
 	min-height: 0;
+}
+
+section.vertical-title-text-chart {
+	grid-template-columns: minmax(120px, 0.25fr) minmax(0, 1fr) minmax(0, 1fr);
+}
+
+section.gallery > p {
+	align-items: center;
+	display: grid;
+	gap: 18px;
+	grid-auto-columns: minmax(0, 1fr);
+	grid-auto-flow: column;
+	grid-template-rows: minmax(0, 1fr);
+	margin: 0;
+	min-height: 0;
+}
+
+/* A gallery without a title gives its one image row the full component region. */
+section.gallery:not(:has(> h1)) {
+	grid-template-rows: minmax(0, 1fr);
+}
+
+section.gallery:not(:has(> h1)) > p {
+	grid-row: 1;
+}
+
+section.gallery > p img {
+	height: 100%;
+	min-height: 0;
+	min-width: 0;
 	object-fit: contain;
 	width: 100%;
 }
 
-section.two-pane {
-	align-content: stretch;
-	display: grid;
-	gap: 18px 42px;
-	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-	grid-template-rows: auto minmax(0, 1fr);
-}
-
-section.two-pane > h1 {
-	grid-column: 1 / -1;
-	margin-bottom: 8px;
-}
-
-section.two-pane > blockquote {
+section.title-two-content > blockquote,
+section.title-content-and-two-content > blockquote,
+section.title-two-content-and-content > blockquote,
+section.title-content-over-content > blockquote,
+section.title-two-content-over-content > blockquote,
+section.title-four-content > blockquote,
+section.title-six-content > blockquote,
+section.title-vertical-text > blockquote,
+section.title-two-vertical-text-clipart > blockquote,
+section.vertical-title-vertical-text > blockquote,
+section.vertical-title-text-chart > blockquote {
 	border: 0;
-	display: flex;
-	flex-direction: column;
+	box-sizing: border-box;
 	margin: 0;
 	min-height: 0;
 	min-width: 0;
-	overflow: hidden;
+	overflow: auto;
 	padding: 0;
 }
 
-section.two-pane > blockquote h2 {
+section.title-two-content > blockquote h2,
+section.title-content-and-two-content > blockquote h2,
+section.title-two-content-and-content > blockquote h2,
+section.title-content-over-content > blockquote h2,
+section.title-two-content-over-content > blockquote h2,
+section.title-four-content > blockquote h2,
+section.title-six-content > blockquote h2,
+section.title-vertical-text > blockquote h2,
+section.title-two-vertical-text-clipart > blockquote h2,
+section.vertical-title-vertical-text > blockquote h2,
+section.vertical-title-text-chart > blockquote h2 {
 	color: var(--slide-foreground, #172033);
 	font-size: 34px;
 	font-weight: 700;
 	margin-top: 0;
 }
 
-section.two-pane > blockquote > p:has(> img) {
-	align-items: center;
-	display: flex;
-	flex: 1;
-	gap: 12px;
-	margin: 0;
-	min-height: 0;
-}
-
-section.two-pane > blockquote img {
-	flex: 1 1 0;
-	height: 100%;
-	max-height: 100%;
-	min-height: 0;
-	min-width: 0;
-	object-fit: contain;
-	width: 100%;
-}
-
-section.two-pane > blockquote > :last-child {
+section.title-two-content > blockquote > :last-child,
+section.title-content-and-two-content > blockquote > :last-child,
+section.title-two-content-and-content > blockquote > :last-child,
+section.title-content-over-content > blockquote > :last-child,
+section.title-two-content-over-content > blockquote > :last-child,
+section.title-four-content > blockquote > :last-child,
+section.title-six-content > blockquote > :last-child,
+section.title-vertical-text > blockquote > :last-child,
+section.title-two-vertical-text-clipart > blockquote > :last-child,
+section.vertical-title-vertical-text > blockquote > :last-child,
+section.vertical-title-text-chart > blockquote > :last-child {
 	margin-bottom: 0;
 }
 
-section.gallery {
-	align-content: stretch;
-	display: grid;
-	grid-template-rows: auto minmax(0, 1fr);
-}
-
-section.gallery > h1 {
-	margin-bottom: 8px;
-}
-
-section.gallery > p {
-	align-items: center;
-	box-sizing: border-box;
-	display: grid;
-	gap: 18px;
-	grid-auto-columns: minmax(0, 1fr);
-	grid-auto-flow: column;
-	grid-template-rows: minmax(0, 1fr);
+section.title-two-content > blockquote img,
+section.title-content-and-two-content > blockquote img,
+section.title-two-content-and-content > blockquote img,
+section.title-content-over-content > blockquote img,
+section.title-two-content-over-content > blockquote img,
+section.title-four-content > blockquote img,
+section.title-six-content > blockquote img,
+section.title-vertical-text > blockquote img,
+section.title-two-vertical-text-clipart > blockquote img,
+section.vertical-title-vertical-text > blockquote img,
+section.vertical-title-text-chart > blockquote img {
 	height: 100%;
-	margin: 0;
-	min-height: 0;
-	padding-bottom: 24px;
-}
-
-section.gallery > p img {
-	height: 100%;
-	max-height: 100%;
-	min-height: 0;
-	min-width: 0;
-	object-fit: contain;
 	width: 100%;
 }
 
-section.dense {
-	font-size: 20px;
-}
-
-section.dense h1 {
-	font-size: 42px;
-}
-
-section.dense.two-pane > blockquote h2 {
-	font-size: 28px;
-}
-
-section.list-columns {
-	font-size: 20px;
-}
-
-section.list-columns > ul {
-	column-count: 2;
-	column-gap: 42px;
-}
-
-section.list-columns > ul > li {
-	break-inside: avoid;
+/* Image-only cells reserve the complete cell for a contained component image. */
+section.title-two-content > blockquote > p:only-child:has(> img:only-child),
+section.title-content-and-two-content > blockquote > p:only-child:has(> img:only-child),
+section.title-two-content-and-content > blockquote > p:only-child:has(> img:only-child),
+section.title-content-over-content > blockquote > p:only-child:has(> img:only-child),
+section.title-two-content-over-content > blockquote > p:only-child:has(> img:only-child),
+section.title-four-content > blockquote > p:only-child:has(> img:only-child),
+section.title-six-content > blockquote > p:only-child:has(> img:only-child),
+section.title-vertical-text > blockquote > p:only-child:has(> img:only-child),
+section.title-two-vertical-text-clipart > blockquote > p:only-child:has(> img:only-child),
+section.vertical-title-vertical-text > blockquote > p:only-child:has(> img:only-child),
+section.vertical-title-text-chart > blockquote > p:only-child:has(> img:only-child) {
+	align-items: center;
+	display: flex;
+	height: 100%;
+	justify-content: center;
+	margin: 0;
 }
