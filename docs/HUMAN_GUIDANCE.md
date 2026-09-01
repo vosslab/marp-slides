@@ -16,3 +16,36 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 
 - Have single-repository propagation add a `devel/changelog_lib.py`-compatible changelog entry only
   when it makes real changes; recurring `.gitignore` churn must not create one.
+
+## Slide migration and presentation
+
+- This is a Python and Marp repository; that choice is settled.
+- legacy ODP &rarr; one-time import &rarr; Marp Markdown becomes authoritative &rarr; generated
+  ODP for class
+- Marp Markdown &rarr; Marp-rendered PPTX &rarr; LibreOffice conversion &rarr; classroom ODP
+- The destination and requirements are understood, but the best implementation for generated
+  classroom output is not locked down yet.
+- Use the cloned slide repositories as idea sources and build our own repository-owned tool; do
+  not adopt their code or workflows directly.
+- A normal instructor workflow must not require VS Code.
+- Retire the legacy ODP authoring format in favor of Marp Markdown as the future source of truth.
+- Treat ODP import as a one-time migration; after Markdown becomes canonical, do not round-trip
+  edits from generated ODP files back into Markdown.
+- Generate ODP files for presenting course content in class with LibreOffice Impress.
+- Provide obvious `marp_to_odp.py` and `marp_to_pptx.py` scripts; keep `build_slides.sh` as the
+  convenient all-output command.
+- Prefer simple teaching layouts instead of preserving every detail of the old ODP formatting.
+- Treat layout simplification as post-conversion polish; keep the one-time ODP importer mechanical.
+- Prefer Marp's built-in layouts and central theme defaults over per-slide sizing and custom layout
+  classes that can clip text or images.
+- Use OpenDyslexic for all authored slide text; use PT Sans Narrow for long URL text.
+- Prioritize the announcements/course-introduction deck for Marp migration because it needs small
+  edits each week.
+- Use lots of images and try to include a visual image on every slide.
+- Avoid lots of HTML or XML tags in Markdown; keep styling in one central CSS file.
+- Require Marp 4.5.0 or newer; older releases carry too many known vulnerabilities.
+- Keep this repository Python-only. Quarto has too much overhead, and npm or TypeScript is not
+  needed for the slide pipeline.
+- Do not run a Marp server as part of the normal workflow.
+- Treat the Marp-rendered PPTX followed by LibreOffice conversion as the current tested baseline,
+  rather than a permanently selected implementation detail.

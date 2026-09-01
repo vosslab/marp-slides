@@ -14,6 +14,12 @@ _temp*.?*
 # === LOCAL REPOSITORY RULES === [ADD CUSTOM IGNORES HERE]
 # Propagation preserves this section.
 # Template-only ignores.
+slide_*source.png
+*.ot?
+*.od?
+*.pdf
+*.pptx
+
 # === PYTHON === [PROPAGATED - LOCAL EDITS OVERWRITTEN]
 build/
 dist/
