@@ -159,13 +159,18 @@ the output bakeoff evidence.
 ### Destination-named converters expose the pipeline
 
 **Decision.** Provide `tools/marp_to_pptx.py` for PPTX-only export and `tools/marp_to_odp.py` for
-the rendered-PPTX-to-ODP classroom path. Keep `build_slides.sh` as the PDF, PPTX, and ODP bundle.
+the rendered-PPTX-to-ODP classroom path. Each Python command accepts one Markdown deck. Keep
+`build_slides.sh` as a directory-level batch command that builds PDF, PPTX, and ODP for every
+Marp deck directly in the selected folder.
 
 **Why.** A command named for its destination is easier to discover than a generic build command and
-makes the generated side effects explicit.
+makes the generated side effects explicit. The plural shell command provides one obvious way to
+rebuild a collection without weakening the single-deck Python interface.
 
 **Consequence.** Every public export command reuses `tools/marp_export.py`; format-specific commands
 do not duplicate renderer discovery, version enforcement, path validation, or conversion logic.
+The batch command scans one directory non-recursively and ignores Markdown without `marp: true` in
+its YAML front matter.
 
 **Owner.** `tools/marp_export.py`, `tools/marp_to_pptx.py`, `tools/marp_to_odp.py`, and
 `build_slides.sh`.
@@ -182,6 +187,8 @@ would make the authoritative Markdown harder to read and maintain.
 **Consequence.** Add a small named layout to the central theme when a repeated teaching pattern is
 needed. Do not solve recurring layout needs with copied raw HTML, per-slide style blocks, or fixed
 pixel dimensions on individual images. Images use `contain` within their layout's available space.
+A percentage on a Marp `bg right` or `bg left` directive allocates a layout pane; it does not set
+the raster image's width or height.
 
 **Owner.** `themes/genetics.css` and `docs/USAGE.md`.
 
@@ -198,8 +205,10 @@ pane beside a `bg right` image; adding custom right padding constrains that pane
 unnecessary wrapping or clipping.
 
 **Consequence.** `lect01a-course_intro.md` uses ordinary headings, lists, Marp background images,
-and shared figure, two-pane, and three-image gallery layouts. Typography, spacing, and image fitting
+and shared figure, two-pane, and auto-sizing gallery layouts. Typography, spacing, and image fitting
 remain central theme decisions, and no full-slide source render is acceptable in the deck.
+OpenDyslexic remains the default for link labels; only slides that visibly print long URLs opt into
+the theme's PT Sans Narrow `url-list` treatment.
 
 **Owner.** `genetics/lect01a-course_intro.md`, `themes/genetics.css`, and `docs/USAGE.md`.
 

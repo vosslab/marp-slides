@@ -22,6 +22,7 @@ title: "Lecture 01A"
 
 ---
 
+<!-- _class: url-list -->
 # Professor Neil R. Voss
 
 - **Dr. Neil Voss**, Associate Professor
@@ -38,17 +39,18 @@ title: "Lecture 01A"
 # Ways to Contact Dr. Voss
 
 1. **Attend office hours**
-2. **Discord** — fastest
+2. **Discord** - fastest
    - Send me a direct message or post to the class
-   - Typical response time: 1–2 calendar days
+   - Typical response time: 1-2 calendar days
 3. **Email**
    - I check email once per day
    - Typical response time: 2 business days
 4. **Anonymous Google Form**
-   - Typical response time: 2–4 business days
+   - Typical response time: 2-4 business days
 
 ---
 
+<!-- _class: url-list -->
 # Dr. Voss YouTube Channel
 
 - https://www.youtube.com/c/NeilVossLab/videos
@@ -78,6 +80,7 @@ title: "Lecture 01A"
 
 ---
 
+<!-- _class: url-list -->
 # Anonymous Message Form
 
 - Send an anonymous message to the instructor.
@@ -90,6 +93,7 @@ title: "Lecture 01A"
 
 ---
 
+<!-- _class: url-list -->
 # Office Hours
 
 - Via Zoom Video Conference:
@@ -119,6 +123,7 @@ title: "Lecture 01A"
 
 ---
 
+<!-- _class: url-list -->
 # New, Free OER Textbook for 2025
 
 - Advanced Genetics: Mechanisms of Inheritance and Analysis
@@ -128,6 +133,7 @@ title: "Lecture 01A"
 
 ---
 
+<!-- _class: url-list -->
 # Idiom: "build the plane while flying it"
 
 - This idiom can also be applied in education when teachers try out new teaching methods or curriculums during actual classes with students. They may experiment with different approaches until they find what works best for their students.
@@ -136,6 +142,7 @@ title: "Lecture 01A"
 
 ---
 
+<!-- _class: url-list -->
 # Other Resources and Materials
 
 - Khan Academy:
@@ -162,7 +169,7 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: figure -->
+<!-- _class: figure url-list -->
 
 # Website: http://blackboard.roosevelt.edu
 
@@ -307,6 +314,7 @@ title: "Lecture 01A"
 
 ---
 
+<!-- _class: url-list -->
 # Graduating Students
 
 - Last day to apply for graduation is:

@@ -32,12 +32,13 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 - Treat ODP import as a one-time migration; after Markdown becomes canonical, do not round-trip
   edits from generated ODP files back into Markdown.
 - Generate ODP files for presenting course content in class with LibreOffice Impress.
-- Provide obvious `marp_to_odp.py` and `marp_to_pptx.py` scripts; keep `build_slides.sh` as the
-  convenient all-output command.
+- Have `build_slides.sh` build every Marp deck in a selected folder; keep `marp_to_odp.py` and
+  `marp_to_pptx.py` as obvious single-deck commands.
 - Prefer simple teaching layouts instead of preserving every detail of the old ODP formatting.
 - Treat layout simplification as post-conversion polish; keep the one-time ODP importer mechanical.
-- Prefer Marp's built-in layouts and central theme defaults over per-slide sizing and custom layout
-  classes that can clip text or images.
+- Use more simple default slide layout templates: title and body, title and two columns, title
+  slide, section header, and title only.
+- Every 16:10 slide must keep authored text and images inside its 1280x800 frame.
 - Let images auto-fit their layout with `contain`; avoid hard-coded per-image pixel dimensions.
 - My ODP slides are hand-authored structured documents, not scans; normal conversion must use their
   text and image objects rather than OCR.
@@ -48,7 +49,7 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 - Preserve the source slide count unless I explicitly approve changing the teaching sequence.
 - Use Marp's small layout vocabulary to enforce consistency even when legacy slides do not follow
   their ODP templates consistently.
-- Use OpenDyslexic for all authored slide text; use PT Sans Narrow for long URL text.
+- Use OpenDyslexic exclusively for all text, except long URLs, which use PT Sans Narrow.
 - Prioritize the announcements/course-introduction deck for Marp migration because it needs small
   edits each week.
 - Use lots of images and try to include a visual image on every slide.

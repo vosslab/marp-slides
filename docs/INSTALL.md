@@ -1,7 +1,7 @@
 # Installation
 
-This repository uses Python for one-time ODP imports and Homebrew Marp for rendering. It does not
-use npm, TypeScript, or a local `node_modules` directory.
+This repository uses Python for one-time ODP and PPTX imports and Homebrew Marp for rendering. It
+does not use npm, TypeScript, or a local `node_modules` directory.
 
 ## Requirements
 
@@ -38,6 +38,8 @@ source source_me.sh && python3 -m pip install -r pip_requirements.txt
 ```bash
 marp --version
 source source_me.sh && python3 tools/odp_to_marp.py --help
+source source_me.sh && python3 tools/pptx_to_marp.py --help
+source source_me.sh && python3 tools/odp_visibility.py --help
 ./build_slides.sh --help
 source source_me.sh && python3 tools/marp_to_pptx.py --help
 source source_me.sh && python3 tools/marp_to_odp.py --help
@@ -52,9 +54,10 @@ transitive packages. Marp is therefore treated as a local build tool for trusted
 Markdown. The build wrapper rejects files outside the repository and enables local-file access only
 so those trusted decks can load their own images.
 
-Only import legacy ODP files that are instructor-owned and trusted. The importer validates the
-archive before invoking LibreOffice to create a temporary PPTX for structured geometry extraction.
-Those checks do not sandbox LibreOffice, so they do not make an untrusted ODP safe to open.
+Only import legacy ODP or PPTX files that are instructor-owned and trusted. The importers validate
+archive structure and processing limits. ODP import then invokes LibreOffice to create a temporary
+PPTX for structured geometry extraction. Those checks do not sandbox LibreOffice or make an
+untrusted presentation safe to open.
 
 Do not run `npm audit fix --force` in this repository. There is no npm dependency tree here, and the
 forced audit solver previously alternated between incompatible Marp versions without resolving the

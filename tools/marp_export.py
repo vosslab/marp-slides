@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Render trusted repository Marp Markdown into presentation files."""
 
 # Standard Library
@@ -16,6 +17,10 @@ BROWSER_CANDIDATES = (
 	pathlib.Path("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"),
 	pathlib.Path("/Applications/Chromium.app/Contents/MacOS/Chromium"),
 	pathlib.Path("/Applications/Vivaldi.app/Contents/MacOS/Vivaldi"),
+)
+SOURCE_FALLBACK_PATTERNS = (
+	re.compile(r"\bslide_\d+_source\.(?:png|jpe?g|webp)\b", re.IGNORECASE),
+	re.compile(r"_class\s*:\s*source-fallback\b", re.IGNORECASE),
 )
 
 
@@ -54,6 +59,12 @@ def validate_input(input_value: str, repo_root: pathlib.Path) -> pathlib.Path:
 		raise ValueError("input must be inside this repository")
 	if input_path.suffix != ".md":
 		raise ValueError("input must use the .md extension")
+	markdown = input_path.read_text(encoding="utf-8")
+	# ASVS 5.2.2: reject the retired full-slide fallback representation at the boundary.
+	if any(pattern.search(markdown) for pattern in SOURCE_FALLBACK_PATTERNS):
+		raise ValueError(
+			"full-slide source images are failed conversions and cannot be exported",
+		)
 	return input_path
 
 

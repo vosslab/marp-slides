@@ -1,13 +1,20 @@
+#!/usr/bin/env python3
 """Resolve ODP drawing-page visibility across page and style cascades."""
 
 # Standard Library
+import sys
 import zipfile
 import pathlib
+import argparse
 import dataclasses
 import xml.etree.ElementTree
 
 # PIP3 modules
 import defusedxml.ElementTree
+
+# local repo modules
+if __name__ == "__main__":
+	sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 
 
 NS = {
@@ -120,3 +127,34 @@ def page_is_hidden(
 	resolved_visibility = resolve_style_visibility(style_name, definitions, set())
 	hidden = resolved_visibility == "hidden"
 	return hidden
+
+
+#============================================
+def parse_args() -> argparse.Namespace:
+	"""Parse the ODP visibility-report arguments."""
+	parser = argparse.ArgumentParser(description=__doc__)
+	parser.add_argument("input_file", type=pathlib.Path, help="trusted legacy ODP")
+	args = parser.parse_args()
+	return args
+
+
+#============================================
+def main() -> None:
+	"""Print each source slide's resolved visible or hidden state."""
+	# Import at the CLI boundary to avoid a module-level cycle with odp_to_marp.
+	from tools import odp_to_marp
+
+	args = parse_args()
+	# ASVS 2.2.1 and 5.3.2: reuse the bounded importer validation for the file path.
+	slides = odp_to_marp.read_slides(args.input_file)
+	for slide in slides:
+		visibility = "hidden" if slide.hidden else "visible"
+		print(f"{slide.source_index}\t{visibility}\t{slide.name}")
+	visible_count = sum(not slide.hidden for slide in slides)
+	hidden_count = len(slides) - visible_count
+	print(f"Visible: {visible_count}")
+	print(f"Hidden: {hidden_count}")
+
+
+if __name__ == "__main__":
+	main()

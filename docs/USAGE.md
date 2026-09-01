@@ -8,6 +8,7 @@ legacy ODP -> temporary PPTX -> Python object extraction -> Marp Markdown -> cla
 
 Marp Markdown and its assets become the editable source of truth. The generated ODP is the file to
 open in LibreOffice Impress for class, not a source to edit and import again.
+See [PIPELINE.md](PIPELINE.md) for the complete stage and tool-ownership map.
 
 ## Import one legacy ODP
 
@@ -39,6 +40,31 @@ work, but the importer invokes LibreOffice to create a temporary geometry-normal
 validation does not sandbox LibreOffice. Keep the same trust boundary when building: Marp Markdown
 and assets must be local, repository-owned teaching material.
 
+## Import one trusted PPTX
+
+The normal legacy path begins with ODP. If a trusted source presentation already exists as PPTX,
+run the structured importer directly:
+
+```bash
+source source_me.sh && python3 tools/pptx_to_marp.py genetics/lecture.pptx
+```
+
+Use `--output` to select a new Markdown destination. The command refuses to replace an existing
+Markdown file or asset directory and writes its review record to
+`assets/<deck>/import_report.json` beside the extracted images.
+
+## Inspect ODP visibility
+
+Use the read-only visibility command to resolve page settings and inherited drawing-page styles
+before import:
+
+```bash
+source source_me.sh && python3 tools/odp_visibility.py genetics/lecture.odp
+```
+
+It prints every source slide number, visible or hidden state, and name, followed by totals. It uses
+the same bounded ODP validation as the importer.
+
 ## What the importer preserves
 
 The importer converts the ODP to a temporary PPTX, then uses `python-pptx` to map every visible
@@ -63,7 +89,7 @@ Edit the `.md` file and its local assets. Favor the layouts already supported by
 - a title with a short bullet list;
 - a title and one figure;
 - a simple two-column text-and-figure slide; or
-- a full-slide image when the original figure itself is the teaching content.
+- an auto-fitting image gallery when related figures share one teaching beat.
 
 Preserve the source slide count and order while simplifying each slide. Do not edit the generated
 ODP as a way to change course content.
@@ -79,6 +105,10 @@ or heights to make one render fit; fix the shared layout when its images do not 
 The central genetics theme uses OpenDyslexic for all authored slide text and PT Sans Narrow for URL
 text. Text that is naturally part of a screenshot or figure remains image content, but the slide's
 headings, explanations, and lists must be Markdown so they inherit the theme.
+
+When a long URL must be displayed literally, add `url-list` to that slide's class directive. Keep
+ordinary link labels in OpenDyslexic; the theme switches only explicit long-URL slides to PT Sans
+Narrow.
 
 ### Header with one auto-fitting figure
 
@@ -120,9 +150,9 @@ The first heading spans the slide. The first and second quoted blocks become the
 panes. Put the image in either pane to reverse the visual emphasis. Repeated geometry belongs in
 `themes/genetics.css`, not copied style blocks.
 
-### Header with a three-image gallery
+### Header with an image gallery
 
-Use the shared `gallery` layout when one source slide contains three related visuals:
+Use the shared `gallery` layout when one source slide contains related visuals:
 
 ```markdown
 <!-- _class: gallery -->
@@ -132,8 +162,8 @@ Use the shared `gallery` layout when one source slide contains three related vis
 ![Column](column.png) ![Console](console.png) ![Researchers](researchers.png)
 ```
 
-The gallery preserves one teaching beat and one slide while keeping placement and automatic image
-fitting in the central theme.
+The gallery preserves one teaching beat and one slide. Its images divide the available row
+automatically, so two, three, or more images need no source-level dimensions.
 
 ## Convert Marp to ODP
 
@@ -156,17 +186,22 @@ source source_me.sh && python3 tools/marp_to_pptx.py genetics/lecture.md
 
 ## Build all classroom files
 
-Run the bundle command when you want PDF, PPTX, and ODP together:
+Run the bundle command when you want PDF, PPTX, and ODP for every Marp deck directly inside a
+folder:
 
 ```bash
-./build_slides.sh genetics/lecture.md
+./build_slides.sh genetics
 ```
 
-The bundle generates:
+For each deck, the bundle generates:
 
 - `output/pdf/lecture.pdf` for review and distribution;
 - `output/pptx/lecture.pptx` as the Marp interchange output; and
 - `output/odp/lecture.odp` for presenting in LibreOffice Impress.
+
+The folder scan is non-recursive and skips Markdown files that do not declare `marp: true` in
+their YAML front matter. Use `tools/marp_to_pptx.py` or `tools/marp_to_odp.py` when converting one
+deck to a specific destination.
 
 Both ODP commands use Marp's rendered PPTX pages, then LibreOffice conversion. This current baseline
 is visually faithful but flattened, so its ODP is not intended for content editing. Make corrections
@@ -208,12 +243,17 @@ reliable in ODP, PPTX, and PDF.
 
 ## Import limits
 
-The importer accepts one ZIP-based `.odp` at a time and enforces these defensive limits:
+Both importers accept one ZIP-based presentation at a time and enforce these defensive limits:
 
 - 256 MiB compressed input;
 - 512 MiB total expanded members;
-- 128 MiB per archive member; and
-- 2,000 archive members.
+- 128 MiB per archive member;
+- 2,000 members for ODP or 4,000 members for PPTX; and
+- 100 million decoded pixels per extracted PPTX image.
+
+The ODP importer validates its mimetype and required members. The PPTX importer requires OOXML
+presentation members, accepts only GIF, JPEG, and PNG content images, and validates their decoded
+dimensions. These checks bound local processing; they do not make an untrusted presentation safe.
 
 See [INSTALL.md](INSTALL.md) for system setup and the Marp security boundary.
 

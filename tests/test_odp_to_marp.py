@@ -10,6 +10,7 @@ import pytest
 
 # local repo modules
 from tools import odp_to_marp
+from tools import pptx_to_marp
 
 
 MINIMAL_CONTENT_XML = """<?xml version="1.0" encoding="UTF-8"?>
@@ -126,16 +127,40 @@ def write_minimal_odp(output_path: pathlib.Path) -> pathlib.Path:
 
 
 #============================================
-def test_minimal_odp_converts_to_first_marp_slide(tmp_path: pathlib.Path) -> None:
-	"""A simple title slide becomes the first Marp slide without a blank page."""
+def test_minimal_odp_uses_temporary_pptx_contract(
+	tmp_path: pathlib.Path,
+	monkeypatch: pytest.MonkeyPatch,
+) -> None:
+	"""The ODP wrapper passes source visibility to the structured PPTX importer."""
 	input_path = write_minimal_odp(tmp_path / "lecture.odp")
 	output_path = tmp_path / "lecture.md"
+	normalized_path = tmp_path / "normalized.pptx"
+	received: dict[str, object] = {}
+
+	def fake_normalize(_input_path: pathlib.Path, _temporary_root: pathlib.Path) -> pathlib.Path:
+		normalized_path.write_bytes(b"temporary PPTX")
+		return normalized_path
+
+	def fake_convert(
+		pptx_path: pathlib.Path,
+		markdown_path: pathlib.Path,
+		**kwargs: object,
+	) -> pptx_to_marp.ConversionSummary:
+		received.update(kwargs)
+		markdown_path.write_text("# Genetics & inheritance\n", encoding="utf-8")
+		report_path = tmp_path / "import_report.json"
+		report_path.write_text("{}\n", encoding="utf-8")
+		return pptx_to_marp.ConversionSummary(1, 1, 0, 0, 0, markdown_path, report_path)
+
+	monkeypatch.setattr(odp_to_marp, "convert_odp_to_pptx", fake_normalize)
+	monkeypatch.setattr(odp_to_marp.pptx_to_marp, "convert_pptx", fake_convert)
 
 	summary = odp_to_marp.convert_odp(input_path, output_path)
-	markdown_text = output_path.read_text(encoding="utf-8")
 
 	assert summary.editable_slides == 1
-	assert "---\n\n<!-- _class: lead -->\n<!-- _paginate: false -->\n# Genetics &amp; inheritance" in markdown_text
+	assert received["expected_slide_count"] == 1
+	assert received["expected_hidden"] == set()
+	assert received["source_name"] == "lecture.odp"
 
 
 #============================================
@@ -149,14 +174,6 @@ def test_unsafe_archive_member_path_is_rejected(tmp_path: pathlib.Path) -> None:
 
 	with pytest.raises(ValueError, match="unsafe archive member path"):
 		odp_to_marp.validate_odp(input_path)
-
-
-#============================================
-def test_presenter_note_comment_text_remains_safe() -> None:
-	"""Source text cannot terminate the generated HTML comment early."""
-	encoded_text = odp_to_marp.comment_text("A -- B \u2192 C")
-
-	assert encoded_text == "A - - B &#8594; C"
 
 
 #============================================
@@ -259,36 +276,6 @@ def test_malformed_optional_styles_xml_is_rejected(tmp_path: pathlib.Path) -> No
 
 
 #============================================
-def test_rendered_page_mapping_accepts_visible_or_all_source_pages() -> None:
-	"""Fallback images retain their source-slide identity across renderers."""
-	rendered_pages = [pathlib.Path(f"slide-{index}.png") for index in range(1, 5)]
-	all_pages = odp_to_marp.map_rendered_pages(
-		rendered_pages,
-		4,
-		[1, 3, 4],
-	)
-	visible_pages = odp_to_marp.map_rendered_pages(
-		[rendered_pages[0], rendered_pages[2], rendered_pages[3]],
-		4,
-		[1, 3, 4],
-	)
-
-	assert all_pages[3] == pathlib.Path("slide-3.png")
-	assert visible_pages[3] == pathlib.Path("slide-3.png")
-
-
-#============================================
-def test_rendered_page_mapping_rejects_ambiguous_count() -> None:
-	"""Unexpected page counts cannot silently attach the wrong fallback image."""
-	with pytest.raises(RuntimeError, match="page count"):
-		odp_to_marp.map_rendered_pages(
-			[pathlib.Path("slide-1.png"), pathlib.Path("slide-2.png")],
-			4,
-			[1, 3, 4],
-		)
-
-
-#============================================
 def test_importer_refuses_existing_markdown_or_asset_directory(tmp_path: pathlib.Path) -> None:
 	"""The one-time importer protects both established canonical destinations."""
 	input_path = write_minimal_odp(tmp_path / "lecture.odp")
@@ -305,16 +292,42 @@ def test_importer_refuses_existing_markdown_or_asset_directory(tmp_path: pathlib
 
 
 #============================================
-def test_supported_image_is_extracted_to_canonical_asset_path(tmp_path: pathlib.Path) -> None:
-	"""A valid embedded PNG is copied under the Markdown asset directory."""
-	input_path = tmp_path / "image.odp"
+def test_wrapper_passes_hidden_source_indexes(
+	tmp_path: pathlib.Path,
+	monkeypatch: pytest.MonkeyPatch,
+) -> None:
+	"""Original ODP visibility remains authoritative after PPTX normalization."""
+	input_path = tmp_path / "hidden.odp"
 	with zipfile.ZipFile(input_path, "w") as archive:
 		archive.writestr("mimetype", odp_to_marp.ODP_MIMETYPE)
-		archive.writestr("content.xml", IMAGE_CONTENT_XML)
-		archive.writestr("Pictures/example.png", b"\x89PNG\r\n\x1a\nimage-data")
-	output_path = tmp_path / "image.md"
+		archive.writestr("content.xml", HIDDEN_STYLE_CONTENT_XML)
+	output_path = tmp_path / "hidden.md"
+	received: dict[str, object] = {}
+
+	def fake_normalize(_input_path: pathlib.Path, _temporary_root: pathlib.Path) -> pathlib.Path:
+		return tmp_path / "hidden.pptx"
+
+	def fake_convert(
+		_pptx_path: pathlib.Path,
+		markdown_path: pathlib.Path,
+		**kwargs: object,
+	) -> pptx_to_marp.ConversionSummary:
+		received.update(kwargs)
+		return pptx_to_marp.ConversionSummary(
+			1,
+			1,
+			1,
+			0,
+			0,
+			markdown_path,
+			tmp_path / "report.json",
+		)
+
+	monkeypatch.setattr(odp_to_marp, "convert_odp_to_pptx", fake_normalize)
+	monkeypatch.setattr(odp_to_marp.pptx_to_marp, "convert_pptx", fake_convert)
 
 	summary = odp_to_marp.convert_odp(input_path, output_path)
 
-	assert summary.extracted_images == 1
-	assert (tmp_path / "assets" / "image" / "image_001.png").read_bytes().startswith(b"\x89PNG")
+	assert summary.hidden_slides == 1
+	assert received["expected_slide_count"] == 2
+	assert received["expected_hidden"] == {2}
