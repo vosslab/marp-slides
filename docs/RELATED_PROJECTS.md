@@ -33,12 +33,12 @@ Python exporter owns that contract.
 
 - Relationship: Language-specification reference.
 - Link: [Official repository](https://github.com/marp-team/marp-core).
-- Why visitors may care: The local clone records the Marp Core and Marpit interpretation of front
-  matter, directives, CommonMark behavior, classes, linkification, tables, code, and comments.
-- Evidence: `src/marp.ts`, `src/size/size.ts`, themes, and tests document parser defaults and
-  directive behavior used to build local Python conformance fixtures.
-- Activity and license: The checked-out clone is source evidence; consult its top-level license and
-  Git history for its snapshot details.
+- Why visitors may care: The local clone records the adopted Marp Core v5 and inherited Marpit
+  interpretation of front matter, directives, CommonMark, tables, code, images, and comments.
+- Evidence: `docs/markdown.md`, `docs/migration-v5.md`, `src/marp.ts`, themes, and tests document
+  author syntax and parser behavior used to build local Python conformance fixtures.
+- Activity and license: The checked-out conformance snapshot is Marp Core 5.0.1 at commit
+  `06c5a54`; it uses the repository's MIT license.
 - Adaptation idea: Translate selected language semantics into explicit Python parser behavior and
   tests with source-line diagnostics.
 - Limitation: It is not imported, executed, packaged, or rendered in this project. Its JavaScript
@@ -93,7 +93,7 @@ Python exporter owns that contract.
 - Activity and license: The local clone's latest commit is 2026-08-12; it is MIT licensed.
 - Adaptation idea: Compare names and semantic cues while keeping the local full native layout
   registry as the authoritative class vocabulary.
-- Limitation: Many examples use raw HTML; retain the local Markdown-first blockquote-cell convention.
+- Limitation: Many examples use raw HTML; retain the local Markdown-first named-cell contract.
 
 ### my-marp-themes
 

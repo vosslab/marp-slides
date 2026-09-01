@@ -175,6 +175,6 @@ Import only trusted instructor-owned presentations. Both importers enforce archi
 limits, but validation does not sandbox LibreOffice. See [INSTALL.md](INSTALL.md) for the full
 trust boundary.
 
-The local `OTHER_REPOS/marp-core` and `OTHER_REPOS/marp-cli` clones help interpret the Marp
-language and design conformance fixtures. The production build does not import, execute, or depend
-on either clone. See [RELATED_PROJECTS.md](RELATED_PROJECTS.md).
+The local `OTHER_REPOS/marp-core` and `OTHER_REPOS/marp-cli` clones help interpret the adopted Marp
+Core v5 language and design conformance fixtures. The production build does not import, execute, or
+depend on either clone. See [RELATED_PROJECTS.md](RELATED_PROJECTS.md).

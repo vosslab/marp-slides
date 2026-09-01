@@ -4,12 +4,30 @@ Use this guide as the authoring contract for canonical presentation Markdown in 
 The source stays recognizable as Marp Markdown while the production build interprets a deliberate,
 validated subset into native editable PPTX and ODP objects.
 
-For the complete upstream language, see the official [Marp directives][marp-directives] and
-[Marpit Markdown][marpit-markdown] references. This guide documents the narrower syntax accepted by
-the repository-owned parser.
+## Compatibility baseline
 
+This repository adopts the author-facing Markdown contract of **Marp Core v5 only**. The primary
+references are the version-pinned [Marp Core v5 Markdown guide][core-v5-markdown] and
+[v5 migration guide][core-v5-migration]. Basic slide syntax comes from the inherited
+[Marpit directives][marpit-directives] and [Marpit image syntax][marpit-images].
+
+Marp Core is conformance evidence, not a production dependency. The repository-owned parser
+accepts the subset documented here. Marp Core v4 and earlier behavior is not a compatibility target.
+
+Marp Core v5 separates built-in behavior from optional Shiki, Mermaid, KaTeX, and MathJax plugins.
+Adopting v5 does not automatically adopt the `/full` entry point or every plugin feature. A feature
+becomes accepted only when this guide documents its native editable-object behavior.
+
+Use the versioned official sources and this guide as the authorities. The upstream and secondary
+references used to prepare this contract are collected under External links.
+
+[core-v5-markdown]: https://github.com/marp-team/marp-core/blob/v5.0.1/docs/markdown.md
+[core-v5-migration]: https://github.com/marp-team/marp-core/blob/v5.0.1/docs/migration-v5.md
+[marpit-directives]: https://marpit.marp.app/directives
+[marpit-images]: https://marpit.marp.app/image-syntax
 [marp-directives]: https://github.com/marp-team/marp/blob/main/website/docs/guide/directives.md
-[marpit-markdown]: https://github.com/marp-team/marpit/blob/main/docs/markdown.md
+[deepwiki-syntax]: https://deepwiki.com/marp-team/marp/3.1-directives-and-syntax
+[marp-cheatsheet]: https://miriam-mueller.com/MarpCheatsheet.pdf
 
 ## Minimal deck
 
@@ -150,6 +168,10 @@ images. Use a cell layout only when the slide needs distinct content regions.
 Standard Markdown uses `>` for a blockquote. In this repository, each top-level blockquote in a
 multi-cell layout becomes one layout cell. This is a repository-specific interpretation.
 
+This is the current accepted syntax. The planned Marp+ contract replaces it with explicit named
+`_cell` markers so `>` can return to ordinary blockquote meaning. Do not author `_cell` yet; track
+the coordinated migration in [ROADMAP.md](ROADMAP.md) and [TODO.md](TODO.md).
+
 ```markdown
 <!-- _class: title-two-content -->
 
@@ -253,13 +275,37 @@ The native pipeline reports a source path and line number for unsupported constr
 - Raw HTML or XML slide content.
 - Markdown tables.
 - Fenced or indented code blocks.
+- Strikethrough, fragmented-list markers, emoji conversion, or `<!-- fit -->` headings.
+- Marp Core v5 plugin syntax for Shiki highlighting, Mermaid diagrams, or math typesetting.
 - Background-image syntax or per-image pixel geometry.
 - Inline text mixed with an image.
 - Remote or data-URL component images.
 - Nested layout cells.
 - More than one layout class or title-size modifier on a slide.
+- Marp Core v4 or earlier compatibility behavior and highlight.js theme contracts.
 
 These restrictions keep every accepted source feature mapped to a validated native editable object.
+They are current behavior, not a promise to implement every upstream feature. See
+[ROADMAP.md](ROADMAP.md) for planned capability boundaries and [TODO.md](TODO.md) for immediate
+next actions.
+
+## External links
+
+Use these primary upstream references:
+
+- [Marp Core v5 Markdown guide][core-v5-markdown]
+- [Marp Core v5 migration guide][core-v5-migration]
+- [Marpit directives][marpit-directives]
+- [Marpit image syntax][marpit-images]
+- [Official Marp directives][marp-directives]
+
+Use these secondary quick references:
+
+- [DeepWiki directives and syntax overview][deepwiki-syntax]
+- [Miriam Mueller's Marp cheat sheet][marp-cheatsheet]
+
+The primary sources explain upstream Marp behavior. This guide remains the authority for the
+narrower syntax accepted by the native pipeline.
 
 ## Build validation
 

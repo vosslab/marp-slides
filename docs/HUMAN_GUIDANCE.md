@@ -13,6 +13,8 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 - Legacy ODP is imported once; Marp Markdown and its local assets then become authoritative.
 - Use Marp because it has a mature language specification. The production build uses neither Marp
   code nor Marp CLI.
+- Use Marp Core v5 only as the upstream authoring and conformance baseline. Do not support Marp
+  Core v4 or earlier behavior.
 - Keep Marp Markdown as the authoring format rather than replacing it with a YAML or `md2pptx`
   dialect. Clearly document standard Marp syntax and repository-specific meanings.
 - Do not show slide numbers; they encourage the audience to track remaining time and watch the
@@ -33,8 +35,9 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 - Use layouts `title-content-over-content`, `title-two-content-over-content`,
   `title-four-content`, `title-six-content`, `vertical-title-vertical-text`,
   `vertical-title-text-chart`, `title-vertical-text`, `title-two-vertical-text-clipart`, and `gallery`.
-- Give every slide exactly one explicit layout class. Use ordinary blockquotes as multi-cell content
-  in the layout's reading order.
+- Give every slide exactly one explicit layout class. Replace blockquote layout cells with explicit
+  comment-based cell markers. Keep `-` as ordinary list syntax and let `>` return to its standard
+  Markdown blockquote meaning.
 - Use a bounded Marp `font-size-N` companion class when an H1 such as `THE END` should occupy the
   slide; keep the title editable and leave normal slide text at its layout size.
 - Preserve text, lists, component images, links, layouts, and presenter notes as native objects.

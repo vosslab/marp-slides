@@ -4,7 +4,11 @@
 
 - Added `docs/MARP_SYNTAX_GUIDE.md` as the concise authoring contract. It distinguishes standard
   Marp syntax from repository-specific layout meanings, documents the supported native subset, and
-  sets `paginate: false` as the no-page-number authoring convention.
+  sets `paginate: false` as the no-page-number authoring convention. Its external-links section
+  separates primary Marp Core v5 and Marpit references from secondary quick-reference material.
+- Added `docs/ROADMAP.md` and `docs/TODO.md` to separate ordered Marp+ capability work from small
+  next actions. The first milestone replaces blockquote layout cells with explicit named `_cell`
+  markers while retaining the syntax guide as the current production contract.
 
 ### Behavior or Interface Changes
 
@@ -45,6 +49,10 @@
 
 ### Design Decisions
 
+- Adopted Marp Core v5 as the only upstream authoring and conformance baseline. The version-pinned
+  reference snapshot is 5.0.1 at commit `06c5a54`; v4 and earlier behavior and highlight.js theme
+  contracts are outside scope, while optional v5 plugins require explicit native capability
+  decisions.
 - Recorded full-slide rasterization and raster fallbacks as failed presentation results. Normal
   presentation builds require no browser, Marp code, Marp CLI, Node, or rendering engine.
 - Recorded the heavily edited local `md2pptx` clone as implementation prior art for native objects,

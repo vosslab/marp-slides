@@ -86,16 +86,18 @@ that cannot fit its assigned native title region fails at the H1 source line ins
 
 ## Marp-language boundary
 
-The repository retains Marp for its mature language specification. Repository-owned Python handles
-the selected Marp vocabulary: opening YAML front matter, slide separators, `_class` and `_paginate`
-directives, headings, paragraphs, formatted/link/inline-code runs, nested lists, standalone
-component images, blockquote cells, and presenter-note comments. Tables plus fenced or indented code
-are source-located rejections until a native editable-object owner is added. Other unsupported
-constructs also fail with a source path and line number.
+The repository adopts Marp Core v5 only for its mature authoring-language specification.
+Repository-owned Python handles the selected vocabulary: opening YAML front matter, slide
+separators, `_class` and `_paginate` directives, headings, paragraphs,
+formatted/link/inline-code runs, nested lists, standalone component images, blockquote cells, and
+presenter-note comments. Tables plus fenced or indented code are source-located rejections until a
+native editable-object owner is added. Other unsupported constructs also fail with a source path
+and line number.
 
 `OTHER_REPOS/marp-core` and `OTHER_REPOS/marp-cli` are local reference and conformance evidence.
-They are outside the runtime graph. Their HTML/browser and raster export paths are neither invoked
-nor bundled.
+The Marp Core snapshot is v5.0.1; v4 and earlier behavior is not a compatibility target. Both
+clones are outside the runtime graph. Their HTML/browser and raster export paths are neither
+invoked nor bundled.
 
 ## Verification lanes
 

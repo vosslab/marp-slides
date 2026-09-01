@@ -21,8 +21,9 @@ notes. `marp_lib.layouts` implements all sixteen LibreOffice layout-grid pattern
 repository `gallery` layout. The LibreOffice grid is a catalog and visual target; Python builds the
 objects.
 
-Marp supplies the mature authoring-language specification only. The production graph contains no
-Marp CLI, Marp Core, Node, browser, rendered-slide stage, or full-slide raster fallback.
+Marp Core v5 supplies the mature authoring-language specification only. The production graph
+contains no Marp CLI, Marp Core runtime, Node, browser, rendered-slide stage, or full-slide raster
+fallback.
 
 ## Quick start
 
@@ -62,6 +63,8 @@ authoring source.
 - [docs/PIPELINE.md](docs/PIPELINE.md) - component architecture and boundaries.
 - [docs/INSTALL.md](docs/INSTALL.md) - macOS dependencies and trust boundary.
 - [docs/MARP_SYNTAX_GUIDE.md](docs/MARP_SYNTAX_GUIDE.md) - supported Marp authoring syntax.
+- [docs/ROADMAP.md](docs/ROADMAP.md) - ordered Marp+ syntax capability plan.
+- [docs/TODO.md](docs/TODO.md) - small next actions from the syntax roadmap.
 - [docs/USAGE.md](docs/USAGE.md) - authoring, layouts, migration, and builds.
 - [docs/HUMAN_GUIDANCE.md](docs/HUMAN_GUIDANCE.md) - durable instructor requirements.
 - [docs/DESIGN_DECISIONS.md](docs/DESIGN_DECISIONS.md) - settled architecture decisions.
