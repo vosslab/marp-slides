@@ -51,7 +51,7 @@ and click-to-reveal build slides.
 
 ## Documentation
 
-- [docs/PIPELINE.md](docs/PIPELINE.md) - end-to-end stages, ownership, and trust boundaries.
+- [docs/PIPELINE.md](docs/PIPELINE.md) - component architecture and transformation boundaries.
 - [docs/INSTALL.md](docs/INSTALL.md) - Homebrew and Python setup.
 - [docs/USAGE.md](docs/USAGE.md) - migration, cleanup, builds, and classroom presentation.
 - [docs/HUMAN_GUIDANCE.md](docs/HUMAN_GUIDANCE.md) - durable instructor requirements.

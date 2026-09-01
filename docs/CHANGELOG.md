@@ -2,9 +2,9 @@
 
 ### Additions
 
-- Added `docs/PIPELINE.md` as the canonical end-to-end map of the import and classroom-build lanes,
-  including the Marp CLI boundary, tool ownership, artifacts, trust limits, and current filename
-  collision constraint.
+- Added `docs/PIPELINE.md` as the canonical component architecture for the import and build engine,
+  including its interfaces, ownership boundaries, success properties, verification lanes, extension
+  seams, and current architectural risks.
 - Added a related-projects guide that inventories every local prior-art clone, distinguishes
   themes, templates, importers, and output converters, and records what to adapt or reject.
 - Added a bounded Python ODP importer that preserves structured slide text, content images, notes,
@@ -116,6 +116,8 @@
 - Ran six independent audit passes covering plan conformance, tests, style, documentation, dead
   code, and comments; after the low-risk repairs, the project-owned suite reported 717 passed and
   1 skipped, and 221 focused command/documentation hygiene checks passed.
+- Validated the component-focused pipeline architecture with ASCII, line-width, Markdown-link, and
+  full project checks; the suite reported 722 passed and 1 skipped.
 
 ### Fixes and Maintenance
 

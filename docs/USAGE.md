@@ -8,7 +8,7 @@ legacy ODP -> temporary PPTX -> Python object extraction -> Marp Markdown -> cla
 
 Marp Markdown and its assets become the editable source of truth. The generated ODP is the file to
 open in LibreOffice Impress for class, not a source to edit and import again.
-See [PIPELINE.md](PIPELINE.md) for the complete stage and tool-ownership map.
+See [PIPELINE.md](PIPELINE.md) for the component architecture and internal ownership boundaries.
 
 ## Import one legacy ODP
 

@@ -1,202 +1,264 @@
-# Presentation pipeline
+# Pipeline architecture
 
-This repository wraps Marp CLI with Python import, validation, batch-build, and LibreOffice
-conversion tools. Marp Markdown and its local assets are the authoritative teaching source.
-Generated PDF, PPTX, and ODP files are disposable classroom outputs.
+This repository is built as a set of narrow presentation components rather than one large
+converter. Marp CLI remains the Markdown renderer. Python supplies the semantic import and
+orchestration layers, while LibreOffice bridges the formats Marp does not read or write.
 
-## End-to-end map
+The architecture is successful when each component owns one transformation, exchanges a clear
+artifact with the next component, and leaves Marp Markdown as the only long-lived authoring source.
+
+## Component map
 
 ```text
-One-time legacy import
+                         ONE-TIME IMPORT SIDE
 
-trusted ODP
-    |
-    | bounded validation and visibility inspection (Python)
-    v
-temporary PPTX (LibreOffice)
-    |
-    | structured text, image, note, and geometry extraction (python-pptx)
-    v
-Marp Markdown + local assets + import report
-    |
-    | instructor cleanup using simple shared layouts
-    v
-authoritative Marp Markdown
+ legacy ODP evidence
+         |
+         v
+ ODP validation and visibility
+         |
+         v
+ LibreOffice normalization bridge
+         |
+         v
+ structured PPTX
+         |
+         v
+ Python semantic importer
+         |
+         v
+ Marp Markdown + assets + import report
+         |
+         v
+ instructor cleanup
+         |
+         v
+ authoritative Marp source package
 
 
-Classroom build
+                         REPEATABLE BUILD SIDE
 
-authoritative Marp Markdown + local assets + genetics.css
-    |
-    | Marp CLI 4.5+ rendered through Chromium
-    +--------------------------+
-    |                          |
-    v                          v
-PDF                         rendered PPTX
-                                |
-                                | LibreOffice conversion
-                                v
+ authoritative Marp source package
+         |
+         +---- central genetics theme
+         |
+         v
+ shared Marp render adapter
+         |
+         +-----------------------+
+         |                       |
+         v                       v
+       PDF                rendered PPTX
+                                 |
+                                 v
+                       LibreOffice ODP bridge
+                                 |
+                                 v
                            classroom ODP
 ```
 
-A trusted PPTX may enter the import lane directly at the `python-pptx` extraction stage. The normal
-legacy path begins with ODP because the original ODP remains the migration evidence.
+## Architectural components
 
-## Source-of-truth boundary
+### Legacy evidence
 
-The lifecycle is deliberately one-way:
+The original ODP is retained as evidence for a one-time migration. It is not forced to remain an
+active source after conversion. This gives the importer a stable reference for slide order,
+visibility, notes, and content without creating a permanent round trip.
 
-```text
-legacy ODP -> one-time import -> Marp Markdown becomes authoritative -> generated ODP for class
-```
+### ODP boundary
 
-After import and cleanup:
+`tools/odp_to_marp.py` owns the ODP-facing edge. It validates the source container, records the
+original slide sequence and visibility, and asks LibreOffice for a temporary PPTX representation.
 
-- edit the Markdown and its local assets;
-- rebuild PDF, PPTX, and ODP outputs as needed;
-- do not import edits from a generated ODP back into Markdown; and
-- do not use a rendered source slide as Marp content.
+This component exists because LibreOffice understands ODP semantics and `python-pptx` provides a
+more practical structured object model for extraction. The temporary PPTX is a normalization bridge,
+not a new authoring format.
 
-The generated ODP is for LibreOffice Impress presentation. It is not the editable content source.
+### Visibility resolver
 
-## Marp CLI boundary
+`tools/odp_visibility.py` isolates ODP page and style visibility from the rest of the importer. The
+ODP-derived result remains authoritative when LibreOffice creates the temporary PPTX.
 
-Marp CLI is the central Markdown renderer; the Python tools do not replace it. The build invokes
-the Homebrew `marp` executable to:
+Keeping visibility separate prevents an external format conversion from silently changing the
+teaching sequence.
 
-- parse the authoritative Marp Markdown;
-- apply `themes/genetics.css`;
-- render through an installed Chromium-compatible browser;
-- produce PDF with presenter notes; and
-- produce the rendered PPTX used for PowerPoint and ODP conversion.
+### Semantic importer
 
-The repository-owned tools supply capabilities outside Marp's scope:
+`tools/pptx_to_marp.py` is the center of the import side. It converts presentation objects into a
+small internal semantic model:
 
-- importing ODP and PPTX presentations;
-- extracting structured text, images, notes, visibility, and geometry;
-- selecting a small, consistent Marp layout vocabulary;
-- validating trusted local file boundaries and processing limits;
-- batch-building every deck in a selected folder; and
-- converting Marp's PPTX output into classroom ODP.
+- positioned text blocks;
+- content images and their source geometry;
+- slide titles and presenter notes;
+- source order and visibility; and
+- review reasons for content needing human polish.
 
-Removing Marp CLI would require a replacement Markdown parser, CSS layout engine, browser renderer,
-PDF generator, and PPTX generator. This repository has not built those components.
+The semantic model separates extraction from layout selection. Geometry informs which simple layout
+fits the source content, but arbitrary source coordinates do not become permanent Markdown styling.
 
-## Command ownership
+### Canonical source package
 
-| Command | Scope | Input | Output |
-| --- | --- | --- | --- |
-| `tools/odp_visibility.py` | One file, read-only | Trusted ODP | Slide visibility report |
-| `tools/odp_to_marp.py` | One deck | Trusted ODP | Markdown, assets, import report |
-| `tools/pptx_to_marp.py` | One deck | Trusted PPTX | Markdown, assets, import report |
-| `tools/marp_to_pptx.py` | One deck | Marp Markdown | Rendered PPTX |
-| `tools/marp_to_odp.py` | One deck | Marp Markdown | Rendered PPTX and classroom ODP |
-| `build_slides.sh` | One folder | Every direct Marp Markdown child | PDF, PPTX, and ODP per deck |
-
-All export commands share `tools/marp_export.py`. It owns Marp discovery, the 4.5.0 minimum,
-browser discovery, central-theme registration, input validation, output paths, and LibreOffice
-conversion.
-
-## Normal workflows
-
-Import one trusted ODP once:
-
-```bash
-source source_me.sh && python3 tools/odp_to_marp.py genetics/lecture.odp
-```
-
-After reviewing and cleaning the resulting Markdown, build the classroom ODP for one deck:
-
-```bash
-source source_me.sh && python3 tools/marp_to_odp.py genetics/lecture.md
-```
-
-Build every Marp deck directly inside one course folder:
-
-```bash
-./build_slides.sh genetics
-```
-
-The folder scan is non-recursive. It skips Markdown files without `marp: true` in their YAML front
-matter and stops when a deck fails to build.
-
-## Artifact ownership
-
-One-time import creates:
+The durable authoring unit is:
 
 ```text
-genetics/lecture.md
-genetics/assets/lecture/<content images>
-genetics/assets/lecture/import_report.json
+deck.md
+assets/deck/<content images>
+assets/deck/import_report.json
 ```
 
-Classroom builds currently create flat, format-specific output paths:
+Markdown contains the teaching structure. The asset directory contains reusable content images.
+The import report preserves machine-readable migration evidence without adding noise to the deck.
 
-```text
-output/pdf/lecture.pdf
-output/pptx/lecture.pptx
-output/odp/lecture.odp
-```
+This package is the handoff between the one-time importer and the repeatable build engine.
 
-These build products can be regenerated from Markdown. Temporary LibreOffice profiles, normalized
-PPTX files used during ODP import, and staging directories are removed after successful conversion.
+### Layout classifier
 
-### Current output-name limitation
+The importer maps semantic slide content into a deliberately small vocabulary: title, body,
+single-figure, left/right image, two-pane, and gallery layouts.
 
-Output paths currently use only the Markdown filename stem. Two decks such as
-`genetics/lecture.md` and `biochemistry/lecture.md` therefore target the same generated filenames.
-Use unique deck basenames across course folders until a directory-preserving output contract is
-approved and implemented.
+The classifier chooses the layout category. It does not own the final pixel geometry. This keeps the
+importer mechanical and makes post-conversion layout improvements possible without re-reading ODP.
 
-## Layout contract
+### Central theme
 
-Every deck uses the 16:10, 1280x800 frame. Authored text and teaching images must remain within
-that frame. The preferred vocabulary is deliberately small:
+`themes/genetics.css` owns the visual system shared by every deck:
 
-- title slide;
-- section header;
-- title only;
-- title and body;
-- title and two columns;
-- title with one auto-fitting figure; and
-- title with an auto-fitting image gallery.
+- the 16:10, 1280x800 frame;
+- OpenDyslexic and long-URL typography;
+- spacing, hierarchy, colors, and pagination;
+- reusable layout geometry; and
+- automatic image fitting inside bounded layout regions.
 
-OpenDyslexic is the exclusive authored-text font. Slides that visibly print long URLs may opt into
-PT Sans Narrow. Image sizing belongs to the shared theme and uses `contain`; individual slides do
-not hard-code pixel dimensions.
+Separating layout classification from theme geometry lets Markdown stay readable while one CSS file
+enforces consistency across lectures.
 
-## Trust and validation
+### Marp render adapter
 
-Only process instructor-owned, trusted ODP, PPTX, Markdown, and image files.
+`tools/marp_export.py` is the single integration point with Marp CLI. It owns renderer discovery,
+the Marp 4.5 minimum, browser selection, theme registration, format selection, and generated output
+locations.
 
-- ODP and PPTX importers bound compressed size, expanded size, member size, and archive count.
-- The PPTX importer validates supported image types and decoded pixel dimensions.
-- ODP XML uses restrictive parsing, and archive member paths cannot control extraction paths.
-- Marp local-file access is restricted to validated repository-owned Markdown and teaching assets.
-- Subprocess commands receive file paths as distinct arguments rather than interpolated shell text.
+The destination-named commands are thin facades over this adapter:
 
-Validation reduces malformed-input and resource-exhaustion risk. It does not sandbox LibreOffice,
-Chromium, Marp, or `python-pptx`, and it does not make an unknown presentation safe to open.
+- `tools/marp_to_pptx.py` selects the PPTX output path; and
+- `tools/marp_to_odp.py` selects the PPTX-to-ODP classroom path.
 
-See [INSTALL.md](INSTALL.md) for exact dependencies and [USAGE.md](USAGE.md) for defensive limits.
+Centralizing Marp invocation prevents each public command from developing its own renderer flags,
+version rules, or failure behavior.
 
-## Known presentation limits
+### LibreOffice output bridge
 
-- The normal Marp PPTX is visually faithful but flattened rather than natively editable.
-- Marp's editable-PPTX experiment lost presenter notes and broke tested two-pane layouts.
-- The PPTX-to-ODP lane does not create native click animations.
-- Classroom reveals use successive slides that progressively add bullets, images, or answers.
-- The importer maps source geometry into simple layouts; it does not reproduce arbitrary ODP
-  coordinates.
-- OCR is not part of normal import because the legacy slides contain structured authored objects.
+Marp does not generate ODP. The build engine therefore treats Marp's rendered PPTX as an interchange
+artifact and gives it to LibreOffice for the final classroom ODP.
 
-These are deliberate boundaries of the current tested baseline, not claims that future output
-experiments are prohibited.
+This bridge is downstream of the authoritative source. It can be replaced or improved later without
+changing the Markdown authoring contract.
+
+### Batch coordinator
+
+`build_slides.sh` composes the single-deck exporter across a folder. It owns deck discovery and
+batch failure propagation, while all rendering and conversion remain in the shared Python adapter.
+
+This separation keeps batch behavior from becoming a second implementation of the pipeline.
+
+## Component interfaces
+
+Each boundary uses an artifact that can be inspected independently.
+
+| Producer | Interface artifact | Consumer |
+| --- | --- | --- |
+| Legacy authoring | ODP | ODP boundary |
+| LibreOffice normalization | Temporary PPTX | Semantic importer |
+| Semantic importer | Internal slide records | Layout classifier |
+| Layout classifier | Markdown, assets, report | Instructor and build engine |
+| Central theme | Named layout contracts | Marp renderer |
+| Marp render adapter | PDF or rendered PPTX | Distribution or ODP bridge |
+| LibreOffice output bridge | ODP | Classroom presentation |
+
+Temporary artifacts exist only to connect components. Durable artifacts are limited to the original
+legacy evidence, the canonical Marp source package, and regenerated presentation outputs.
+
+## Design for pipeline success
+
+### One canonical state
+
+Only Marp Markdown and its assets are edited after migration. A single canonical state prevents ODP,
+PPTX, and Markdown from drifting into competing versions of the lecture.
+
+### Semantic conversion before visual polish
+
+The importer first preserves text, images, notes, order, and visibility. Consistent presentation
+geometry comes from the shared layout vocabulary and theme afterward. This prevents visual fidelity
+work from destroying editability.
+
+### External tools behind adapters
+
+LibreOffice, Marp, and Chromium are invoked at narrow module boundaries. The rest of the repository
+works with paths, semantic records, and explicit result objects rather than external-tool details.
+
+This makes tool replacement possible without rewriting the entire pipeline.
+
+### One renderer path
+
+PDF, PPTX, and ODP builds all pass through the same Marp adapter. ODP adds one downstream bridge but
+does not introduce another Markdown renderer or layout dialect.
+
+### Theme-owned geometry
+
+Layout dimensions live in the theme rather than individual decks. The engine emits semantic layout
+names and lets CSS fit content into the frame. This is the main mechanism for keeping hand-authored
+lectures consistent after migration.
+
+### Fail at component boundaries
+
+Each stage validates the artifact it receives and stops when a required invariant is lost. The
+pipeline does not hide failures with source-slide screenshots, alternate renderers, older Marp
+versions, or guessed visibility.
+
+### Disposable build outputs
+
+PDF, PPTX, and ODP are products of the canonical source package. Treating them as reproducible
+output allows the rendering and ODP bridge to evolve without changing course content ownership.
+
+## Verification architecture
+
+Successful conversion has three distinct evidence lanes:
+
+| Lane | Establishes |
+| --- | --- |
+| Fast Python tests | Validation, parsing, semantic extraction, and layout-selection behavior |
+| End-to-end builds | Marp, Chromium, LibreOffice, counts, notes, and format interoperability |
+| Rendered review | Text and images remain inside the frame and make visual teaching sense |
+
+No single lane establishes the whole pipeline. Unit tests cannot prove LibreOffice fidelity, and a
+good screenshot cannot prove that imported text and images remain editable semantic objects.
+
+## Extension seams
+
+The component boundaries intentionally leave room for later improvements:
+
+- a neutral ODP archive reader can remove the current importer/visibility ownership cycle;
+- a directory-preserving output mapper can replace flat generated filenames;
+- a native or reference-template ODP writer can replace the LibreOffice output bridge;
+- new recurring teaching layouts can enter through the classifier/theme interface; and
+- a permanent E2E runner can formalize the existing measured build evidence.
+
+These changes should replace one component behind an existing interface rather than create a second
+authoring source or parallel rendering pipeline.
+
+## Current architectural risks
+
+- Same-named decks in different course folders currently target the same flat output filenames.
+- The visibility command and ODP importer still share a cyclic ownership edge.
+- Real Marp/LibreOffice builds have measured manual evidence but no permanent E2E runner.
+- The rendered PPTX-to-ODP bridge favors visual fidelity over native slide-object editability.
+
+These are explicit component-level debts for the next approved implementation plan.
 
 ## Related contracts
 
 - [HUMAN_GUIDANCE.md](HUMAN_GUIDANCE.md) records instructor requirements.
-- [DESIGN_DECISIONS.md](DESIGN_DECISIONS.md) records settled implementation decisions.
-- [INSTALL.md](INSTALL.md) defines dependencies and security boundaries.
-- [USAGE.md](USAGE.md) provides detailed authoring and conversion examples.
-- [RELATED_PROJECTS.md](RELATED_PROJECTS.md) inventories prior art that may inform future work.
+- [DESIGN_DECISIONS.md](DESIGN_DECISIONS.md) records settled architecture decisions.
+- [INSTALL.md](INSTALL.md) defines runtime dependencies and trust boundaries.
+- [USAGE.md](USAGE.md) owns instructor-facing commands and examples.
+- [RELATED_PROJECTS.md](RELATED_PROJECTS.md) inventories relevant prior art.
