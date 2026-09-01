@@ -56,3 +56,45 @@ def test_require_libreoffice_closed_ignores_quicklook_extension() -> None:
 	result = subprocess.CompletedProcess(["ps"], 0, stdout=processes)
 	with mock.patch.object(libreoffice.subprocess, "run", return_value=result):
 		libreoffice.require_libreoffice_closed()
+
+
+#============================================
+def test_successful_conversion_captures_and_hides_libreoffice_output(
+		tmp_path: pathlib.Path, capsys: pytest.CaptureFixture[str]) -> None:
+	"""Successful third-party chatter never reaches the presentation build stream."""
+	input_path = tmp_path / "deck.pptx"
+	input_path.write_bytes(b"source")
+	output_dir = tmp_path / "converted"
+	output_dir.mkdir()
+	call_options: list[dict[str, object]] = []
+
+	def finish_conversion(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+		"""Return noisy success while creating the represented ODP artifact."""
+		call_options.append(kwargs)
+		(output_dir / "deck.odp").write_bytes(b"odp")
+		return subprocess.CompletedProcess(command, 0, stdout="convert chatter\n", stderr="warning\n")
+
+	with mock.patch.object(libreoffice, "require_libreoffice_closed"), \
+		mock.patch.object(libreoffice, "require_soffice", return_value=pathlib.Path("/usr/bin/soffice")), \
+		mock.patch.object(libreoffice.subprocess, "run", side_effect=finish_conversion):
+		libreoffice.convert_file(input_path, output_dir, "odp")
+	captured = capsys.readouterr()
+	assert captured.out == "" and captured.err == ""
+	assert call_options[0]["capture_output"] is True and call_options[0]["text"] is True
+
+
+#============================================
+def test_failed_conversion_reports_captured_diagnostics(tmp_path: pathlib.Path) -> None:
+	"""A failed conversion retains actionable stdout and stderr without a raw command."""
+	input_path = tmp_path / "deck.pptx"
+	input_path.write_bytes(b"source")
+	output_dir = tmp_path / "converted"
+	output_dir.mkdir()
+	result = subprocess.CompletedProcess(["soffice"], 7,
+		stdout="source format rejected\n", stderr="presentation filter unavailable\n")
+	with mock.patch.object(libreoffice, "require_libreoffice_closed"), \
+		mock.patch.object(libreoffice, "require_soffice", return_value=pathlib.Path("/usr/bin/soffice")), \
+		mock.patch.object(libreoffice.subprocess, "run", return_value=result):
+		with pytest.raises(libreoffice.LibreOfficeError,
+			match="presentation filter unavailable; source format rejected"):
+			libreoffice.convert_file(input_path, output_dir, "odp")

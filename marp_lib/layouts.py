@@ -38,6 +38,10 @@ MUTED = RGBColor(0x52, 0x61, 0x76)
 WHITE = RGBColor(0xFF, 0xFF, 0xFF)
 
 
+class LayoutError(ValueError):
+	"""Report an expected source or native-layout validation failure."""
+
+
 @dataclass(frozen=True)
 class LayoutSpec:
 	"""Stable authoring contract and renderer for one named slide layout."""
@@ -201,7 +205,7 @@ def fit_body_size(item_sets: list[list[tuple[tuple[marp_lib.native_model.Inline,
 		size = quarter_points / 4
 		if all(estimate_items_height(items, size, width) <= height for items in item_sets):
 			return size
-	raise ValueError(f"{source.path}:{source.line}: {context} content cannot fit within the supported readable minimum of "
+	raise LayoutError(f"{source.path}:{source.line}: {context} content cannot fit within the supported readable minimum of "
 		f"{MIN_READABLE_BODY_SIZE:g} CSS px")
 
 
@@ -242,9 +246,9 @@ def resolve_image_path(deck: object, image: marp_lib.native_model.Image) -> path
 	"""Resolve a component image within its canonical repository boundary."""
 	image_path = (deck.asset_root / image.source).resolve()
 	if not image_path.is_relative_to(deck.repo_root):
-		raise ValueError(f"{image.location.path}:{image.location.line}: component image must be inside the repository: {image.source}")
+		raise LayoutError(f"{image.location.path}:{image.location.line}: component image must be inside the repository: {image.source}")
 	if not image_path.is_file():
-		raise ValueError(f"{image.location.path}:{image.location.line}: component image is missing: {image.source}")
+		raise LayoutError(f"{image.location.path}:{image.location.line}: component image is missing: {image.source}")
 	return image_path
 
 
@@ -257,7 +261,7 @@ def add_picture(slide: object, image_path: pathlib.Path, image: marp_lib.native_
 	scale = min(width / image_width, height / image_height)
 	display_width, display_height = image_width * scale, image_height * scale
 	if display_width >= SLIDE_WIDTH or display_height >= SLIDE_HEIGHT:
-		raise ValueError(f"{image.location.path}:{image.location.line}: component image occupies a full slide: {image.source}")
+		raise LayoutError(f"{image.location.path}:{image.location.line}: component image occupies a full slide: {image.source}")
 	picture = slide.shapes.add_picture(str(image_path), px(left + (width - display_width) / 2),
 		px(top + (height - display_height) / 2), px(display_width), px(display_height))
 	picture.element.nvPicPr.cNvPr.set("descr", image.alt_text)

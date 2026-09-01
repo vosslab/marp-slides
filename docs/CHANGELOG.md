@@ -1,5 +1,11 @@
 ## 2026-09-01
 
+### Additions and New Features
+
+- Added `docs/MARP_SYNTAX_GUIDE.md` as the concise authoring contract. It distinguishes standard
+  Marp syntax from repository-specific layout meanings, documents the supported native subset, and
+  sets `paginate: false` as the no-page-number authoring convention.
+
 ### Behavior or Interface Changes
 
 - Replaced the browser-rendered, flattened presentation baseline with the native-output contract:
@@ -24,6 +30,12 @@
   `marp-cli` clones provide conformance evidence outside the production dependency/runtime graph.
 - Added destination-named `tools/marp_to_pptx.py` and `tools/marp_to_odp.py` commands backed by one
   validated `marp_lib/native_export.py` implementation.
+- Replaced the presentation-build output stream with one shared Rich interface for folder and
+  single-deck commands. Builds now leave a borderless artifact-size table, relative output paths,
+  and one elapsed total while keeping current deck stages transient.
+- Made `tools/marp_export.py` accept either one Markdown file or a folder. Folder builds now select
+  sorted direct-child Marp decks and run them through one Python process behind the stable
+  `build_slides.sh FOLDER` wrapper.
 - Calibrated native Office typography from CSS pixels and fitted native text to its assigned layout
   region; balanced nested-list columns by height and restored paragraph separation in native cells.
 - Preserved Markdown links, slide title metadata, and component-image descriptions in native
@@ -54,6 +66,8 @@
   displayed literal URL; labeled hyperlinks retain their native hyperlink and ordinary typeface.
 - Gave all seventeen registry entries distinct named native builders and aligned the vertical
   preview contracts with fixed native geometry and one-root-body authoring.
+- Captured LibreOffice stdout and stderr so successful conversions remain quiet while failed
+  conversions retain actionable diagnostics in the concise expected-error panel.
 
 - Corrected the native authoring contract: formatted/link/inline-code runs, nested lists, component
   images, blockquote cells, directives, and presenter-note comments are supported; tables and fenced
@@ -69,6 +83,14 @@
   slide count, and full-slide-image absence.
 - Hardened the ODP E2E gate with `defusedxml`, numeric page-relative full-slide-image detection,
   and verification that component-image descriptions survive editable ODP conversion.
+- Kept focused permanent pytest coverage for folder selection, progress ordering, LibreOffice
+  capture and diagnostics, concise single-format summaries, expected failures, and unexpected
+  defect propagation. Removed redundant single-file discovery and broad presentation-detail tests
+  after applying the permanent-test checklist. The complete fast suite reports 937 passes.
+- Classified the redirected and terminal `./build_slides.sh genetics/` runs as one-time
+  implementation checks. Both modes produced all six PPTX, ODP, and PDF artifacts; redirected
+  output was static and ANSI-free, terminal progress was transient, and successful LibreOffice
+  conversions emitted no chatter.
 
 ## Historical renderer and migration records
 

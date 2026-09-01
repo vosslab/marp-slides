@@ -268,3 +268,40 @@ def test_presentation_chain_converts_odp_to_pdf(tmp_path: pathlib.Path) -> None:
 	assert convert.call_args_list[0].args[2] == "odp"
 	assert convert.call_args_list[1].args[0] == outputs["odp"]
 	assert convert.call_args_list[1].args[2] == "pdf"
+
+
+#============================================
+def test_folder_discovery_selects_sorted_direct_marp_children(tmp_path: pathlib.Path) -> None:
+	"""Folder builds skip non-Marp and nested Markdown while retaining sorted order."""
+	folder = tmp_path / "slides"
+	folder.mkdir()
+	(folder / "z_deck.md").write_text(HEADER, encoding="utf-8")
+	(folder / "notes.md").write_text("# Notes\n", encoding="utf-8")
+	(folder / "a_deck.md").write_text(HEADER, encoding="utf-8")
+	nested = folder / "nested"
+	nested.mkdir()
+	(nested / "hidden_deck.md").write_text(HEADER, encoding="utf-8")
+	decks = marp_lib.native_export.discover_decks(str(folder), tmp_path)
+	assert [path.name for path in decks] == ["a_deck.md", "z_deck.md"]
+
+
+#============================================
+def test_folder_discovery_rejects_an_empty_marp_selection(tmp_path: pathlib.Path) -> None:
+	"""A folder without a direct Marp deck receives an actionable input error."""
+	folder = tmp_path / "slides"
+	folder.mkdir()
+	(folder / "notes.md").write_text("---\ntitle: Notes\n---\n", encoding="utf-8")
+	with pytest.raises(ValueError, match="no Marp Markdown decks found"):
+		marp_lib.native_export.discover_decks(str(folder), tmp_path)
+
+
+#============================================
+def test_export_progress_follows_artifact_dependency_order(tmp_path: pathlib.Path) -> None:
+	"""Progress reports parsing before the unchanged PPTX, ODP, and PDF chain."""
+	deck_path = tmp_path / "stages.md"
+	deck_path.write_text(HEADER + "<!-- _class: blank -->\n", encoding="utf-8")
+	stages: list[str] = []
+	with mock.patch.object(marp_lib.native_export, "find_repo_root", return_value=tmp_path), \
+		mock.patch.object(marp_lib.native_export, "convert_presentation"):
+		marp_lib.native_export.export_deck(str(deck_path), "all", stages.append)
+	assert stages == ["parsing", "pptx", "odp", "pdf"]

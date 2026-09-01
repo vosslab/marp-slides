@@ -13,6 +13,10 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 - Legacy ODP is imported once; Marp Markdown and its local assets then become authoritative.
 - Use Marp because it has a mature language specification. The production build uses neither Marp
   code nor Marp CLI.
+- Keep Marp Markdown as the authoring format rather than replacing it with a YAML or `md2pptx`
+  dialect. Clearly document standard Marp syntax and repository-specific meanings.
+- Do not show slide numbers; they encourage the audience to track remaining time and watch the
+  clock instead of the presenter.
 - `OTHER_REPOS/marp-core` and `OTHER_REPOS/marp-cli` are interpretation and conformance evidence,
   not production dependencies, runtimes, or renderers.
 - Build canonical Marp Markdown through repository-owned Python into native editable PPTX objects,
@@ -41,6 +45,9 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 - Use a `marp_lib` folder for common reusable functions that other presentation scripts import.
 - Have `build_slides.sh` build every Marp deck in a selected folder; keep `marp_to_odp.py` and
   `marp_to_pptx.py` as obvious single-deck commands.
+- Keep presentation-build output concise: show the current deck and stage transiently, then leave
+  one compact summary with relative paths, file sizes, and one elapsed total. Hide successful
+  third-party conversion chatter.
 - Prefer simple teaching layouts instead of copying arbitrary legacy ODP geometry. Keep authored
   text and images within the 1280x800 16:10 frame, and fit component images with `contain`.
 - Preserve the teaching sequence unless I explicitly approve a change.
@@ -61,3 +68,5 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 
 - Have single-repository propagation add a `devel/changelog_lib.py`-compatible changelog entry only
   when it makes real changes; recurring `.gitignore` churn must not create one.
+- Classify one-time implementation checks separately from permanent tests. Apply the permanent
+  pytest checklist, keep temporary proof out of the suite, and remove a test when in doubt.

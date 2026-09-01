@@ -369,7 +369,10 @@ def parse_blocks(path: pathlib.Path, tokens: list[Token], base_line: int,
 def parse_deck(input_path: pathlib.Path) -> marp_lib.native_model.Deck:
 	"""Parse one authoritative Marp Markdown file without Marp runtime code."""
 	path = input_path.resolve()
-	source = path.read_text(encoding="utf-8")
+	try:
+		source = path.read_text(encoding="utf-8")
+	except UnicodeDecodeError as exc:
+		raise error(path, 1, "Marp Markdown must use UTF-8 text") from exc
 	# Normalize before the strict YAML boundary while retaining physical line counts.
 	source = source.replace("\r\n", "\n").replace("\r", "\n")
 	front_matter, body, body_line = parse_front_matter(path, source)

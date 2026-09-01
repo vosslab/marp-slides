@@ -9,7 +9,8 @@ Node, npm, Marp CLI, or Marp Core runtime.
 The supported environment is macOS with Homebrew:
 
 - Python 3.12 for import, parsing, and native PPTX writing;
-- declared packages in `pip_requirements.txt`, including `python-pptx` for editable objects;
+- declared packages in `pip_requirements.txt`, including `python-pptx` for editable objects and
+  Rich for concise build progress and summaries;
 - LibreOffice Impress for ODP input, PPTX-to-ODP conversion, and ODP-to-PDF conversion; and
 - Poppler for optional local PDF review.
 

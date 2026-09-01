@@ -2,9 +2,11 @@
 
 # Standard Library
 import os
+import re
 import pathlib
 import subprocess
 import tempfile
+import collections.abc
 
 # PIP3 modules
 from pptx import Presentation
@@ -15,6 +17,16 @@ from marp_lib import layouts
 from marp_lib import libreoffice
 from marp_lib import marp_parser
 import marp_lib.native_model
+
+
+MARP_TRUE_PATTERN = re.compile(
+	r"^\s*marp\s*:\s*true(?:\s+#.*)?\s*$",
+	re.IGNORECASE | re.MULTILINE,
+)
+
+
+class PresentationInputError(ValueError):
+	"""Report an expected presentation-build input selection failure."""
 
 
 #============================================
@@ -30,12 +42,44 @@ def validate_input(input_value: str, repo_root: pathlib.Path) -> pathlib.Path:
 	"""Resolve canonical Markdown and reject failed full-slide conversions."""
 	input_path = pathlib.Path(input_value).expanduser().resolve()
 	if not input_path.is_file():
-		raise ValueError(f"input is not a file: {input_value}")
+		raise PresentationInputError(f"input is not a file: {input_value}")
 	if not input_path.is_relative_to(repo_root):
-		raise ValueError("input must be inside this repository")
+		raise PresentationInputError("input must be inside this repository")
 	if input_path.suffix != ".md":
-		raise ValueError("input must use the .md extension")
+		raise PresentationInputError("input must use the .md extension")
 	return input_path
+
+
+#============================================
+def has_marp_front_matter(input_path: pathlib.Path) -> bool:
+	"""Return whether opening front matter identifies a Markdown file as Marp."""
+	source = input_path.read_text(encoding="utf-8").replace("\r\n", "\n").replace("\r", "\n")
+	if source.startswith("\ufeff"):
+		source = source.removeprefix("\ufeff")
+	if not source.startswith("---\n"):
+		return False
+	closing = source.find("\n---", 4)
+	front_text = source[4:] if closing == -1 else source[4:closing]
+	return MARP_TRUE_PATTERN.search(front_text) is not None
+
+
+#============================================
+def discover_decks(input_value: str, repo_root: pathlib.Path,
+		allow_folder: bool = True) -> list[pathlib.Path]:
+	"""Resolve one deck or sorted direct-child Marp decks from one folder."""
+	input_path = pathlib.Path(input_value).expanduser().resolve()
+	if input_path.is_file():
+		return [validate_input(input_value, repo_root)]
+	if not input_path.is_dir():
+		raise PresentationInputError(f"input is not a file or folder: {input_value}")
+	if not allow_folder:
+		raise PresentationInputError(f"input is not a Markdown file: {input_value}")
+	if not input_path.is_relative_to(repo_root):
+		raise PresentationInputError("input must be inside this repository")
+	decks = [path for path in sorted(input_path.glob("*.md")) if has_marp_front_matter(path)]
+	if not decks:
+		raise PresentationInputError(f"no Marp Markdown decks found in: {input_value}")
+	return decks
 
 
 #============================================
@@ -82,7 +126,16 @@ def convert_presentation(input_path: pathlib.Path, output_path: pathlib.Path,
 
 
 #============================================
-def export_deck(input_value: str, output_format: str) -> dict[str, pathlib.Path]:
+def report_progress(progress_callback: collections.abc.Callable[[str], None] | None,
+		stage: str) -> None:
+	"""Report a build stage when the caller supplied a progress callback."""
+	if progress_callback is not None:
+		progress_callback(stage)
+
+
+#============================================
+def export_deck(input_value: str, output_format: str,
+		progress_callback: collections.abc.Callable[[str], None] | None = None) -> dict[str, pathlib.Path]:
 	"""Export PPTX, then editable ODP, then PDF from that ODP when requested."""
 	if output_format not in ("all", "odp", "pdf", "pptx"):
 		raise ValueError(f"unsupported output format: {output_format}")
@@ -92,19 +145,16 @@ def export_deck(input_value: str, output_format: str) -> dict[str, pathlib.Path]
 	outputs = {"pptx": repo_root / f"output/pptx/{deck_name}.pptx",
 		"odp": repo_root / f"output/odp/{deck_name}.odp",
 		"pdf": repo_root / f"output/pdf/{deck_name}.pdf"}
-	generated = {"pptx": render_native_pptx(parse_deck(input_path), outputs["pptx"])}
+	report_progress(progress_callback, "parsing")
+	deck = parse_deck(input_path)
+	report_progress(progress_callback, "pptx")
+	generated = {"pptx": render_native_pptx(deck, outputs["pptx"])}
 	if output_format in ("all", "odp", "pdf"):
+		report_progress(progress_callback, "odp")
 		convert_presentation(outputs["pptx"], outputs["odp"], "odp", repo_root)
 		generated["odp"] = outputs["odp"]
 	if output_format in ("all", "pdf"):
+		report_progress(progress_callback, "pdf")
 		convert_presentation(outputs["odp"], outputs["pdf"], "pdf", repo_root)
 		generated["pdf"] = outputs["pdf"]
 	return generated
-
-
-#============================================
-def print_outputs(outputs: dict[str, pathlib.Path]) -> None:
-	"""Print generated artifact paths in their required dependency order."""
-	for output_format in ("pptx", "odp", "pdf"):
-		if output_format in outputs:
-			print(f"{output_format.upper()}: {outputs[output_format]}")

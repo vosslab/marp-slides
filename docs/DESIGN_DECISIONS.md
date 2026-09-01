@@ -19,8 +19,9 @@ meet the editable native-object product requirement.
 
 **Consequence.** `OTHER_REPOS/marp-core` and `OTHER_REPOS/marp-cli` are conformance evidence only.
 The production dependency graph contains no Marp code, CLI, Node, browser, or render stage.
+The author-facing contract distinguishes standard Marp syntax from repository-specific meanings.
 
-**Owner.** `marp_lib/marp_parser.py` and `docs/PIPELINE.md`.
+**Owner.** `marp_lib/marp_parser.py`, `docs/MARP_SYNTAX_GUIDE.md`, and `docs/PIPELINE.md`.
 
 ### Native layout registry owns geometry
 
@@ -83,6 +84,21 @@ non-visual batch mode. ODP-to-PDF conversion uses `impress_pdf_Export`, 70 perce
 unsupported 100 DPI value with the next documented resolution.
 
 **Owner.** `marp_lib/libreoffice.py` and all LibreOffice conversion callers.
+
+### One terminal owner presents every build
+
+**Decision.** Route folder builds and destination-named single-deck commands through one Rich
+terminal interface. Keep `build_slides.sh` as a bootstrap wrapper and keep artifact generation free
+of permanent per-stage logging.
+
+**Why.** One presentation owner can show transient current work while leaving a concise,
+consistent, redirect-safe result for every command.
+
+**Consequence.** `marp_export.py` accepts a file or folder in one Python process. Folder discovery
+selects sorted direct-child Marp Markdown, successful LibreOffice output stays captured, and
+expected failures receive a concise stderr panel. Unexpected defects retain their traceback.
+
+**Owner.** `marp_lib/terminal_output.py`, `marp_lib/native_export.py`, and `build_slides.sh`.
 
 ### Native objects replace slide rasterization
 

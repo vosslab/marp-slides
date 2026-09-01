@@ -20,6 +20,9 @@ source source_me.sh && python3 tools/pptx_to_marp.py genetics/lecture.pptx
 
 ## Author a native slide
 
+Use [MARP_SYNTAX_GUIDE.md](MARP_SYNTAX_GUIDE.md) as the concise authoring contract for front matter,
+directives, layouts, content cells, pagination, supported Markdown, and native-pipeline limits.
+
 Each slide has exactly one explicit Marp class directive. The directive selects a native builder,
 not a CSS renderer. The class must be one of the layout names in [PIPELINE.md](PIPELINE.md).
 
@@ -104,6 +107,20 @@ Build PPTX, editable ODP, and PDF for every Marp deck directly in a folder:
 ./build_slides.sh genetics
 ```
 
+Use the general command when selecting one format from either one deck or one folder:
+
+```bash
+source source_me.sh && python3 tools/marp_export.py genetics --format pdf
+source source_me.sh && python3 tools/marp_export.py genetics/lecture.md --format pptx
+```
+
+Folder discovery examines only direct-child `*.md` files, sorts them by path, and skips Markdown
+without `marp: true` in its opening front matter. A terminal build shows one transient line for the
+current deck's parsing, PPTX, ODP, or PDF stage. Successful output leaves one borderless table with
+relative deck names and artifact sizes, followed by the output directories and one elapsed total.
+Redirected output is static and contains no ANSI styling. Expected input, parsing, and conversion
+failures use one concise stderr panel and a nonzero status; unexpected defects retain a traceback.
+
 Close the LibreOffice desktop application before any command that invokes it, including one-time
 ODP import and ODP/PDF builds. The shared conversion code uses `--headless --norestore` through the
 established user profile. Use LibreOffice's `--safe-mode` only when diagnosing or repairing a
@@ -114,8 +131,9 @@ The ODP-to-PDF step uses LibreOffice's `impress_pdf_Export` filter with 70 perce
 the supported image-resolution limits; 150 is the supported ceiling used in place of 100 DPI.
 
 The folder build emits `output/pptx/lecture.pptx`, `output/odp/lecture.odp`, and
-`output/pdf/lecture.pdf`. It always makes PDF by converting the produced ODP, never by creating a
-parallel PDF branch from PPTX.
+`output/pdf/lecture.pdf`. It runs all selected decks in one Python process and always makes PDF by
+converting the produced ODP, never by creating a parallel PDF branch from PPTX. LibreOffice stdout
+and stderr remain hidden after success and appear as concise diagnostics only after failure.
 
 ## Validate output
 

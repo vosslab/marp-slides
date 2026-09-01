@@ -41,8 +41,9 @@ ODP-derived PDF, for every deck directly in a folder:
 ./build_slides.sh genetics
 ```
 
-See [docs/INSTALL.md](docs/INSTALL.md) for setup and [docs/USAGE.md](docs/USAGE.md) for source
-syntax, layouts, imports, and commands.
+See [docs/INSTALL.md](docs/INSTALL.md) for setup,
+[docs/MARP_SYNTAX_GUIDE.md](docs/MARP_SYNTAX_GUIDE.md) for source syntax, and
+[docs/USAGE.md](docs/USAGE.md) for imports and commands.
 
 ## One-time migration
 
@@ -60,6 +61,7 @@ authoring source.
 
 - [docs/PIPELINE.md](docs/PIPELINE.md) - component architecture and boundaries.
 - [docs/INSTALL.md](docs/INSTALL.md) - macOS dependencies and trust boundary.
+- [docs/MARP_SYNTAX_GUIDE.md](docs/MARP_SYNTAX_GUIDE.md) - supported Marp authoring syntax.
 - [docs/USAGE.md](docs/USAGE.md) - authoring, layouts, migration, and builds.
 - [docs/HUMAN_GUIDANCE.md](docs/HUMAN_GUIDANCE.md) - durable instructor requirements.
 - [docs/DESIGN_DECISIONS.md](docs/DESIGN_DECISIONS.md) - settled architecture decisions.

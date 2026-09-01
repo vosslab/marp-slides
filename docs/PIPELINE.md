@@ -14,6 +14,7 @@ trusted legacy ODP -> LibreOffice temporary PPTX -> semantic importer -> Marp Ma
 REPEATABLE BUILD
 
 canonical Marp Markdown
+  -> marp_lib.terminal_output
   -> marp_lib.marp_parser
   -> typed native slide-object model
   -> marp_lib.layouts
@@ -34,13 +35,16 @@ visual QA is separate from the production object-conversion chain and never supp
 | `marp_lib/marp_parser.py` | Marp-subset framing, directives, and block parsing | Typed slide model |
 | `marp_lib/layouts.py` | Registry and native geometry for every supported layout | Editable PPTX objects |
 | `marp_lib/libreoffice.py` | Process preflight, conversion, and PDF filter | PPTX, ODP, and PDF conversions |
-| `marp_lib/native_export.py` | Export orchestration, notes, pagination, and paths | PPTX, ODP, and PDF paths |
+| `marp_lib/native_export.py` | Deck discovery, export stages, notes, pagination, and paths | Ordered deck and artifact paths |
+| `marp_lib/terminal_output.py` | Transient progress, summaries, and expected failures | One concise Rich interface |
+| `tools/marp_export.py` | One-deck or direct-child folder command | Selected PPTX, ODP, and PDF outputs |
 | `tools/marp_to_pptx.py` | One-deck editable PPTX command | PPTX |
 | `tools/marp_to_odp.py` | One-deck editable ODP command | PPTX and ODP |
-| `build_slides.sh` | Folder discovery and all-output build | PPTX, ODP, and ODP-derived PDF |
+| `build_slides.sh` | Environment bootstrap for the folder command | One Python batch process |
 
-`native_export` imports the layout and LibreOffice owners; neither owner imports the exporter. This
-one-way boundary keeps parsing, geometry, conversion, and output orchestration separate.
+`terminal_output` invokes `native_export`, which imports the layout and LibreOffice owners. None of
+those lower-level owners imports the terminal interface. This one-way boundary keeps presentation,
+parsing, geometry, conversion, and artifact orchestration separate.
 
 ## Native layout contract
 
