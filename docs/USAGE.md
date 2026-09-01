@@ -165,7 +165,7 @@ Use the shared `gallery` layout when one source slide contains related visuals:
 The gallery preserves one teaching beat and one slide. Its images divide the available row
 automatically, so two, three, or more images need no source-level dimensions.
 
-## Convert Marp to ODP
+## Build native presentations
 
 Run the destination-named converter when the classroom ODP is the goal:
 
@@ -175,10 +175,10 @@ source source_me.sh && python3 tools/marp_to_odp.py genetics/lecture.md
 
 It generates:
 
-- `output/pptx/lecture.pptx` as the required Marp interchange file; and
-- `output/odp/lecture.odp` for presenting in LibreOffice Impress.
+- `output/pptx/lecture.pptx` with native editable slide objects; and
+- `output/odp/lecture.odp` with editable LibreOffice presentation objects.
 
-The converter intentionally does not create a PDF. To generate only the Marp-rendered PPTX, run:
+The converter intentionally does not create a PDF. To generate only the native editable PPTX, run:
 
 ```bash
 source source_me.sh && python3 tools/marp_to_pptx.py genetics/lecture.md
@@ -186,8 +186,7 @@ source source_me.sh && python3 tools/marp_to_pptx.py genetics/lecture.md
 
 ## Build all classroom files
 
-Run the bundle command when you want PDF, PPTX, and ODP for every Marp deck directly inside a
-folder:
+Run the bundle command when you want PDF, PPTX, and ODP for every Marp deck directly inside a folder:
 
 ```bash
 ./build_slides.sh genetics
@@ -196,30 +195,39 @@ folder:
 For each deck, the bundle generates:
 
 - `output/pdf/lecture.pdf` for review and distribution;
-- `output/pptx/lecture.pptx` as the Marp interchange output; and
-- `output/odp/lecture.odp` for presenting in LibreOffice Impress.
+- `output/pptx/lecture.pptx` as native editable PowerPoint content; and
+- `output/odp/lecture.odp` for editable presentation in LibreOffice Impress.
 
 The folder scan is non-recursive and skips Markdown files that do not declare `marp: true` in
 their YAML front matter. Use `tools/marp_to_pptx.py` or `tools/marp_to_odp.py` when converting one
 deck to a specific destination.
 
-Both ODP commands use Marp's rendered PPTX pages, then LibreOffice conversion. This current baseline
-is visually faithful but flattened, so its ODP is not intended for content editing. Make corrections
-in Markdown and rebuild. It is a tested baseline, not a permanent decision that rules out a future
-repository-owned output implementation.
+`marp_lib/native_export.py` owns the shared Marp reader, native PPTX writer, layout templates, and
+output selection used by the commands. `marp_lib/__init__.py` establishes the reusable package
+boundary; `tools/marp_export.py`, `tools/marp_to_pptx.py`, and `tools/marp_to_odp.py` are thin
+executable CLIs. LibreOffice then converts the native PPTX to ODP. Text, lists, component images,
+and presenter notes stay separate native objects. The normal workflow requires no browser and
+rejects unsupported constructs rather than rasterizing a complete slide.
+Make course-content corrections in Markdown and rebuild.
 
-### Editable PPTX is a manual experiment
+### Validate native semantic output
 
-Marp 4.5 also offers `--pptx-editable`, which tries to create native PowerPoint objects instead of
-the ordinary rendered PPTX pages. It is not used by `build_slides.sh`: in the 23-slide bakeoff it
-lost all presenter notes and visibly broke the Markdown-only two-pane geometry. You may try it
-manually for a simple slide deck, but do not use it as the normal classroom path or expect it to
-preserve notes and layout. Neither normal workflow requires VS Code.
+Run the native semantic E2E gate from a macOS GUI-capable host session outside the restricted
+execution sandbox:
+
+```bash
+source source_me.sh && python3 tests/e2e/e2e_native_odp_semantics.py
+```
+
+The exporter invokes LibreOffice with `--headless`, but macOS initialization still requires that
+host-session condition. The gate drives LibreOffice through the editable PPTX-to-ODP handoff, then
+inspects both formats for native text, lists, links, presenter notes, component images, matching
+slide counts, and the absence of a full-slide image.
 
 ## Click-to-reveal teaching sequences
 
-Marp's browser-only fragmented lists do not become native ODP animations. Use consecutive build
-slides instead. For example, reveal a multiple-choice answer on the next click:
+Use consecutive build slides for classroom reveals. For example, reveal a multiple-choice answer on
+the next click:
 
 ```markdown
 # Which mutation changes one nucleotide?
@@ -255,13 +263,16 @@ The ODP importer validates its mimetype and required members. The PPTX importer 
 presentation members, accepts only GIF, JPEG, and PNG content images, and validates their decoded
 dimensions. These checks bound local processing; they do not make an untrusted presentation safe.
 
-See [INSTALL.md](INSTALL.md) for system setup and the Marp security boundary.
+See [INSTALL.md](INSTALL.md) for system setup and the presentation security boundary.
 
-## Future output experiments
+## Supported native layouts
 
-The cloned projects are useful prior art, not part of this pipeline. They are not renderers,
-dependencies, or second Markdown dialects for these lectures. If a classroom need appears later,
-their ideas about reference-PPTX geometry, image fitting, notes, ODP writing, or native objects may
-inform a narrow, repository-owned Python tool. There is no current adoption and no click-object
-animation solution. See [RELATED_PROJECTS.md](RELATED_PROJECTS.md) for the full inventory and the
-specific ideas and limitations of each clone.
+The native exporter in `marp_lib/native_export.py` recognizes the repository's compact layout
+vocabulary: title slide, section header, title-only, title/body, two-content, gallery, and
+multi-content. It maps ordinary headings, lists, images, and presenter-note comments into those
+templates. Use the existing theme class names as semantic source cues; use `contain` image placement
+and keep every object inside the 16:10 frame.
+
+The cloned projects remain prior art, not renderers, dependencies, or a second Markdown dialect.
+`md2pptx` supplies useful implementation ideas for reference geometry, native shapes, image fitting,
+and notes. See [RELATED_PROJECTS.md](RELATED_PROJECTS.md) for exact evidence and adaptation limits.

@@ -4,8 +4,8 @@
 # Standard Library
 import argparse
 
-# local repo modules
-import marp_export
+# Local Modules
+import marp_lib.native_export
 
 
 #============================================
@@ -23,8 +23,8 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
 	"""Render a PPTX interchange file and convert it into an ODP."""
 	args = parse_args()
-	outputs = marp_export.export_deck(args.input_file, "odp")
-	marp_export.print_outputs(outputs)
+	outputs = marp_lib.native_export.export_deck(args.input_file, "odp")
+	marp_lib.native_export.print_outputs(outputs)
 
 
 if __name__ == "__main__":

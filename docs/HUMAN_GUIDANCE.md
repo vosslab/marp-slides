@@ -22,11 +22,10 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 - This is a Python and Marp repository; that choice is settled.
 - legacy ODP &rarr; one-time import &rarr; Marp Markdown becomes authoritative &rarr; generated
   ODP for class
-- Marp Markdown &rarr; Marp-rendered PPTX &rarr; LibreOffice conversion &rarr; classroom ODP
-- The destination and requirements are understood, but the best implementation for generated
-  classroom output is not locked down yet.
 - Use the cloned slide repositories as idea sources and build our own repository-owned tool; do
   not adopt their code or workflows directly.
+- Use the heavily edited `md2pptx` clone for native-object implementation ideas while retaining
+  Marp syntax as this repository's authoring contract.
 - A normal instructor workflow must not require VS Code.
 - Retire the legacy ODP authoring format in favor of Marp Markdown as the future source of truth.
 - Treat ODP import as a one-time migration; after Markdown becomes canonical, do not round-trip
@@ -37,7 +36,8 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 - Prefer simple teaching layouts instead of preserving every detail of the old ODP formatting.
 - Treat layout simplification as post-conversion polish; keep the one-time ODP importer mechanical.
 - Use more simple default slide layout templates: title and body, title and two columns, title
-  slide, section header, and title only.
+  slide, section header, title only, and gallery or multi-content layouts. The LibreOffice layout
+  grid is the visual target for these native templates.
 - Every 16:10 slide must keep authored text and images inside its 1280x800 frame.
 - Let images auto-fit their layout with `contain`; avoid hard-coded per-image pixel dimensions.
 - My ODP slides are hand-authored structured documents, not scans; normal conversion must use their
@@ -54,9 +54,15 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
   edits each week.
 - Use lots of images and try to include a visual image on every slide.
 - Avoid lots of HTML or XML tags in Markdown; keep styling in one central CSS file.
-- Require Marp 4.5.0 or newer; older releases carry too many known vulnerabilities.
+- Retain Marp syntax as the authoring contract. Repository-owned Python parses the supported
+  vocabulary directly, so normal export requires no Marp CLI runtime version.
 - Keep this repository Python-only. Quarto has too much overhead, and npm or TypeScript is not
   needed for the slide pipeline.
 - Do not run a Marp server as part of the normal workflow.
-- Treat the Marp-rendered PPTX followed by LibreOffice conversion as the current tested baseline,
-  rather than a permanently selected implementation detail.
+- Build Marp Markdown directly into native editable PPTX objects, then generate editable ODP for
+  LibreOffice Impress. Preserve text, lists, component images, layout, and presenter notes.
+- Treat every full-slide raster image or raster fallback in generated PPTX or ODP as a failed
+  product result. A browser is not a normal build dependency.
+- This pre-production repository uses direct replacements when terminology or architecture changes;
+  keep the workflow simple rather than carrying compatibility layers or transitional formats.
+- Use a `marp_lib` folder for common reusable functions that other presentation scripts import.

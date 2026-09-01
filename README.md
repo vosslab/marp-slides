@@ -1,7 +1,7 @@
 # marp-slides
 
-Convert legacy biology lectures into simple, reviewable Marp Markdown and regenerate dependable
-PDF, PowerPoint, and LibreOffice classroom presentations.
+Convert legacy biology lectures into simple, reviewable Marp Markdown and regenerate native,
+editable PowerPoint and LibreOffice classroom presentations.
 
 ## One source, classroom-ready outputs
 
@@ -13,8 +13,11 @@ legacy ODP -> one-time import -> authoritative Marp Markdown -> generated ODP fo
 
 - Simple title, bullet, and figure slides become editable Markdown.
 - Structured text, images, notes, visibility, and geometry survive through a temporary PPTX.
-- One command rebuilds PDF, PPTX, and ODP from the same Markdown source.
-- Homebrew owns Marp 4.5.0 or newer; the repository has no npm or TypeScript dependency layer.
+- One command rebuilds PDF, native PPTX, and editable ODP from the same Markdown source.
+- Repository-owned Python maps the supported Marp vocabulary to native slide objects without a
+  browser or rendered-slide fallback.
+- `marp_lib` provides the shared native-export implementation; the commands in `tools/` remain
+  small executable entry points.
 
 The two migrated genetics examples preserve their original 31-slide and 23-slide teaching
 sequences without embedding a rendered source slide as converted content.
@@ -29,11 +32,10 @@ source source_me.sh && python3 -m pip install -r pip_requirements.txt
 source source_me.sh && python3 tools/marp_to_odp.py genetics/lect01b-genetic_disorders.md
 ```
 
-The conversion writes the classroom file under `output/odp/` and its required PPTX intermediate
-under `output/pptx/`. Use `./build_slides.sh genetics` to rebuild PDF, PPTX, and ODP files for
-every Marp deck in that folder. See
-[docs/INSTALL.md](docs/INSTALL.md) for supported tools, browser requirements, and the local-file
-security boundary.
+The conversion writes the classroom file under `output/odp/` and its native PPTX source under
+`output/pptx/`. Use `./build_slides.sh genetics` to rebuild PDF, PPTX, and ODP files for every
+Marp deck in that folder. See [docs/INSTALL.md](docs/INSTALL.md) for supported tools and the
+local-file security boundary.
 
 ## Import another lecture
 
@@ -63,9 +65,9 @@ and click-to-reveal build slides.
 
 The importer is a migration aid, not a general ODP layout engine. It maps structured objects into a
 small layout vocabulary and flags dense text or unsupported drawing geometry for post-conversion
-polish; it never substitutes a full-slide screenshot. Marp exports static PPTX pages in the current
-baseline, so the generated ODP is visually faithful but intentionally not an editable content
-source. Use successive build slides for classroom reveals.
+polish. The native exporter creates editable text, list, shape, and component-image objects; it
+rejects unsupported constructs rather than replacing a slide with a raster image. Use successive
+build slides for classroom reveals.
 
 ## License
 

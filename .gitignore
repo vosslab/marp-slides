@@ -27,16 +27,3 @@ sdist/
 *.egg
 *.egg-info/
 site/
-
-# === TYPESCRIPT === [PROPAGATED - LOCAL EDITS OVERWRITTEN]
-dist_*/
-_site/
-*.tsbuildinfo
-.eslintcache
-.prettiercache
-test-results/
-playwright-report/
-blob-report/
-coverage/
-meta.json
-stats.html

@@ -1,5 +1,40 @@
 ## 2026-09-01
 
+### Behavior Changes
+
+- Replaced the documented browser-rendered, flattened presentation baseline with the native-output
+  product contract: repository-owned Python maps authoritative Marp Markdown into editable PPTX
+  objects, then LibreOffice creates editable ODP.
+- Made `marp_lib/native_export.py` the direct owner of native Marp parsing, PPTX writing, layout
+  templates, and output selection, with `marp_lib/__init__.py` as its package boundary. The
+  destination-named commands retain single-deck command ownership, and `build_slides.sh` retains
+  folder-level command ownership.
+- Defined title slide, section header, title-only, title/body, two-content, gallery, and
+  multi-content as the supported native layout vocabulary, using the LibreOffice layout grid as the
+  visual target.
+- Added destination-named `tools/marp_to_pptx.py` and `tools/marp_to_odp.py` commands backed by one
+  validated `marp_lib/native_export.py` implementation.
+
+### Design Decisions
+
+- Recorded full-slide rasterization and raster fallbacks as failed presentation results. Normal
+  presentation builds require no browser.
+- Recorded the heavily edited local `md2pptx` clone as implementation prior art for native objects,
+  image fitting, list construction, and notes while retaining Marp syntax rather than its dialect.
+
+### Current native export verification
+
+- Added the native semantic E2E gate. Run
+  `source source_me.sh && python3 tests/e2e/e2e_native_odp_semantics.py` from a macOS GUI-capable
+  host session outside the restricted execution sandbox. It inspects native PPTX and editable ODP
+  text, lists, links, notes, component images, slide count, and full-slide-image absence.
+
+## Historical renderer and migration records
+
+The entries below retain evidence from the former Marp CLI/browser-rendered PPTX path and earlier
+migration work. They are historical records, not the current presentation contract, except where
+an entry explicitly identifies the current native package or native semantic E2E gate above.
+
 ### Additions
 
 - Added `docs/PIPELINE.md` as the canonical component architecture for the import and build engine,
@@ -13,8 +48,6 @@
   and auto-fitting gallery layouts.
 - Added `build_slides.sh` to generate PDF and PPTX with Marp 4.5.0 or newer and convert the PPTX
   into a classroom ODP with LibreOffice.
-- Added destination-named `tools/marp_to_pptx.py` and `tools/marp_to_odp.py` commands backed by one
-  validated `tools/marp_export.py` implementation.
 - Added installation, usage, design, human-guidance, and measured palette documentation plus a
   useful repository landing page.
 - Added the first canonical migration candidate, `genetics/lect01b-genetic_disorders.md`, with its
@@ -75,8 +108,8 @@
   as the geometry-normalization path for inconsistent legacy ODP layouts.
 - Kept all `OTHER_REPOS/` clones as prior art only; future repository-owned work may adapt their
   ideas without adopting their code, dependencies, Markdown dialects, or VS Code workflows.
-- Chose ordinary Marp-rendered PPTX followed by LibreOffice conversion as the current classroom
-  baseline after a measured bakeoff; it is not a permanent output-mechanism commitment.
+- Recorded an ordinary Marp-rendered PPTX followed by LibreOffice conversion as the temporary
+  classroom baseline after a measured bakeoff; it was later retired for native output.
 
 ### Developer Tests
 

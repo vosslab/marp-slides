@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
-"""Convert trusted repository Marp Markdown into a rendered PPTX."""
+"""Create one native editable PPTX from repository Marp Markdown."""
 
 # Standard Library
 import argparse
 
-# local repo modules
-import marp_export
+# Local Modules
+import marp_lib.native_export
 
 
 #============================================
 def parse_args() -> argparse.Namespace:
-	"""Parse command-line arguments."""
+	"""Parse the single-deck PPTX command arguments."""
 	parser = argparse.ArgumentParser(
-		description="Convert one trusted repository Marp Markdown deck into a PPTX.",
+		description="Create one native editable PPTX from Marp Markdown.",
 	)
 	parser.add_argument("input_file", help="repository Markdown deck")
 	args = parser.parse_args()
@@ -21,10 +21,10 @@ def parse_args() -> argparse.Namespace:
 
 #============================================
 def main() -> None:
-	"""Render one Marp Markdown deck into a PPTX."""
+	"""Write and print the native PPTX for one canonical deck."""
 	args = parse_args()
-	outputs = marp_export.export_deck(args.input_file, "pptx")
-	marp_export.print_outputs(outputs)
+	outputs = marp_lib.native_export.export_deck(args.input_file, "pptx")
+	marp_lib.native_export.print_outputs(outputs)
 
 
 if __name__ == "__main__":

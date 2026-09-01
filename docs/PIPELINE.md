@@ -1,8 +1,9 @@
 # Pipeline architecture
 
-This repository is built as a set of narrow presentation components rather than one large
-converter. Marp CLI remains the Markdown renderer. Python supplies the semantic import and
-orchestration layers, while LibreOffice bridges the formats Marp does not read or write.
+This repository is built as narrow presentation components rather than one large converter. Python
+supplies the semantic import, native-output, and orchestration layers, while LibreOffice bridges
+the final native PPTX to editable ODP. Marp Markdown remains the authoring syntax; no browser
+renders the presentation build.
 
 The architecture is successful when each component owns one transformation, exchanges a clear
 artifact with the next component, and leaves Marp Markdown as the only long-lived authoring source.
@@ -43,18 +44,17 @@ artifact with the next component, and leaves Marp Markdown as the only long-live
          +---- central genetics theme
          |
          v
- shared Marp render adapter
+ native Marp-to-PPTX exporter
          |
+         v
+ native editable PPTX
          +-----------------------+
          |                       |
          v                       v
-       PDF                rendered PPTX
+ LibreOffice PDF bridge   LibreOffice ODP bridge
                                  |
                                  v
-                       LibreOffice ODP bridge
-                                 |
-                                 v
-                           classroom ODP
+                         classroom editable ODP
 ```
 
 ## Architectural components
@@ -121,35 +121,39 @@ importer mechanical and makes post-conversion layout improvements possible witho
 
 ### Central theme
 
-`themes/genetics.css` owns the visual system shared by every deck:
+`themes/genetics.css` keeps the authoring-side visual vocabulary shared by every deck:
 
 - the 16:10, 1280x800 frame;
 - OpenDyslexic and long-URL typography;
-- spacing, hierarchy, colors, and pagination;
-- reusable layout geometry; and
-- automatic image fitting inside bounded layout regions.
+- spacing, hierarchy, colors, pagination, and semantic layout names; and
+- authoring-side image-fitting guidance.
 
-Separating layout classification from theme geometry lets Markdown stay readable while one CSS file
-enforces consistency across lectures.
+The CSS theme is the canonical authoring vocabulary and visual reference. Until shared theme data is
+explicitly implemented, `marp_lib/native_export.py` independently owns exported object geometry and
+typography. This keeps Markdown readable while exports use one consistent native template set.
 
-### Marp render adapter
+### Native Marp exporter
 
-`tools/marp_export.py` is the single integration point with Marp CLI. It owns renderer discovery,
-the Marp 4.5 minimum, browser selection, theme registration, format selection, and generated output
-locations.
+`marp_lib/native_export.py` is the shared native exporter. `marp_lib/__init__.py` establishes its
+package boundary. The module owns the supported Marp source reader, native PPTX writer, template
+geometry, and output selection. It reads front matter, slide boundaries, headings, lists, images,
+class directives, and presenter-note comments, then writes native PowerPoint text, list, shape, and
+component-image objects into a small set of templates.
 
-The destination-named commands are thin facades over this adapter:
+The destination-named commands remain thin command owners:
 
-- `tools/marp_to_pptx.py` selects the PPTX output path; and
-- `tools/marp_to_odp.py` selects the PPTX-to-ODP classroom path.
+- `tools/marp_to_pptx.py` selects the native PPTX output path; and
+- `tools/marp_to_odp.py` selects the native-PPTX-to-ODP classroom path.
 
-Centralizing Marp invocation prevents each public command from developing its own renderer flags,
-version rules, or failure behavior.
+The three executable CLIs import the same shared implementation, so every public command uses one
+source reader, template mapping, and native-object contract. The package is code organization, not
+an additional conversion stage.
 
 ### LibreOffice output bridge
 
-Marp does not generate ODP. The build engine therefore treats Marp's rendered PPTX as an interchange
-artifact and gives it to LibreOffice for the final classroom ODP.
+LibreOffice receives native PPTX as an interchange artifact and writes the final editable classroom
+ODP. It also derives the PDF review and distribution output from that native PPTX. The bridge
+preserves the native-object product contract; it is not a rendered-page conversion.
 
 This bridge is downstream of the authoritative source. It can be replaced or improved later without
 changing the Markdown authoring contract.
@@ -157,7 +161,7 @@ changing the Markdown authoring contract.
 ### Batch coordinator
 
 `build_slides.sh` composes the single-deck exporter across a folder. It owns deck discovery and
-batch failure propagation, while all rendering and conversion remain in the shared Python adapter.
+batch failure propagation, while all rendering and conversion remain in the shared Python module.
 
 This separation keeps batch behavior from becoming a second implementation of the pipeline.
 
@@ -171,8 +175,8 @@ Each boundary uses an artifact that can be inspected independently.
 | LibreOffice normalization | Temporary PPTX | Semantic importer |
 | Semantic importer | Internal slide records | Layout classifier |
 | Layout classifier | Markdown, assets, report | Instructor and build engine |
-| Central theme | Named layout contracts | Marp renderer |
-| Marp render adapter | PDF or rendered PPTX | Distribution or ODP bridge |
+| `marp_lib/native_export.py` templates | Named layout contracts | Native exporter |
+| Native Marp exporter | Editable PPTX | LibreOffice PDF or ODP bridge |
 | LibreOffice output bridge | ODP | Classroom presentation |
 
 Temporary artifacts exist only to connect components. Durable artifacts are limited to the original
@@ -193,27 +197,27 @@ work from destroying editability.
 
 ### External tools behind adapters
 
-LibreOffice, Marp, and Chromium are invoked at narrow module boundaries. The rest of the repository
-works with paths, semantic records, and explicit result objects rather than external-tool details.
+LibreOffice is invoked at a narrow output boundary. The rest of the repository works with paths,
+semantic records, and explicit result objects rather than a browser-rendering tool.
 
 This makes tool replacement possible without rewriting the entire pipeline.
 
-### One renderer path
+### One output path
 
-PDF, PPTX, and ODP builds all pass through the same Marp adapter. ODP adds one downstream bridge but
-does not introduce another Markdown renderer or layout dialect.
+PPTX and ODP builds pass through the same direct native exporter. ODP adds one downstream bridge
+but does not introduce another Markdown dialect or a rendered-slide fallback.
 
-### Theme-owned geometry
+### Template-owned geometry
 
-Layout dimensions live in the theme rather than individual decks. The engine emits semantic layout
-names and lets CSS fit content into the frame. This is the main mechanism for keeping hand-authored
-lectures consistent after migration.
+Layout dimensions live in native templates rather than individual decks. The engine maps semantic
+Marp layout names to title slide, section header, title-only, title/body, two-content, gallery, and
+multi-content regions within the 16:10 frame. This is the main mechanism for keeping lectures
+consistent after migration.
 
 ### Fail at component boundaries
 
 Each stage validates the artifact it receives and stops when a required invariant is lost. The
-pipeline does not hide failures with source-slide screenshots, alternate renderers, older Marp
-versions, or guessed visibility.
+native exporter reports an unsupported construct rather than emitting a full-slide raster image.
 
 ### Disposable build outputs
 
@@ -227,8 +231,8 @@ Successful conversion has three distinct evidence lanes:
 | Lane | Establishes |
 | --- | --- |
 | Fast Python tests | Validation, parsing, semantic extraction, and layout-selection behavior |
-| End-to-end builds | Marp, Chromium, LibreOffice, counts, notes, and format interoperability |
-| Rendered review | Text and images remain inside the frame and make visual teaching sense |
+| Native semantic E2E gate | Native PPTX and ODP text, lists, links, notes, component images, counts, and no full-slide image |
+| Object and rendered review | Text and images remain editable, inside the frame, and teach clearly |
 
 No single lane establishes the whole pipeline. Unit tests cannot prove LibreOffice fidelity, and a
 good screenshot cannot prove that imported text and images remain editable semantic objects.
@@ -239,9 +243,9 @@ The component boundaries intentionally leave room for later improvements:
 
 - a neutral ODP archive reader can remove the current importer/visibility ownership cycle;
 - a directory-preserving output mapper can replace flat generated filenames;
-- a native or reference-template ODP writer can replace the LibreOffice output bridge;
-- new recurring teaching layouts can enter through the classifier/theme interface; and
-- a permanent E2E runner can formalize the existing measured build evidence.
+- a native ODP writer can replace the LibreOffice output bridge;
+- new recurring teaching layouts can enter through the classifier/template interface; and
+- the native semantic E2E gate can gain visual-layout assertions for additional recurring templates.
 
 These changes should replace one component behind an existing interface rather than create a second
 authoring source or parallel rendering pipeline.
@@ -250,8 +254,9 @@ authoring source or parallel rendering pipeline.
 
 - Same-named decks in different course folders currently target the same flat output filenames.
 - The visibility command and ODP importer still share a cyclic ownership edge.
-- Real Marp/LibreOffice builds have measured manual evidence but no permanent E2E runner.
-- The rendered PPTX-to-ODP bridge favors visual fidelity over native slide-object editability.
+- The permanent native semantic E2E gate verifies object semantics; rendered review remains the
+  evidence for visual clarity and frame containment.
+- Native template coverage must grow only when a recurring teaching layout has an explicit contract.
 
 These are explicit component-level debts for the next approved implementation plan.
 

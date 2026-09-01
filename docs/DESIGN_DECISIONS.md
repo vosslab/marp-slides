@@ -40,18 +40,19 @@ future changelog writes use the shared changelog library rather than assembling 
 
 ## Dependencies
 
-### Homebrew owns the Marp installation
+### Repository-owned Python writes presentation objects
 
-**Decision.** Install Marp CLI 4.5.0 or newer through Homebrew and keep this repository Python-only,
-without `package.json`, `package-lock.json`, local `node_modules`, TypeScript, or Quarto.
+**Decision.** Use repository-owned Python tooling to read the supported Marp Markdown vocabulary and
+write native, editable PPTX objects directly. LibreOffice converts that native PPTX into editable ODP.
 
-**Why.** Marp is an external renderer rather than application code. Homebrew gives it one upgrade
-path and avoids the npm forced-audit solver alternating between old and new vulnerable Marp trees.
+**Why.** The classroom product requires editable text, lists, component images, layout, and presenter
+notes. Browser-rendered presentation pages cannot meet that product meaning.
 
-**Consequence.** `brew bundle` installs the rendering tools, Node remains only a transitive Marp
-formula dependency, and repository commands invoke `marp` from `PATH`.
+**Consequence.** The presentation build has no browser requirement. The supported vocabulary maps to
+native title slide, section header, title-only, title/body, two-content, gallery, and multi-content
+templates instead of a general CSS rendering engine.
 
-**Owner.** `Brewfile`, `tools/marp_export.py`, and `build_slides.sh`.
+**Owner.** `marp_lib/native_export.py` and `docs/PIPELINE.md`.
 
 ## Generated artifacts
 
@@ -123,43 +124,36 @@ ODP-to-PPTX step invokes LibreOffice. Input validation does not sandbox LibreOff
 opening ODP files from unknown sources. The build wrapper's local-file access remains limited to
 the repository's teaching assets.
 
-**Owner.** `tools/odp_to_marp.py`, `tools/marp_export.py`, `build_slides.sh`, and
-`docs/INSTALL.md`.
+**Owner.** `tools/odp_to_marp.py`, `marp_lib/native_export.py`, and `docs/INSTALL.md`.
 
 ### Classroom reveals use successive build slides
 
 **Decision.** Represent click-to-reveal bullets, images, and answers as consecutive Markdown slides
 that progressively add content.
 
-**Why.** Marp browser fragments do not become native animations in the static PPTX-to-ODP export,
-while successive slides work consistently in LibreOffice Impress, PDF, and PowerPoint.
+**Why.** Successive slides work consistently in LibreOffice Impress and native PowerPoint output.
 
-**Consequence.** Generated ODP decks preserve the teaching sequence without requiring browser
-presentation mode or post-generation ODP editing.
+**Consequence.** Generated ODP decks preserve the teaching sequence without post-generation ODP
+editing.
 
 **Owner.** `docs/USAGE.md`.
 
-### Flattened PPTX conversion is the current classroom baseline
+### Native editable output replaces rendered presentation pages
 
-**Decision.** Build normal classroom output through Marp 4.5's ordinary rendered PPTX, then
-convert that PPTX to ODP with LibreOffice. This is a current verified baseline, not a permanent
-choice of output implementation.
+**Decision.** Generate native editable PPTX and ODP as the only normal classroom-output path.
 
-**Why.** The 23-slide genetics bakeoff preserved every page, the 16:10 layout, and all 23 ODP note
-parts containing about 6,460 note characters. Marp's official `--pptx-editable` mode instead lost
-all notes and visibly broke the two-pane layout, despite producing native PowerPoint objects.
+**Why.** Full-slide rasterization defeats editable slide objects and is incompatible with the
+instructor's product requirement.
 
-**Consequence.** The normal build output remains visually faithful and flattened. Editable PPTX
-may be run manually as a measured experiment for simple slides, but it is not normal build output
-and must not promise page geometry or presenter-note preservation.
+**Consequence.** Generated decks contain separately addressable text, list, shape, and component-image
+objects. The exporter rejects unsupported source features explicitly and has no raster fallback.
 
-**Owner.** `tools/marp_export.py`, `tools/marp_to_odp.py`, `build_slides.sh`, `docs/USAGE.md`, and
-the output bakeoff evidence.
+**Owner.** `marp_lib/native_export.py` and its validation contracts.
 
-### Destination-named converters expose the pipeline
+### Destination-named converters expose native output
 
-**Decision.** Provide `tools/marp_to_pptx.py` for PPTX-only export and `tools/marp_to_odp.py` for
-the rendered-PPTX-to-ODP classroom path. Each Python command accepts one Markdown deck. Keep
+**Decision.** Provide `tools/marp_to_pptx.py` for native PPTX export and `tools/marp_to_odp.py` for
+native-PPTX-to-ODP classroom export. Each Python command accepts one Markdown deck. Keep
 `build_slides.sh` as a directory-level batch command that builds PDF, PPTX, and ODP for every
 Marp deck directly in the selected folder.
 
@@ -167,30 +161,45 @@ Marp deck directly in the selected folder.
 makes the generated side effects explicit. The plural shell command provides one obvious way to
 rebuild a collection without weakening the single-deck Python interface.
 
-**Consequence.** Every public export command reuses `tools/marp_export.py`; format-specific commands
-do not duplicate renderer discovery, version enforcement, path validation, or conversion logic.
-The batch command scans one directory non-recursively and ignores Markdown without `marp: true` in
-its YAML front matter.
+**Consequence.** `marp_lib/native_export.py` owns the parser, native writer, templates, and output
+selection. `marp_lib/__init__.py` establishes the package boundary. The destination-named commands
+select one output destination; the batch command scans one directory non-recursively and ignores
+Markdown without `marp: true` in its YAML front matter.
 
-**Owner.** `tools/marp_export.py`, `tools/marp_to_pptx.py`, `tools/marp_to_odp.py`, and
+**Owner.** `marp_lib/native_export.py`, `tools/marp_export.py`, `tools/marp_to_pptx.py`,
+`tools/marp_to_odp.py`, and
 `build_slides.sh`.
 
-### A central theme owns the visual vocabulary
+### CSS defines authoring vocabulary and native templates own output geometry
 
-**Decision.** Keep slide source close to ordinary Markdown and centralize typography, color,
-spacing, and reusable layout behavior in one Marp CSS theme. Favor image-led title, split, and
-full-visual slides.
+**Decision.** Keep slide source close to ordinary Marp Markdown. Treat `themes/genetics.css` as the
+canonical authoring vocabulary and visual reference; let `marp_lib/native_export.py` own the native
+output geometry and typography until an explicit shared theme-data contract exists. Favor image-led
+title, split, gallery, and multi-content slides.
 
 **Why.** The lectures use a visual on most slides, while repeated HTML, XML, and inline styling
 would make the authoritative Markdown harder to read and maintain.
 
-**Consequence.** Add a small named layout to the central theme when a repeated teaching pattern is
-needed. Do not solve recurring layout needs with copied raw HTML, per-slide style blocks, or fixed
-pixel dimensions on individual images. Images use `contain` within their layout's available space.
-A percentage on a Marp `bg right` or `bg left` directive allocates a layout pane; it does not set
-the raster image's width or height.
+**Consequence.** Add a small named layout to the native exporter when a repeated teaching pattern is
+needed. Images use `contain` inside their assigned native layout region. Marp class directives and
+the CSS theme remain authoring cues; the exporter does not parse CSS into native geometry or
+typography unless shared theme data is deliberately implemented.
 
-**Owner.** `themes/genetics.css` and `docs/USAGE.md`.
+**Owner.** `marp_lib/native_export.py` and `docs/USAGE.md`.
+
+### Native exporter has a shared package boundary
+
+**Decision.** Keep reusable Marp parsing, native PPTX writing, template geometry, and output
+selection in `marp_lib/native_export.py`, with `marp_lib/__init__.py` as the package boundary.
+
+**Why.** The exporter serves several executable commands and future presentation scripts. A
+repository-owned module gives them one direct implementation to import.
+
+**Consequence.** `tools/marp_export.py`, `tools/marp_to_pptx.py`, and `tools/marp_to_odp.py` stay
+small executable CLIs. `marp_lib` organizes shared code; the product pipeline remains Marp Markdown
+to native editable PPTX to editable ODP.
+
+**Owner.** `marp_lib/native_export.py`, `marp_lib/__init__.py`, and `docs/PIPELINE.md`.
 
 ### Post-conversion polish owns layout and typography
 

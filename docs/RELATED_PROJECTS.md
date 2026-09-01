@@ -2,9 +2,9 @@
 
 This guide records the 14 repositories evaluated on 2026-09-01 while designing this
 repository's instructor-owned Markdown-to-classroom-slide workflow. They are idea
-libraries, not dependencies or an adopted implementation. The destination is clear:
-authoritative Marp Markdown, with generated presentation files. The implementation
-details remain open to measured experiments, especially around editable classroom output.
+libraries, not dependencies or an adopted implementation. The product contract is authoritative
+Marp Markdown with native editable PPTX and ODP output. The repository-owned Python exporter owns
+that contract.
 
 ## At-a-glance inventory
 
@@ -117,14 +117,36 @@ details remain open to measured experiments, especially around editable classroo
 
 - Relationship: Prior art or inspiration.
 - Link: [Official repository](https://github.com/MartinPacker/md2pptx).
-- Why visitors may care: It is a mature Python path for creating native PPTX from a Markdown-like
-  source when reference templates and presenter notes are important.
-- Evidence: Its README documents a Python 3 `python-pptx` converter, a reference PPTX template,
-  slide conventions, and notes.
+- Why visitors may care: The heavily edited local clone demonstrates native Python `python-pptx`
+  construction techniques relevant to this repository's editable-output target.
+- Evidence: `md2pptx.py` creates a slide with `addSlide()`, reads a template through
+  `Presentation(slideTemplateFile)`, maps a bounded rectangle with `Rectangle`, fits component
+  images through `scalePicture()`, builds list content in `createListBlock()`, and writes presenter
+  notes with `createSlideNotes()` through `slide.notes_slide.notes_text_frame`. `runPython.py`
+  demonstrates direct `slide.shapes.add_textbox()`, `add_picture()`, `add_shape()`, and
+  `add_connector()` calls.
 - Activity and license: The local clone's latest commit is 2026-08-31; it is MIT licensed.
-- Adaptation idea: Retain only ideas about reference-PPTX geometry, image fitting, and notes.
-- Limitation: It defines a second Markdown dialect and a direct renderer, so it must not replace
-  Marp as the canonical authoring syntax.
+- Adaptation idea: Adapt the demonstrated native-object techniques into the local exporter: fixed
+  template geometry, bounded contain fitting, text/list population, and note assignment.
+- Limitation: Its input parser, metadata syntax, global option state, and reference-template
+  conventions form a separate Markdown dialect. The local exporter retains Marp front matter,
+  slide separators, directives, and presenter-note comments instead.
+
+#### md2pptx implementation boundary
+
+The local clone is useful as implementation evidence rather than a drop-in library. Its important
+inner workings are confined to four reusable ideas:
+
+| Local evidence | Native-output use |
+| --- | --- |
+| `addSlide()` selects a PowerPoint layout and creates a slide | Select one repository-owned native template for each supported Marp layout. |
+| `scalePicture()` calculates a bounded aspect-preserving fit | Place each authored component image with `contain` geometry. |
+| `createListBlock()` sizes and populates a text shape | Map Marp bullet nesting to editable paragraph levels. |
+| `createSlideNotes()` writes `notes_text_frame` | Preserve Marp presenter-note comments as editable speaker notes. |
+
+This repository adapts the techniques, not the source or its Markdown dialect.
+`marp_lib/native_export.py` uses small explicit templates matching the LibreOffice layout grid: title
+slide, section header, title-only, title/body, two-content, gallery, and multi-content.
 
 ### odpdown
 
@@ -219,9 +241,9 @@ Two bounded discovery rounds supplemented the clone evidence. The seed round che
 [md2pptx](https://github.com/MartinPacker/md2pptx). The widening round checked
 [deck2video](https://github.com/pjdoland/deck2video),
 [Marp documentation](https://github.com/marp-team/marp), and related format-conversion leads.
-Marp's official documentation confirms CLI output includes HTML, PDF, PPTX, and images; it also
-warns that editable PPTX has lower visual reproducibility. That supports continued experimentation
-rather than a permanent output-mechanism decision.
+Marp's official documentation confirms CLI output includes HTML, PDF, PPTX, and images. This
+repository retains Marp syntax for authoring but intentionally owns native presentation output in
+Python so the classroom files preserve editable slide objects.
 
 The widening round also found additional untraced projects, including `marp2pptx`, `marp-pptx`,
 and `MarpToPptx`. They are deliberately excluded from the candidate list because they were not
