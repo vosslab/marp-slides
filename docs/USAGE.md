@@ -3,7 +3,7 @@
 The pipeline is deliberately one-way:
 
 ```text
-legacy ODP -> one-time Python import -> Marp Markdown -> PDF/PPTX -> classroom ODP
+legacy ODP -> temporary PPTX -> Python object extraction -> Marp Markdown -> classroom ODP
 ```
 
 Marp Markdown and its assets become the editable source of truth. The generated ODP is the file to
@@ -20,7 +20,7 @@ source source_me.sh && python3 tools/odp_to_marp.py genetics/lecture.odp
 By default this writes:
 
 - `genetics/lecture.md`; and
-- `genetics/assets/lecture/` for extracted images and source-rendered fallbacks.
+- `genetics/assets/lecture/` for extracted content images.
 
 To create a review draft elsewhere, use an explicit new output path:
 
@@ -34,25 +34,26 @@ after Markdown has become canonical.
 
 ### Trust the legacy input
 
-Import only instructor-owned, trusted ODP files. Archive, XML, and image validation bounds the
-Python extraction work, but a complex slide can require LibreOffice fallback rendering. That
+Import only instructor-owned, trusted ODP files. Archive validation bounds the Python extraction
+work, but the importer invokes LibreOffice to create a temporary geometry-normalized PPTX. That
 validation does not sandbox LibreOffice. Keep the same trust boundary when building: Marp Markdown
 and assets must be local, repository-owned teaching material.
 
 ## What the importer preserves
 
-Simple title, question, bullet, and figure slides become editable Markdown. The importer also:
+The importer converts the ODP to a temporary PPTX, then uses `python-pptx` to map every visible
+source slide into editable Marp Markdown. It also:
 
 - preserves list nesting and ordinary Unicode text;
 - extracts embedded PNG and JPEG images under internally generated filenames;
 - carries ODP speaker notes into Marp presenter-note comments;
-- skips ODP slides explicitly marked hidden, including inherited drawing-page styles; and
-- validates archive paths, member counts, compressed size, expanded size, XML, and image signatures.
+- skips slides marked hidden by the normalized presentation; and
+- uses source geometry to select a simple Marp layout rather than copying arbitrary coordinates.
 
-Dense slides, unsupported image formats, and slides with positioned drawing geometry become
-full-slide PNG fallbacks. Their source text and the fallback reason remain in a presenter-note
-comment. The deck is immediately presentable, and each fallback identifies a slide that still needs
-manual simplification.
+The importer never uses a full-slide source render as converted content. A source render may be used
+temporarily for visual comparison, but `slide_*_source.png` references are conversion failures and
+must not appear in canonical or buildable Marp decks. OCR is not part of the normal workflow because
+the legacy slides are structured authored documents, not scans.
 
 ## Clean up the Markdown
 
@@ -64,7 +65,7 @@ Edit the `.md` file and its local assets. Favor the layouts already supported by
 - a simple two-column text-and-figure slide; or
 - a full-slide image when the original figure itself is the teaching content.
 
-Replace source-rendered fallback slides gradually with concise Markdown. Do not edit the generated
+Preserve the source slide count and order while simplifying each slide. Do not edit the generated
 ODP as a way to change course content.
 
 Treat this cleanup as a post-conversion polish pass, not as more importer logic. Start with ordinary
@@ -72,10 +73,27 @@ Marp headings, lists, and advanced background images. For a text-and-image split
 such as `![bg right:42% contain](figure.png)` own the pane geometry; do not add a second class that
 also reserves space on the right.
 
+Use `contain` and let the layout provide the available image area. Do not add per-image pixel widths
+or heights to make one render fit; fix the shared layout when its images do not auto-fit correctly.
+
 The central genetics theme uses OpenDyslexic for all authored slide text and PT Sans Narrow for URL
-text. Text contained inside screenshots, figures, or full-slide source-fallback PNGs is raster
-content and cannot inherit either theme font. Reauthor a fallback as Markdown when its legacy text
-needs to adopt the current typography.
+text. Text that is naturally part of a screenshot or figure remains image content, but the slide's
+headings, explanations, and lists must be Markdown so they inherit the theme.
+
+### Header with one auto-fitting figure
+
+Use the shared `figure` layout for a heading above one content image:
+
+```markdown
+<!-- _class: figure -->
+
+# Blackboard website
+
+![Blackboard course page](blackboard.png)
+```
+
+The figure consumes the remaining space below the heading and fits with `contain`; do not add a
+per-image height or width.
 
 ### Header with left and right panes
 
@@ -101,6 +119,21 @@ block becomes one pane, so the source needs no raw HTML or XML:
 The first heading spans the slide. The first and second quoted blocks become the left and right
 panes. Put the image in either pane to reverse the visual emphasis. Repeated geometry belongs in
 `themes/genetics.css`, not copied style blocks.
+
+### Header with a three-image gallery
+
+Use the shared `gallery` layout when one source slide contains three related visuals:
+
+```markdown
+<!-- _class: gallery -->
+
+# Cryo-Electron Microscope
+
+![Column](column.png) ![Console](console.png) ![Researchers](researchers.png)
+```
+
+The gallery preserves one teaching beat and one slide while keeping placement and automatic image
+fitting in the central theme.
 
 ## Convert Marp to ODP
 

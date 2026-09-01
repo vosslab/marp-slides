@@ -8,9 +8,10 @@ use npm, TypeScript, or a local `node_modules` directory.
 The supported development environment is macOS with Homebrew. The build requires:
 
 - Python 3.12 for the importer;
+- `python-pptx` for structured text, image, note, and geometry extraction;
 - Marp CLI 4.5.0 or newer;
 - LibreOffice Impress for ODP input and output;
-- Poppler for rendering complex source slides; and
+- Poppler for optional rendered-output review; and
 - an installed Chromium-compatible browser such as Brave, Chrome, Chromium, or Vivaldi.
 
 ## Install system tools
@@ -51,10 +52,9 @@ transitive packages. Marp is therefore treated as a local build tool for trusted
 Markdown. The build wrapper rejects files outside the repository and enables local-file access only
 so those trusted decks can load their own images.
 
-Only import legacy ODP files that are instructor-owned and trusted. The importer validates ZIP
-members, XML, and extracted images, but it may invoke LibreOffice to render a complex-slide
-fallback. Those checks do not sandbox LibreOffice, so they do not make an untrusted ODP safe to
-open or render.
+Only import legacy ODP files that are instructor-owned and trusted. The importer validates the
+archive before invoking LibreOffice to create a temporary PPTX for structured geometry extraction.
+Those checks do not sandbox LibreOffice, so they do not make an untrusted ODP safe to open.
 
 Do not run `npm audit fix --force` in this repository. There is no npm dependency tree here, and the
 forced audit solver previously alternated between incompatible Marp versions without resolving the

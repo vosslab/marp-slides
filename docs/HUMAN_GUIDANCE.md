@@ -38,6 +38,16 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 - Treat layout simplification as post-conversion polish; keep the one-time ODP importer mechanical.
 - Prefer Marp's built-in layouts and central theme defaults over per-slide sizing and custom layout
   classes that can clip text or images.
+- Let images auto-fit their layout with `contain`; avoid hard-coded per-image pixel dimensions.
+- My ODP slides are hand-authored structured documents, not scans; normal conversion must use their
+  text and image objects rather than OCR.
+- A `slide_*_source.png` containing the slide's text is a failed conversion and cannot be used as a
+  Marp slide.
+- A full-slide source render may be used to check placement during review, but never as converted
+  slide content.
+- Preserve the source slide count unless I explicitly approve changing the teaching sequence.
+- Use Marp's small layout vocabulary to enforce consistency even when legacy slides do not follow
+  their ODP templates consistently.
 - Use OpenDyslexic for all authored slide text; use PT Sans Narrow for long URL text.
 - Prioritize the announcements/course-introduction deck for Marp migration because it needs small
   edits each week.

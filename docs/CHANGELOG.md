@@ -4,11 +4,10 @@
 
 - Added a related-projects guide that inventories every local prior-art clone, distinguishes
   themes, templates, importers, and output converters, and records what to adapt or reject.
-- Added a bounded Python ODP importer that extracts simple slide content into Marp Markdown,
-  preserves supported images and notes, and renders explicit full-slide fallbacks for complex
-  source geometry.
-- Added a central genetics Marp theme with accessible teaching colors and reusable lead, split,
-  source-fallback, and Markdown-only two-pane layouts.
+- Added a bounded Python ODP importer that preserves structured slide text, content images, notes,
+  visibility, and geometry without using full-slide screenshots as converted content.
+- Added a central genetics Marp theme with accessible teaching colors and reusable lead, two-pane,
+  and three-image gallery layouts.
 - Added `build_slides.sh` to generate PDF and PPTX with Marp 4.5.0 or newer and convert the PPTX
   into a classroom ODP with LibreOffice.
 - Added destination-named `tools/marp_to_pptx.py` and `tools/marp_to_odp.py` commands backed by one
@@ -16,9 +15,9 @@
 - Added installation, usage, design, human-guidance, and measured palette documentation plus a
   useful repository landing page.
 - Added the first canonical migration candidate, `genetics/lect01b-genetic_disorders.md`, with its
-  extracted and fallback assets.
+  extracted content assets.
 - Added `genetics/lect01a-course_intro.md` as the first recurring announcements/course-information
-  deck: 31 visible slides, 20 editable layouts, and 11 explicit source-rendered fallbacks.
+  deck with all 31 visible source slides represented as editable Marp layouts.
 - Added deterministic importer tests for simple conversion, unsafe archive paths, and safe
   presenter-note comments, including drawing-page visibility and style-cascade behavior.
 
@@ -29,14 +28,17 @@
 - Established a one-way migration contract: legacy ODP is imported once, Marp Markdown becomes
   authoritative, and generated ODP is used for classroom presentation.
 - Protected canonical Markdown by refusing to overwrite an existing deck or asset directory.
-- Made hidden-slide detection honor page visibility through the ODP drawing-page style cascade,
-  then map fallback render pages by original source-page position.
-- Documented the importer and build trust boundaries: archive and XML validation do not sandbox
-  LibreOffice fallback rendering, so legacy ODP inputs must be instructor-owned and trusted.
+- Made hidden-slide detection preserve the source presentation sequence while excluding its nine
+  hidden `lect01a` slides.
+- Documented the importer and build trust boundaries: archive validation does not sandbox the
+  LibreOffice ODP-to-PPTX normalization step, so legacy inputs must be instructor-owned and trusted.
 - Made `build_slides.sh` reuse the same exporter as the destination-named commands so PPTX-only,
   ODP, and all-output workflows enforce one conversion contract.
 - Established post-conversion polish as a separate phase from mechanical ODP import, with built-in
   Marp layouts preferred before adding custom per-slide geometry.
+- Rejected full-slide PNGs as conversions: source renders are visual QA evidence only, never Marp
+  slide content.
+- Preserved the 31-slide `lect01a` teaching sequence while replacing all 11 source-rendered slides.
 
 ### Design Decisions
 
@@ -48,6 +50,12 @@
   weekly-edit deck remains readable without per-slide HTML.
 - Standardized authored slide text on OpenDyslexic and displayed URL text on PT Sans Narrow in the
   central genetics theme.
+- Made content images auto-fit their theme-owned panes and gallery cells instead of using per-image
+  pixel dimensions.
+- Added a shared auto-fitting single-figure layout so screenshots remain below their Markdown title
+  without per-slide dimensions or overlap.
+- Chose structured slide-object extraction over OCR and measured temporary PPTX plus `python-pptx`
+  as the geometry-normalization path for inconsistent legacy ODP layouts.
 - Kept all `OTHER_REPOS/` clones as prior art only; future repository-owned work may adapt their
   ideas without adopting their code, dependencies, Markdown dialects, or VS Code workflows.
 - Chose ordinary Marp-rendered PPTX followed by LibreOffice conversion as the current classroom
@@ -55,8 +63,8 @@
 
 ### Developer Tests
 
-- Verified the canonical genetics sample imports as 23 visible slides: 17 editable, 6 explicit
-  source-rendered fallbacks, 6 extracted images, and no hidden slides.
+- Verified the `lect01a` ODP-to-PPTX bakeoff as 40 source slides, the same 9 hidden slides, one
+  preserved source note slide, and separate text/image geometry on every former rasterized slide.
 - Verified Marp and LibreOffice generate matching 23-slide PDF, PPTX, and ODP outputs and that
   LibreOffice can reopen the generated ODP and export all 23 pages at 16:10, with all 23 note
   parts and about 6,460 note characters preserved.
@@ -76,9 +84,13 @@
   PPTX-to-ODP conversion completed successfully, and 302 focused hygiene tests passed.
 - Rendered all 31 `lect01a` slides after post-conversion polish and inspected both a full contact
   sheet and the dense split layouts at full size; no authored text or images cross a slide edge.
+- Compared structured and OCR extraction across the 31-slide source PDF: structured extraction
+  retained 99.6% of estimated words versus 95.8% for OCR, confirming OCR is unnecessary here.
 
 ### Fixes and Maintenance
 
 - Removed the redundant `split` and `compact` classes from `lect01a`: Marp's `bg right` directive
   already reserves the text pane, so the old theme padding was constraining it a second time.
+- Replaced all `slide_*_source.png` references in `lect01a` with editable text and extracted content
+  images while keeping the source slide count unchanged.
 - Synchronized shared style guides, tests, and repository support files from the starter template.

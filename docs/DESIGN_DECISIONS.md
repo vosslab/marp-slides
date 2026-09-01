@@ -68,29 +68,56 @@ changes after migration belong in Markdown; generated ODP files may be rebuilt a
 
 **Owner.** `tools/odp_to_marp.py` and `docs/USAGE.md`.
 
-### Complex source slides use explicit migration fallbacks
+### Full-slide source images are conversion failures
 
-**Decision.** Convert simple title, bullet, and figure slides into editable Markdown. Render dense
-or geometrically complex ODP pages as full-slide PNG fallbacks and retain their extracted text in
-presenter-note comments.
+**Decision.** Never use a rendered source slide as Marp content. A `slide_*_source.png` containing
+the source slide's text is evidence that semantic conversion failed, not a presentation fallback.
 
-**Why.** Automatic reconstruction of arbitrary ODP drawing geometry would produce fragile layouts
-and lose visual information. A visible fallback keeps the lecture teachable while making cleanup
-work explicit.
+**Why.** A screenshot may preserve appearance, but its text is no longer editable, searchable, or
+controlled by the central theme. That defeats the reason for making Marp Markdown authoritative.
 
-**Consequence.** A converted deck can be presented immediately, but source-rendered fallback slides
-remain migration debt until an instructor replaces them with simple Markdown layouts.
+**Consequence.** Import must extract text and content images as separate objects. A source render may
+be generated temporarily as a visual review oracle, but canonical Markdown and buildable decks must
+not reference it.
 
-**Owner.** `tools/odp_to_marp.py` and `themes/genetics.css`.
+**Owner.** `tools/odp_to_marp.py`, `genetics/*.md`, and `docs/USAGE.md`.
+
+### Structured slide data replaces OCR
+
+**Decision.** Treat legacy ODP decks as structured documents, not scanned pages. Read text, lists,
+notes, and content images from document objects; do not use OCR in the normal import path.
+
+**Why.** Authored slide text already exists in ODP XML and survives LibreOffice's PPTX translation
+as text shapes. OCR is less accurate and discards structure that the source already provides.
+
+**Consequence.** OCR is reserved for a genuine content image whose text must be recovered. It is not
+used to interpret whole slides or to compensate for arbitrary layout.
+
+**Owner.** `tools/odp_to_marp.py` and `docs/USAGE.md`.
+
+### Temporary PPTX normalizes legacy geometry
+
+**Decision.** Convert trusted ODP input to a temporary PPTX with LibreOffice, then use `python-pptx`
+to extract separate text, image, note, visibility, and geometry objects for Marp layout selection.
+The original ODP remains the source evidence for the one-time import.
+
+**Why.** A measured `lect01a` bakeoff preserved all 40 source slides, identified the same 9 hidden
+slides, retained the original note slide, and exposed separate text and picture geometry for every
+slide that the direct importer had rasterized.
+
+**Consequence.** PPTX geometry selects from a small Marp layout vocabulary; it does not reproduce
+arbitrary source coordinates. The temporary PPTX is discarded after extraction, and Marp Markdown
+becomes authoritative after polish.
+
+**Owner.** `tools/odp_to_marp.py`, `tools/pptx_to_marp.py`, and `docs/USAGE.md`.
 
 ### Legacy ODP import has a local trust boundary
 
 **Decision.** Accept only instructor-owned, trusted legacy ODP files for one-time import, and
 render only trusted repository-owned Marp Markdown and assets.
 
-**Why.** The importer validates archive members, XML, and extracted images before processing them,
-but complex source slides can require LibreOffice fallback rendering. Input validation does not
-sandbox LibreOffice.
+**Why.** The importer validates archive members before processing them, but its geometry-normalizing
+ODP-to-PPTX step invokes LibreOffice. Input validation does not sandbox LibreOffice.
 
 **Consequence.** Archive limits reduce accidental or malformed-input risk but do not authorize
 opening ODP files from unknown sources. The build wrapper's local-file access remains limited to
@@ -153,7 +180,8 @@ full-visual slides.
 would make the authoritative Markdown harder to read and maintain.
 
 **Consequence.** Add a small named layout to the central theme when a repeated teaching pattern is
-needed. Do not solve recurring layout needs with copied raw HTML or per-slide style blocks.
+needed. Do not solve recurring layout needs with copied raw HTML, per-slide style blocks, or fixed
+pixel dimensions on individual images. Images use `contain` within their layout's available space.
 
 **Owner.** `themes/genetics.css` and `docs/USAGE.md`.
 
@@ -169,12 +197,24 @@ Markdown is the right place to choose a simpler teaching layout. Marp already re
 pane beside a `bg right` image; adding custom right padding constrains that pane twice and causes
 unnecessary wrapping or clipping.
 
-**Consequence.** `lect01a-course_intro.md` uses ordinary headings, lists, and Marp background-image
-directives for its split slides. Typography and spacing remain central theme decisions. Text baked
-into a source-fallback PNG keeps the legacy appearance until that fallback slide is reauthored as
-Markdown.
+**Consequence.** `lect01a-course_intro.md` uses ordinary headings, lists, Marp background images,
+and shared figure, two-pane, and three-image gallery layouts. Typography, spacing, and image fitting
+remain central theme decisions, and no full-slide source render is acceptable in the deck.
 
 **Owner.** `genetics/lect01a-course_intro.md`, `themes/genetics.css`, and `docs/USAGE.md`.
+
+### Import preserves the teaching sequence
+
+**Decision.** Preserve the visible source slide count and order during import and polish unless the
+instructor explicitly approves a sequence change.
+
+**Why.** Slide boundaries encode pacing and click order even when the legacy layout is inconsistent.
+Consistency should come from Marp layouts, not from silently combining or splitting teaching beats.
+
+**Consequence.** A multi-image source slide uses an auto-fitting shared gallery, and dense paired
+content uses a shared pane layout when necessary to retain one source slide as one Marp slide.
+
+**Owner.** `tools/odp_to_marp.py`, `genetics/*.md`, and `themes/genetics.css`.
 
 ### Cloned projects are idea sources, not implementation dependencies
 
