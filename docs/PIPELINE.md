@@ -33,13 +33,14 @@ visual QA is separate from the production object-conversion chain and never supp
 | `tools/pptx_to_marp.py` | Structured PPTX extraction | Import records and Markdown |
 | `marp_lib/marp_parser.py` | Marp-subset framing, directives, and block parsing | Typed slide model |
 | `marp_lib/layouts.py` | Registry and native geometry for every supported layout | Editable PPTX objects |
-| `marp_lib/native_export.py` | Export orchestration, notes, pagination, and conversions | PPTX, ODP, and PDF paths |
+| `marp_lib/libreoffice.py` | Process preflight, conversion, and PDF filter | PPTX, ODP, and PDF conversions |
+| `marp_lib/native_export.py` | Export orchestration, notes, pagination, and paths | PPTX, ODP, and PDF paths |
 | `tools/marp_to_pptx.py` | One-deck editable PPTX command | PPTX |
 | `tools/marp_to_odp.py` | One-deck editable ODP command | PPTX and ODP |
 | `build_slides.sh` | Folder discovery and all-output build | PPTX, ODP, and ODP-derived PDF |
 
-`native_export` imports the layout registry; the layout registry does not import the exporter.
-This one-way boundary keeps parser/output orchestration separate from layout construction.
+`native_export` imports the layout and LibreOffice owners; neither owner imports the exporter. This
+one-way boundary keeps parsing, geometry, conversion, and output orchestration separate.
 
 ## Native layout contract
 

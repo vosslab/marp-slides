@@ -17,6 +17,10 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
   not production dependencies, runtimes, or renderers.
 - Build canonical Marp Markdown through repository-owned Python into native editable PPTX objects,
   then use LibreOffice to make editable ODP, then make PDF from that ODP.
+- Run LibreOffice conversion with `--headless --norestore` through the established user profile.
+  Keep LibreOffice closed during the batch build; use `--safe-mode` when repairing profile problems.
+- Export ODP to PDF with the Impress PDF filter, 70 percent JPEG quality, a documented 150 DPI image
+  limit, and PDF/A-3b output.
 - Implement every individual LibreOffice layout-grid pattern as native editable Python objects, plus
   the repository `gallery` layout. The grid is a visual catalog, not a rendering dependency.
 - Use layouts `blank`, `title-only`, `title-slide`, `title-content`, `centered-text`,

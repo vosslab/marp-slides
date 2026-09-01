@@ -3,7 +3,6 @@
 # Standard Library
 import os
 import pathlib
-import shutil
 import subprocess
 import tempfile
 
@@ -13,6 +12,7 @@ from pptx.enum.text import PP_ALIGN
 
 # Local Modules
 from marp_lib import layouts
+from marp_lib import libreoffice
 from marp_lib import marp_parser
 import marp_lib.native_model
 
@@ -67,34 +67,17 @@ def render_native_pptx(deck: marp_lib.native_model.Deck, output_path: pathlib.Pa
 
 
 #============================================
-def require_executable(command: str, install_message: str) -> pathlib.Path:
-	"""Resolve a required executable from PATH."""
-	command_value = shutil.which(command)
-	if command_value is None:
-		raise RuntimeError(install_message)
-	return pathlib.Path(command_value).resolve()
-
-
-#============================================
 def convert_presentation(input_path: pathlib.Path, output_path: pathlib.Path,
 		output_format: str, repo_root: pathlib.Path) -> None:
 	"""Use LibreOffice to convert one editable presentation artifact."""
-	soffice_path = require_executable("soffice", "LibreOffice is not installed; run brew bundle")
 	output_root = repo_root / "output"
 	output_root.mkdir(parents=True, exist_ok=True)
 	output_path.parent.mkdir(parents=True, exist_ok=True)
 	with tempfile.TemporaryDirectory(prefix=".libreoffice.", dir=output_root) as temporary_value:
 		temporary_root = pathlib.Path(temporary_value)
-		profile_path = temporary_root / "profile"
 		conversion_path = temporary_root / "converted"
 		conversion_path.mkdir()
-		command = [str(soffice_path), f"-env:UserInstallation={profile_path.as_uri()}",
-			"--headless", "--convert-to", output_format, "--outdir", str(conversion_path),
-			str(input_path)]
-		subprocess.run(command, check=True)
-		converted_path = conversion_path / f"{input_path.stem}.{output_format}"
-		if not converted_path.is_file():
-			raise RuntimeError(f"LibreOffice did not create the expected {output_format.upper()} output")
+		converted_path = libreoffice.convert_file(input_path, conversion_path, output_format)
 		os.replace(converted_path, output_path)
 
 

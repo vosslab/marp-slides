@@ -4,12 +4,10 @@
 # Standard Library
 import stat
 import sys
-import shutil
 import zipfile
 import pathlib
 import argparse
 import tempfile
-import subprocess
 import dataclasses
 import xml.etree.ElementTree
 
@@ -19,6 +17,7 @@ import defusedxml.ElementTree
 # local repo modules
 if __name__ == "__main__":
 	sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+from marp_lib import libreoffice
 from tools import odp_visibility
 from tools import pptx_to_marp
 
@@ -31,10 +30,6 @@ MAX_INPUT_BYTES = 256 * 1024 * 1024
 MAX_MEMBER_BYTES = 128 * 1024 * 1024
 MAX_UNPACKED_BYTES = 512 * 1024 * 1024
 MAX_ARCHIVE_MEMBERS = 2000
-SOFFICE_CANDIDATES = (
-	pathlib.Path("/Applications/LibreOffice.app/Contents/MacOS/soffice"),
-	pathlib.Path("/Applications/LibreOffice-Still.app/Contents/MacOS/soffice"),
-)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -128,49 +123,11 @@ def read_slides(input_path: pathlib.Path) -> list[SourceSlide]:
 
 
 #============================================
-def require_soffice() -> pathlib.Path:
-	"""Resolve the LibreOffice command used for trusted local conversion."""
-	command_value = shutil.which("soffice")
-	if command_value is not None:
-		return pathlib.Path(command_value).resolve()
-	for candidate in SOFFICE_CANDIDATES:
-		if candidate.is_file():
-			return candidate
-	raise RuntimeError("LibreOffice is not installed; run brew bundle")
-
-
-#============================================
 def convert_odp_to_pptx(input_path: pathlib.Path, temporary_root: pathlib.Path) -> pathlib.Path:
 	"""Normalize ODP geometry into a temporary PPTX with LibreOffice."""
-	soffice_path = require_soffice()
 	converted_dir = temporary_root / "converted"
-	profile_dir = temporary_root / "libreoffice_profile"
 	converted_dir.mkdir()
-	profile_dir.mkdir()
-	profile_argument = f"-env:UserInstallation={profile_dir.resolve().as_uri()}"
-	command = [
-		str(soffice_path),
-		profile_argument,
-		"--headless",
-		"--convert-to",
-		"pptx",
-		"--outdir",
-		str(converted_dir),
-		str(input_path),
-	]
-	# ASVS 1.2.5: user paths remain separate subprocess arguments; no shell is used.
-	result = subprocess.run(
-		command,
-		capture_output=True,
-		check=False,
-		text=True,
-		timeout=180,
-	)
-	if result.returncode != 0:
-		raise RuntimeError("LibreOffice could not normalize the trusted ODP")
-	pptx_path = converted_dir / f"{input_path.stem}.pptx"
-	if not pptx_path.is_file():
-		raise RuntimeError("LibreOffice did not create the expected temporary PPTX")
+	pptx_path = libreoffice.convert_file(input_path, converted_dir, "pptx")
 	return pptx_path
 
 

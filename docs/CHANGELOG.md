@@ -40,6 +40,13 @@
 
 ### Fixes and Maintenance
 
+- Replaced disposable LibreOffice `UserInstallation` profiles with the established user profile,
+  centralized conversion in `marp_lib/libreoffice.py`, added `--norestore`, and made a running
+  LibreOffice desktop session an actionable preflight error. This removes repeated first-profile
+  macOS task-policy diagnostics while retaining temporary directories for converted artifacts.
+- Applied the documented Impress PDF filter with 70 percent JPEG quality, a supported 150 DPI image
+  limit, and `SelectPdfVersion=3` for PDF/A-3b rather than passing Writer's PDF filter or an
+  unsupported 100 DPI value.
 - Hardened the native typed boundary: CRLF Markdown preserves physical source lines, retired
   `slide_*_source` raster names fail at their image line, and layout, cell, and overflow errors
   identify the most precise authored block or cell.
@@ -57,9 +64,9 @@
 ### Developer Tests and Notes
 
 - Added the native semantic E2E gate. Run
-  `source source_me.sh && python3 tests/e2e/e2e_native_odp_semantics.py` from a macOS GUI-capable
-  host session outside the restricted execution sandbox. It inspects native PPTX and editable ODP
-  text, lists, links, notes, component images, slide count, and full-slide-image absence.
+  `source source_me.sh && python3 tests/e2e/e2e_native_odp_semantics.py` from an ordinary macOS user
+  session. It inspects native PPTX and editable ODP text, lists, links, notes, component images,
+  slide count, and full-slide-image absence.
 - Hardened the ODP E2E gate with `defusedxml`, numeric page-relative full-slide-image detection,
   and verification that component-image descriptions survive editable ODP conversion.
 

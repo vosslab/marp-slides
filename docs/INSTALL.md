@@ -35,6 +35,9 @@ The build path is repository-owned Python and LibreOffice. `marp_lib/native_expo
 parsing and output; `marp_lib/layouts.py` owns native layout builders. LibreOffice receives the
 completed native PPTX, writes ODP, and receives that ODP to write PDF.
 
+Close the LibreOffice desktop application before importing ODP or building ODP/PDF output. Shared
+batch conversion uses `--headless --norestore` and the established LibreOffice user profile.
+
 ## Trust boundary
 
 Build only repository-owned Marp Markdown and local teaching assets. The exporter rejects source

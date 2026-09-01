@@ -67,6 +67,23 @@ rendering remains evidence only and never becomes slide content.
 **Owner.** `marp_lib/native_export.py`, `build_slides.sh`, and
 `tests/e2e/e2e_native_odp_semantics.py`.
 
+### LibreOffice conversion uses its established profile
+
+**Decision.** Run batch conversions with `--headless --norestore` and LibreOffice's established
+user profile after confirming that the main desktop application is closed.
+
+**Why.** A brand-new `-env:UserInstallation` directory forces first-profile initialization for
+each conversion and produces a macOS task-policy diagnostic. LibreOffice already owns normal and
+safe-mode profile behavior.
+
+**Consequence.** Temporary directories contain converted artifacts only. `--safe-mode` is available
+for explicit profile repair rather than routine isolation, and `--headless` already supplies the
+non-visual batch mode. ODP-to-PDF conversion uses `impress_pdf_Export`, 70 percent JPEG quality,
+150 DPI image reduction, and `SelectPdfVersion=3` for PDF/A-3b. The 150 DPI limit replaces the
+unsupported 100 DPI value with the next documented resolution.
+
+**Owner.** `marp_lib/libreoffice.py` and all LibreOffice conversion callers.
+
 ### Native objects replace slide rasterization
 
 **Decision.** Native text, lists, shapes, component images, links, and notes are the only normal

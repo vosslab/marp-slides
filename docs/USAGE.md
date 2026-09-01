@@ -104,21 +104,30 @@ Build PPTX, editable ODP, and PDF for every Marp deck directly in a folder:
 ./build_slides.sh genetics
 ```
 
+Close the LibreOffice desktop application before any command that invokes it, including one-time
+ODP import and ODP/PDF builds. The shared conversion code uses `--headless --norestore` through the
+established user profile. Use LibreOffice's `--safe-mode` only when diagnosing or repairing a
+profile problem.
+
+The ODP-to-PDF step uses LibreOffice's `impress_pdf_Export` filter with 70 percent JPEG quality,
+150 DPI image reduction, and PDF/A-3b output. LibreOffice documents 75, 150, 300, 600, and 1200 as
+the supported image-resolution limits; 150 is the supported ceiling used in place of 100 DPI.
+
 The folder build emits `output/pptx/lecture.pptx`, `output/odp/lecture.odp`, and
 `output/pdf/lecture.pdf`. It always makes PDF by converting the produced ODP, never by creating a
 parallel PDF branch from PPTX.
 
 ## Validate output
 
-Run the native semantic E2E gate from a macOS GUI-capable host session:
+Run the native semantic E2E gate from an ordinary macOS user session:
 
 ```bash
 source source_me.sh && python3 tests/e2e/e2e_native_odp_semantics.py
 ```
 
-The exporter invokes LibreOffice with `--headless`, but macOS initialization requires a host GUI
-session outside the restricted execution sandbox. The gate verifies native semantic objects and the
-PPTX-to-ODP-to-PDF order. Rendered PDF pages are visual QA evidence only.
+The exporter invokes LibreOffice with `--headless --norestore` from the current macOS user session.
+The gate verifies native semantic objects and the PPTX-to-ODP-to-PDF order. Rendered PDF pages are
+visual QA evidence only.
 
 ## Classroom reveals
 
