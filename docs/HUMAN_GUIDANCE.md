@@ -67,6 +67,20 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 - A normal instructor workflow must not require VS Code, npm, TypeScript, Node, or a Marp server.
 - This pre-production repository uses direct replacements when terminology or architecture changes.
 
+- Keep a separate Markdown review for every repository in `OTHER_REPOS/` that identifies its
+  content and whether its ideas, code, functions, themes, or assets fit this project.
+- Evaluate these repositories for useful ideas rather than license analysis when source copying is
+  out of scope. Prioritize correctness, maintainability, validation, and delivery risks over
+  trivial details.
+- Review each repository for whether it improves an active task, offers a stronger pipeline model,
+  or shows a useful possibility for Marp and its themes.
+- Marp is not feature-complete for the planned teaching layouts. Explore a coherent extension
+  language instead of adopting CDL or a rushed Marp-plus language wholesale.
+- Do not route an extension language through Marp CLI. The repository-owned native exporter is the
+  rendering boundary.
+- Survey every `OTHER_REPOS/` project for how it handles Marp's missing layout vocabulary. Separate
+  semantic language extensions, CSS visual catalogs, output transformations, and unrelated tools.
+
 ## Working style
 
 - Have single-repository propagation add a `devel/changelog_lib.py`-compatible changelog entry only

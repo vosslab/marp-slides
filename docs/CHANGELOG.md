@@ -108,11 +108,18 @@ an entry explicitly identifies the current native package or native semantic E2E
 
 ### Additions
 
+- Added `docs/LAYOUT_LANGUAGE_SURVEY.md`, a 20-project comparison of layout grammars, visual
+  theme catalogs, output transformations, and validation approaches.
+- Added a one-page prior-art matrix for all 20 reviews, focused on stronger task solutions,
+  pipeline models, and Marp theme possibilities.
 - Added `docs/PIPELINE.md` as the canonical component architecture for the import and build engine,
   including its interfaces, ownership boundaries, success properties, verification lanes, extension
   seams, and current architectural risks.
 - Added a related-projects guide that inventories every local prior-art clone, distinguishes
   themes, templates, importers, and output converters, and records what to adapt or reject.
+- Added 20 individual repository reviews under `docs/OTHER_REPOS/` covering content, licenses,
+  ideas, code and function candidates, themes and assets, architectural fit, and a concrete reuse
+  decision for every repository present when the audit began.
 - Added a bounded Python ODP importer that preserves structured slide text, content images, notes,
   visibility, and geometry without using full-slide screenshots as converted content.
 - Added a central genetics Marp theme with accessible teaching colors and reusable lead, two-pane,
@@ -157,6 +164,8 @@ an entry explicitly identifies the current native package or native semantic E2E
 
 ### Design Decisions
 
+- Recorded the search for a coherent Marp extension language: CDL is a language-design reference,
+  and Marp CLI is excluded from the future extension rendering path.
 - Chose simple editable layouts over automatic reconstruction of arbitrary ODP drawing geometry.
 - Chose successive build slides for classroom reveals because Marp browser fragments do not become
   native animations in the generated ODP.
@@ -184,6 +193,10 @@ an entry explicitly identifies the current native package or native semantic E2E
 
 ### Developer Tests
 
+- Ran the repository-owned suite as `python3 -m pytest tests`: 827 passed and 1 skipped, including
+  239 focused ASCII, Markdown-link, and source-line-limit checks against all 20 new reports.
+- Confirmed `git diff --check` is clean with the new untracked reports represented in an isolated
+  temporary Git index; the real index and staging area were not changed.
 - Verified the `lect01a` ODP-to-PPTX bakeoff as 40 source slides, the same 9 hidden slides, one
   preserved source note slide, and separate text/image geometry on every former rasterized slide.
 - Verified Marp and LibreOffice generate matching 23-slide PDF, PPTX, and ODP outputs and that

@@ -1,33 +1,46 @@
 # Related projects
 
-This guide records the 16 repositories evaluated on 2026-09-01 while designing this
-repository's instructor-owned Markdown-to-classroom-slide workflow. They are idea
-libraries, not dependencies or an adopted implementation. The product contract is authoritative
-Marp Markdown with native editable PPTX, editable ODP, and an ODP-derived PDF. The repository-owned
-Python exporter owns that contract.
+This guide indexes the 20 local repositories evaluated on 2026-09-01 while designing this
+repository's instructor-owned Markdown-to-classroom-slide workflow. They are idea libraries, not
+dependencies or an adopted implementation. The product contract is authoritative Marp Markdown
+with native editable PPTX, editable ODP, and an ODP-derived PDF. The repository-owned Python
+exporter owns that contract.
 
-## At-a-glance inventory
+For a short practical comparison of task solutions, pipeline models, and theme possibilities, see
+the [reuse decision matrix](REUSE_DECISION_MATRIX.md).
 
-| Project | Category | Direction or purpose | Key stack | Strongest idea to adapt |
-| --- | --- | --- | --- | --- |
-| ai-lesson-planner | Course planner | Course to lessons | Agent prompts | Separate planning |
-| awesome-marp | Ecosystem index | Marp discovery | Markdown catalog | Curated discovery |
-| deck2video | Video companion | Marp to narrated MP4 | Python, Marp, ffmpeg | Notes to narration |
-| marp-core | Language engine | Marp/Marpit language interpretation | TypeScript, Marpit | Conformance evidence |
-| marp-cli | Renderer CLI | Marp output orchestration | TypeScript, Node, browser tools | Boundary evidence |
-| marp-community-themes | Themes | CSS for Marp | CSS, Quarto | Theme previews and provenance |
-| marp-deck-directory | Deck template | Markdown to deck site | Marp, Nix | Reproducible checks |
-| marp-slides | Authoring examples | Prompt to Marp deck | Claude, SVG, HTML | Visual patterns |
-| marp-slides-template | Publish template | Marp to Pages | Marp, Actions, CSS | Overflow review |
-| marp-to-editable-pptx | PPTX experiment | Marp DOM to PPTX | Node tools | Native shape boundary |
-| MarpX | Theme library | Marp to styled slides | CSS, Marp | Semantic classes |
-| md2pptx | Direct renderer | Markdown dialect to PPTX | Python, python-pptx | Template geometry |
-| my-marp-themes | Theme collection | CSS for Marp | CSS | Visual motifs |
-| odpdown | ODP generator | Markdown to ODP | Python, odfdo | ODP writer ideas |
-| ppt2asciidocslides | Legacy importer | PPTX to markup | Java, Apache POI | Intermediate model |
-| slide-ai-agent | Deck builder | Sources to Marp/export | Python, TypeScript, Marp | Human review |
+For the layout-language approaches across all 20 projects, see the
+[LAYOUT_LANGUAGE_SURVEY.md](LAYOUT_LANGUAGE_SURVEY.md).
 
-## Likely related projects
+These projects are prior art, not dependencies. Marp Markdown remains authoritative, the native
+Python exporter owns conversion, and the central theme owns presentation styling.
+
+## Inventory
+
+| Project | Content type | Strongest relevance | Review |
+| --- | --- | --- | --- |
+| MarpX | Theme suite | Named semantic layouts | [Review](OTHER_REPOS/MARPX.md) |
+| ai-lesson-planner | Lesson-planning prompts | Planning boundary | [Review](OTHER_REPOS/AI_LESSON_PLANNER.md) |
+| awesome-marp | Ecosystem catalog | Candidate discovery | [Review](OTHER_REPOS/AWESOME_MARP.md) |
+| cdl-slides | Slide preprocessor | Bounded feature inventory | [Review](OTHER_REPOS/CDL_SLIDES.md) |
+| deck2video | Narrated-video generator | Notes-to-narration lane | [Review](OTHER_REPOS/DECK2VIDEO.md) |
+| lectern-slides | Multi-renderer CLI | Source-aware diagnostics | [Review](OTHER_REPOS/LECTERN_SLIDES.md) |
+| marp-cli | Official CLI | Language-conformance boundary | [Review](OTHER_REPOS/MARP_CLI.md) |
+| marp-community-themes | Theme gallery | Visual motif catalog | [Review](OTHER_REPOS/MARP_COMMUNITY_THEMES.md) |
+| marp-core | Language engine | Marp Core v5 conformance | [Review](OTHER_REPOS/MARP_CORE.md) |
+| marp-deck-directory | Deck builder | Output and asset ownership | [Review](OTHER_REPOS/MARP_DECK_DIRECTORY.md) |
+| marp-slides | Example-deck collection | Teaching visual patterns | [Review](OTHER_REPOS/MARP_SLIDES.md) |
+| marp-slides-template | Publishing template | Rendered-overflow checks | [Review](OTHER_REPOS/MARP_SLIDES_TEMPLATE.md) |
+| marp-to-editable-pptx | Native PPTX experiment | Typed-native output comparison | [Review](OTHER_REPOS/MARP_TO_EDITABLE_PPTX.md) |
+| marp2pptx | PPTX postprocessor | Limits of postprocessing | [Review](OTHER_REPOS/MARP2PPTX.md) |
+| my-marp-themes | Theme collection | Compact teaching motifs | [Review](OTHER_REPOS/MY_MARP_THEMES.md) |
+| odpdown | Direct ODP renderer | Template and shape-model ideas | [Review](OTHER_REPOS/ODPDOWN.md) |
+| ppt2asciidocslides | PPTX importer | Renderer-neutral model | [Review](OTHER_REPOS/PPT2ASCIIDOCSLIDES.md) |
+| pptx2marp | PPTX importer | Shape-order negative baseline | [Review](OTHER_REPOS/PPTX2MARP.md) |
+| slide-ai-agent | AI deck application | Explicit review boundary | [Review](OTHER_REPOS/SLIDE_AI_AGENT.md) |
+| slideSonnet | Narrated-video toolkit | Cached media companion | [Review](OTHER_REPOS/SLIDESONNET.md) |
+
+## Best ideas for this repository
 
 ### marp-core
 
@@ -146,42 +159,6 @@ Python exporter owns that contract.
   Node, Puppeteer, PptxGenJS, and raster fallbacks. It is not a dependency and does not establish
   the final Marp-to-ODP implementation.
 
-### md2pptx
-
-- Relationship: Prior art or inspiration.
-- Link: [Official repository](https://github.com/MartinPacker/md2pptx).
-- Why visitors may care: The heavily edited local clone demonstrates native Python `python-pptx`
-  construction techniques relevant to this repository's editable-output target.
-- Evidence: `md2pptx.py` creates a slide with `addSlide()`, reads a template through
-  `Presentation(slideTemplateFile)`, maps a bounded rectangle with `Rectangle`, fits component
-  images through `scalePicture()`, builds list content in `createListBlock()`, and writes presenter
-  notes with `createSlideNotes()` through `slide.notes_slide.notes_text_frame`. `runPython.py`
-  demonstrates direct `slide.shapes.add_textbox()`, `add_picture()`, `add_shape()`, and
-  `add_connector()` calls.
-- Activity and license: The local clone's latest commit is 2026-08-31; it is MIT licensed.
-- Adaptation idea: Adapt the demonstrated native-object techniques into the local exporter: fixed
-  template geometry, bounded contain fitting, text/list population, and note assignment.
-- Limitation: Its input parser, metadata syntax, global option state, and reference-template
-  conventions form a separate Markdown dialect. The local exporter retains Marp front matter,
-  slide separators, directives, and presenter-note comments instead.
-
-#### md2pptx implementation boundary
-
-The local clone is useful as implementation evidence rather than a drop-in library. Its important
-inner workings are confined to four reusable ideas:
-
-| Local evidence | Native-output use |
-| --- | --- |
-| `addSlide()` selects a PowerPoint layout and creates a slide | Select one repository-owned native template for each supported Marp layout. |
-| `scalePicture()` calculates a bounded aspect-preserving fit | Place each authored component image with `contain` geometry. |
-| `createListBlock()` sizes and populates a text shape | Map Marp bullet nesting to editable paragraph levels. |
-| `createSlideNotes()` writes `notes_text_frame` | Preserve Marp presenter-note comments as editable speaker notes. |
-
-This repository adapts the techniques, not the source or its Markdown dialect.
-`marp_lib/layouts.py` owns one explicit native builder for every LibreOffice layout-grid entry plus
-the repository `gallery` layout. `marp_lib/native_export.py` orchestrates parser input, PPTX output,
-notes, pagination, and the downstream conversion chain.
-
 ### odpdown
 
 - Relationship: Prior art or inspiration.
@@ -269,17 +246,5 @@ The project-purpose, stack, license, and local activity statements come from the
 repositories' README files, manifests, top-level license files, Git origins, and latest local
 commits. Those commit dates describe the checked-out snapshots, not a claim about live activity.
 
-Two bounded discovery rounds supplemented the clone evidence. The seed round checked the official
-[Marp CLI repository](https://github.com/marp-team/marp-cli),
-[marp-to-editable-pptx](https://github.com/KatsuYuzu/marp-to-editable-pptx), and
-[md2pptx](https://github.com/MartinPacker/md2pptx). The widening round checked
-[deck2video](https://github.com/pjdoland/deck2video),
-[Marp documentation](https://github.com/marp-team/marp), and related format-conversion leads.
-Marp's documentation confirms a broader HTML, PDF, PPTX, and image ecosystem. This repository
-retains Marp syntax for authoring but intentionally owns native presentation output in Python so
-classroom files preserve editable objects. The local `marp-core` and `marp-cli` clones are
+The survey covers every checked-out clone. The local `marp-core` and `marp-cli` repositories are
 conformance evidence only; they supply no production runtime code or renderer.
-
-The widening round also found additional untraced projects, including `marp2pptx`, `marp-pptx`,
-and `MarpToPptx`. They are deliberately excluded from the candidate list because they were not
-cloned and evaluated against this repository's requirements.

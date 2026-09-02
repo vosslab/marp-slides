@@ -186,4 +186,4 @@ workflows, licenses, or renderer assumptions.
 **Consequence.** The repository adapts verified ideas into local Python. The inventory records the
 specific evidence and limitations for each clone.
 
-**Owner.** `docs/RELATED_PROJECTS.md`.
+**Owner.** `docs/RELATED_PROJECTS.md` and `docs/USAGE.md`.
