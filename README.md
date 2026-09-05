@@ -1,6 +1,6 @@
 # marp-slides
 
-Build editable classroom presentations from authoritative Marp Markdown.
+Build editable classroom presentations from instructor-authored Markdown and native objects.
 
 ## One source, native outputs
 
@@ -62,9 +62,13 @@ authoring source.
 
 - [docs/PIPELINE.md](docs/PIPELINE.md) - component architecture and boundaries.
 - [docs/INSTALL.md](docs/INSTALL.md) - macOS dependencies and trust boundary.
-- [docs/MARP_SYNTAX_GUIDE.md](docs/MARP_SYNTAX_GUIDE.md) - supported Marp authoring syntax.
-- [docs/ROADMAP.md](docs/ROADMAP.md) - ordered Marp+ syntax capability plan.
-- [docs/TODO.md](docs/TODO.md) - small next actions from the syntax roadmap.
+- [docs/MARP_SYNTAX_GUIDE.md](docs/MARP_SYNTAX_GUIDE.md) - classic Marp Core v5 / Marp CLI syntax.
+- [docs/LAYOUT_LANGUAGE_SURVEY.md](docs/LAYOUT_LANGUAGE_SURVEY.md) - evidence for choosing a
+  successor slide language.
+- [docs/MARP_ADJACENT_PROJECT_COMPARISON.md](docs/MARP_ADJACENT_PROJECT_COMPARISON.md) - Marp and
+  Markdown-presentation prior art for that decision.
+- [docs/ROADMAP.md](docs/ROADMAP.md) - provisional native-syntax transition research.
+- [docs/TODO.md](docs/TODO.md) - decision and transition research tasks.
 - [docs/USAGE.md](docs/USAGE.md) - authoring, layouts, migration, and builds.
 - [docs/HUMAN_GUIDANCE.md](docs/HUMAN_GUIDANCE.md) - durable instructor requirements.
 - [docs/DESIGN_DECISIONS.md](docs/DESIGN_DECISIONS.md) - settled architecture decisions.

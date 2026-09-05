@@ -20,8 +20,14 @@ source source_me.sh && python3 tools/pptx_to_marp.py genetics/lecture.pptx
 
 ## Author a native slide
 
-Use [MARP_SYNTAX_GUIDE.md](MARP_SYNTAX_GUIDE.md) as the concise authoring contract for front matter,
-directives, layouts, content cells, pagination, supported Markdown, and native-pipeline limits.
+Use [MARP_SYNTAX_GUIDE.md](MARP_SYNTAX_GUIDE.md) only for classic Marp Core v5 / Marp CLI-compatible
+front matter, directives, and Markdown. It intentionally does not specify repository layout classes
+or content cells.
+
+The native-layout examples in this page record a pre-decision implementation transition, not a
+public authoring language. Classic Marp is known not to meet the required layout needs; do not add
+new parser/exporter language behavior until the extension-versus-adoption decision in
+[LAYOUT_LANGUAGE_SURVEY.md](LAYOUT_LANGUAGE_SURVEY.md) is approved.
 
 Each slide has exactly one explicit Marp class directive. The directive selects a native builder,
 not a CSS renderer. The class must be one of the layout names in [PIPELINE.md](PIPELINE.md).

@@ -1,3 +1,32 @@
+## 2026-09-05
+
+### Documentation and Design Research
+
+- Removed the standalone `REUSE_DECISION_MATRIX.md` and replaced its focused Marp prior-art
+  comparison with `docs/MARP_ADJACENT_PROJECT_COMPARISON.md`. Kept
+  `docs/RELATED_PROJECTS.md` as the broader visitor-facing related-project guide.
+- Rewrote `docs/LAYOUT_LANGUAGE_SURVEY.md` as a literal, syntax-first thirteen-fixture comparison
+  of Markdown presentation languages and real Marp-extension approaches. The survey now frames the
+  two remaining branches -- extend Marp or adopt another format -- without selecting either;
+  classic Marp is retained only as the upstream compatibility baseline.
+- Restored `docs/MARP_SYNTAX_GUIDE.md` to its single purpose: classic Marp Core v5 and Marp
+  CLI-compatible syntax. It does not define the current native transition or an unapproved future
+  extension.
+- Recorded the native `_cell` marker plan as a provisional candidate rather than an adopted public
+  language, and deferred both parser work and a parallel extension guide until the language choice.
+- Recorded the instructor's canonical slide-language requirements in both human guidance and design
+  decisions, independently of any grammar choice.
+- Clarified older guidance and related-project framing so classic Marp remains the current migration
+  baseline rather than a prematurely selected long-term spatial-layout language.
+- Expanded the language requirements and survey with named LibreOffice-style layout patterns,
+  predictable Markdown image placement, minimal inline/display equations, low-punctuation
+  hand-authoring, and editable native-object output.
+- Clarified that required equation support means LaTeX-compatible or similarly capable,
+  hand-writable syntax for both inline and display mathematics.
+
+### Fixes and Maintenance
+
+- Synchronized shared style guides, tests, and repository support files from the starter template.
 ## 2026-09-01
 
 ### Additions and New Features

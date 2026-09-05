@@ -2,18 +2,20 @@
 
 This guide indexes the 20 local repositories evaluated on 2026-09-01 while designing this
 repository's instructor-owned Markdown-to-classroom-slide workflow. They are idea libraries, not
-dependencies or an adopted implementation. The product contract is authoritative Marp Markdown
-with native editable PPTX, editable ODP, and an ODP-derived PDF. The repository-owned Python
-exporter owns that contract.
+dependencies or an adopted implementation. Classic Marp Markdown is the current migration and
+compatibility baseline, while the successor-language decision remains open. Native editable PPTX,
+editable ODP, and an ODP-derived PDF remain the product model, and the repository-owned Python
+exporter owns that model.
 
-For a short practical comparison of task solutions, pipeline models, and theme possibilities, see
-the [reuse decision matrix](REUSE_DECISION_MATRIX.md).
+For the focused Marp-adjacent project comparison, see
+[MARP_ADJACENT_PROJECT_COMPARISON.md](MARP_ADJACENT_PROJECT_COMPARISON.md).
 
 For the layout-language approaches across all 20 projects, see the
 [LAYOUT_LANGUAGE_SURVEY.md](LAYOUT_LANGUAGE_SURVEY.md).
 
-These projects are prior art, not dependencies. Marp Markdown remains authoritative, the native
-Python exporter owns conversion, and the central theme owns presentation styling.
+These projects are prior art, not dependencies. Classic Marp remains the current compatibility
+baseline, the native Python exporter owns conversion, and the central theme owns presentation
+styling.
 
 ## Inventory
 

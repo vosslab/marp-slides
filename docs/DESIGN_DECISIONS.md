@@ -11,8 +11,9 @@ the reasoning a later reader needs. Guidance Neil Voss states belongs in
 
 ### Marp is an authoring-language specification
 
-**Decision.** Retain canonical Marp Markdown, adopt Marp Core v5 as the only upstream authoring
-baseline, and independently implement its supported language subset in repository-owned Python.
+**Decision.** Retain canonical Marp Markdown as the current migration baseline, adopt Marp Core v5
+as the only upstream compatibility baseline, and independently implement its supported language
+subset in repository-owned Python while the successor-language decision remains open.
 
 **Why.** Marp Core v5 offers a mature authoring language and separates built-in behavior from
 optional plugins. Its runtime and browser render paths do not meet the editable native-object
@@ -20,13 +21,40 @@ product requirement.
 
 **Consequence.** `OTHER_REPOS/marp-core` and `OTHER_REPOS/marp-cli` are conformance evidence only.
 The production dependency graph contains no Marp code, CLI, Node, browser, or render stage.
-The author-facing contract distinguishes standard Marp Core v5 syntax from repository-specific
-meanings. Marp Core v4 and earlier behavior is not supported. Optional v5 Shiki, Mermaid, KaTeX,
-and MathJax features require explicit native capability decisions rather than implicit `/full`
-compatibility. The current local evidence snapshot is Marp Core 5.0.1 at commit `06c5a54`.
+`MARP_SYNTAX_GUIDE.md` describes only standard Marp Core v5 / Marp CLI-compatible syntax. Classic
+Marp is known not to express the required spatial layouts, so a separate language-choice decision
+will determine whether the repository adopts another format or defines a new extension. Marp Core
+v4 and earlier behavior is not supported. Optional v5 Shiki, Mermaid, KaTeX, and MathJax features
+require explicit native capability decisions rather than implicit `/full` compatibility. The
+current local evidence snapshot is Marp Core 5.0.1 at commit `06c5a54`.
 
 **Owner.** `marp_lib/marp_parser.py`, [MARP_SYNTAX_GUIDE.md](MARP_SYNTAX_GUIDE.md),
 [ROADMAP.md](ROADMAP.md), and [PIPELINE.md](PIPELINE.md).
+
+### Slide-language requirements precede grammar choice
+
+**Decision.** The future slide language must make recurring teaching structures directly
+authorable: title; title and subtitle; ordinary body; nested bulleted and numbered lists; equal and
+unequal panels; image/text on either side; three or four regions; image with caption; gallery;
+quote or callout; and reusable named teaching layouts. The layout vocabulary must include the
+common LibreOffice-style patterns: title slide, title plus content, equal and asymmetric columns,
+stacked regions, 2x2, 3x2, and related teaching layouts. It must also support simple Markdown
+images with predictable named-region placement and both inline and display equations through
+LaTeX-compatible or similarly capable hand-writable syntax.
+
+**Why.** These are the lecture structures that classic Marp cannot express as portable semantic
+source. They define the evidence needed to choose between a small extension and an adopted Markdown
+presentation language without presupposing either outcome.
+
+**Consequence.** The language survey uses those structures and equation support as literal source
+fixtures. A future grammar must preserve ordinary nested Markdown, avoid routine HTML-comment or
+container scaffolding when possible, and map text, lists, practical equations, and images to typed
+editable native slide objects. Equation support must not require a scientific-publishing workflow.
+This decision does not approve a grammar, parser change, or future guide.
+
+**Owner.** [LAYOUT_LANGUAGE_SURVEY.md](LAYOUT_LANGUAGE_SURVEY.md),
+[MARP_ADJACENT_PROJECT_COMPARISON.md](MARP_ADJACENT_PROJECT_COMPARISON.md), and a future
+explicitly approved language guide.
 
 ### Native layout registry owns geometry
 
@@ -59,20 +87,22 @@ Subtitles, body text, cells, links, notes, and pagination remain layout-defined.
 **Owner.** `marp_lib/native_model.py`, `marp_lib/marp_parser.py`, `marp_lib/layouts.py`, and
 `themes/genetics.css`.
 
-### Explicit named cell markers replace blockquote cells
+### Explicit named cell markers are a provisional transition candidate
 
-**Decision.** Migrate multi-cell slides to repository-owned `<!-- _cell: <slot> -->` markers, with
-slot names defined by the selected layout class.
+**Decision.** Retain named cell markers as one implementation candidate for the existing native
+transition, but do not treat `<!-- _cell: <slot> -->` as an adopted public language. The language
+choice between a small extension and an adopted Markdown presentation format remains open.
 
-**Why.** Standard Markdown already assigns `>` to blockquotes. A named marker states placement
-directly, keeps `-` unambiguously available for list items, and avoids depending on cell order for
-geometry.
+**Why.** Standard Markdown already assigns `>` to blockquotes. A named marker would state placement
+directly, keep `-` unambiguously available for list items, and avoid depending on cell order for
+geometry. The layout survey now compares that comment-based candidate with other source forms before
+it can become a language decision.
 
-**Consequence.** The parser, native model, layout registry, importers, canonical decks, preview
-behavior, tests, and documentation migrate together. Generic Marp ignores the comments and shows a
-readable sequential fallback; the production parser owns native placement. The current
-blockquote-as-cell syntax remains authoritative only until the coordinated pre-production migration
-in [ROADMAP.md](ROADMAP.md) is complete.
+**Consequence.** Do not add a public `_cell` contract to `MARP_SYNTAX_GUIDE.md` or implement this
+candidate until the language decision is approved. If selected, the parser, native model, layout
+registry, importers, canonical decks, preview behavior, tests, and a separately named extension
+guide would migrate together. Generic Marp would ignore the comments and show a readable sequential
+fallback, but that fallback is no longer a reason to prefer comments over a clearer language form.
 
 **Owner.** [ROADMAP.md](ROADMAP.md), `marp_lib/marp_parser.py`, `marp_lib/native_model.py`,
 `marp_lib/layouts.py`, and `themes/genetics.css`.

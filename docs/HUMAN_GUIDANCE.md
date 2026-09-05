@@ -15,8 +15,10 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
   code nor Marp CLI.
 - Use Marp Core v5 only as the upstream authoring and conformance baseline. Do not support Marp
   Core v4 or earlier behavior.
-- Keep Marp Markdown as the authoring format rather than replacing it with a YAML or `md2pptx`
-  dialect. Clearly document standard Marp syntax and repository-specific meanings.
+- Keep classic Marp Markdown as the current migration baseline rather than replacing it with a YAML
+  or `md2pptx` dialect. Before committing to a successor language, assess whether a FOSS Markdown
+  presentation language should be adopted or a small extension should be defined. Clearly separate
+  standard Marp syntax from any later repository-owned language.
 - Do not show slide numbers; they encourage the audience to track remaining time and watch the
   clock instead of the presenter.
 - `OTHER_REPOS/marp-core` and `OTHER_REPOS/marp-cli` are interpretation and conformance evidence,
@@ -80,6 +82,27 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
   rendering boundary.
 - Survey every `OTHER_REPOS/` project for how it handles Marp's missing layout vocabulary. Separate
   semantic language extensions, CSS visual catalogs, output transformations, and unrelated tools.
+- Classic Marp is known not to support the required slide layouts. The remaining decision is whether
+  to define a small new language or adopt another Markdown presentation language; do not imply that
+  standard Marp is sufficient.
+- Produce decision-support documentation before creating a future language guide or changing the
+  parser. Compare literal source for recurring teaching layouts, and investigate existing Marp
+  extensions as attempts to bridge linear Markdown content to spatial slide structure.
+- Judge the choice by hand-authoring quality, ordinary nested Markdown, structural punctuation and
+  comment burden, semantic layout names, and a clean mapping to typed editable native slide
+  objects. Treat the repository Python parser and exporter as the rendering boundary.
+- The future slide-language wishlist is:
+  - Multiple named teaching layouts, including title slide, title plus content, two equal columns,
+    asymmetric columns, stacked regions, 2x2, 3x2, and related LibreOffice-style patterns.
+  - Ordinary nested bulleted and numbered lists inside every content region.
+  - Simple Markdown image insertion with predictable placement inside a named region.
+  - Equation support, using LaTeX-compatible syntax or a similarly capable hand-writable equation
+    syntax, for both inline and display math without turning the language into a
+    scientific-publishing framework.
+  - Hand-writable source with very little structural punctuation or comment scaffolding.
+  - Native editable output: text, lists, practical equations, and images remain real PPTX and ODP
+    objects, never slide screenshots.
+- These are requirements for the language choice, not approval for a particular grammar.
 
 ## Working style
 

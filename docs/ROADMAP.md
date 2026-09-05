@@ -1,8 +1,14 @@
-# Plan: Marp syntax support roadmap
+# Plan: provisional native-syntax transition research
 
-Status: planned. Marp Core v5 is the only upstream compatibility baseline.
-[MARP_SYNTAX_GUIDE.md](MARP_SYNTAX_GUIDE.md) remains the authority for syntax accepted by the
-production pipeline today.
+Status: research only. Marp Core v5 is the upstream compatibility baseline, but classic Marp is
+known not to express the required spatial layouts. [MARP_SYNTAX_GUIDE.md](MARP_SYNTAX_GUIDE.md) is
+the authority for classic Marp Core v5 / Marp CLI syntax only; it is not the authority for a local
+extension language.
+
+This roadmap records a pre-existing implementation candidate after a language choice is approved.
+It does not authorize parser, exporter, importer, canonical-deck, or syntax-guide changes. The
+decision is documented in [LAYOUT_LANGUAGE_SURVEY.md](LAYOUT_LANGUAGE_SURVEY.md): define a small
+extension or adopt another Markdown presentation language.
 
 ## Context
 
@@ -10,9 +16,10 @@ The native pipeline accepts a deliberate Marp subset only when each source featu
 editable PPTX object and survives conversion to editable ODP. The current multi-cell convention
 overloads standard Markdown blockquotes, so `>` means a layout cell while `-` means a list item.
 
-The target Marp+ contract replaces that overload with explicit named cell markers such as
-`<!-- _cell: left -->`. The roadmap then expands useful Marp syntax in dependency order without
-promising full browser-rendered Marp compatibility.
+One candidate replaces that overload with explicit named cell markers such as
+`<!-- _cell: left -->`. This remains comparison evidence, not the target language contract. A later
+approved roadmap may expand selected syntax in dependency order without promising full
+browser-rendered Marp compatibility.
 
 The upstream baseline is the author-facing contract of Marp Core v5, including its inherited
 Marpit syntax. The local evidence snapshot is Marp Core 5.0.1 at commit `06c5a54`. Marp Core v4 and
@@ -20,7 +27,9 @@ earlier behavior is outside the compatibility target.
 
 ## Objectives
 
-- Replace blockquote layout cells with explicit, named `_cell` markers.
+- Decide whether to adopt another Markdown language or approve a small extension before making a
+  source-language change.
+- If an extension is approved, choose its region syntax before considering `_cell` markers.
 - Classify every Marp Core v5 author-facing feature as accepted, planned, or a non-goal.
 - Expand authoring syntax only after each feature has a native editable-object owner.
 - Keep parser behavior, native output, importers, preview behavior, tests, and documentation
@@ -37,7 +46,7 @@ The production native-object contract takes priority over grid-accurate generic 
 Upstream Marp ignores `_cell` comments and leaves their content readable in source order; the build
 pipeline interprets the comments without adding Node, a custom Marp plugin, or a browser dependency.
 
-## Scope
+## Conditional scope if the extension branch is selected
 
 - Define and migrate the explicit named-cell authoring contract.
 - Maintain a Marp Core v5 conformance matrix for built-in and optional-plugin syntax.
@@ -82,10 +91,11 @@ The roadmap classifies every item currently listed as unsupported.
 | Raw HTML or XML | Remains outside the canonical authoring contract | Non-goal |
 | Marp Core v4 and highlight.js | Remain outside the compatibility contract | Non-goal |
 
-## User-facing contract
+## Provisional option: named cell markers
 
-`_class` selects the slide layout. `_cell` begins one named content region within that layout and
-ends at the next `_cell` marker or the slide boundary.
+The following is an implementation candidate, not user-facing syntax. It illustrates why the former
+blockquote convention could be replaced by `_cell` markers if that syntax survives the language
+decision.
 
 ```markdown
 <!-- _class: title-two-content -->
@@ -192,8 +202,9 @@ The initial slot registry is:
 | WP-D3 | Coder | Add registered independent modifier classes | WP-D2 |
 | WP-D4 | Architect | Decide emoji, Shiki, Mermaid, and math support | WP-D1 |
 
-Every work package finishes by updating the syntax guide, this roadmap, [TODO.md](TODO.md), and
-[CHANGELOG.md](CHANGELOG.md). Implementation and independent verification remain separate owners.
+After a language decision, every work package updates the separately named extension guide, this
+roadmap, [TODO.md](TODO.md), and [CHANGELOG.md](CHANGELOG.md). Implementation and independent
+verification remain separate owners.
 
 ## Acceptance criteria and gates
 
@@ -203,7 +214,8 @@ Every work package finishes by updating the syntax guide, this roadmap, [TODO.md
 - Importer gate: ODP and PPTX importers emit only the accepted canonical syntax.
 - Preview gate: generic Marp fallback remains readable; grid fidelity is not required for `_cell`.
 - V5 gate: every Marp Core v5 feature is classified as accepted, planned, or a non-goal.
-- Documentation gate: current syntax moves into the guide only after implementation passes.
+- Documentation gate: extension syntax moves into a separately named guide only after the language
+  decision and implementation pass.
 - Independent review gate: a reviewer compares behavior, tests, and documentation before closure.
 
 ## Migration and compatibility policy
@@ -232,7 +244,8 @@ conformance snapshot prevent the upstream `main` branch from silently redefining
 
 ## Documentation close-out requirements
 
-- Update [MARP_SYNTAX_GUIDE.md](MARP_SYNTAX_GUIDE.md) only with behavior that has shipped.
+- Do not change [MARP_SYNTAX_GUIDE.md](MARP_SYNTAX_GUIDE.md) for extension behavior. Create a
+  separately named guide only after the language decision and implementation ship.
 - Keep [TODO.md](TODO.md) limited to small next actions; remove completed entries.
 - Record completed behavior and verification in [CHANGELOG.md](CHANGELOG.md).
 - Record any changed durable architecture in [DESIGN_DECISIONS.md](DESIGN_DECISIONS.md).
