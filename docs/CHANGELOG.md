@@ -66,19 +66,33 @@
 - Recorded the instructor's current preference to extend Djot, particularly its lack of indented
   code blocks and simpler list-item indentation rule, without treating the source foundation or
   spatial grammar as settled.
-- Added an exploratory Djot slide-extension record. It evaluates parse-valid `@layout:` and
-  `@slot:` directives, Djot-native alternatives, reserved syntax, Jotdown implementation prior art,
-  and the fixture evidence needed before a grammar decision.
+- Added an exploratory Djot slide-extension syntax inventory. It records Djot constructs and
+  parse-valid free block-level surface without assigning slide, layout, slot, gallery, reveal, or
+  styling semantics.
 - Recorded the instructor's requirement that a Djot-based slide language preserve Djot's parsing,
   composition, simple-source, attributes, and generic-container design goals.
 - Clarified that hard-wrap-friendly source is a specific instructor priority and that Djot attributes
   remain content metadata rather than a second layout syntax.
 - Replaced the missing local automatic-caption transcript link in the Djot interview note with the
   source video, while retaining the note's limits on caption-derived evidence.
-- Recorded the instructor's preference to avoid braces and other paired punctuation in normal slide
-  authoring, while retaining Djot attributes as optional content metadata.
-- Coupled the candidate slide boundary with its required layout: `@ <layout>` begins every slide
-  without a separate boundary directive, while the low-punctuation named-region form remains open.
+- Recorded the instructor's preference to avoid paired punctuation and C++/CSS-style attribute bags
+  in normal slide authoring. Retained one-line Djot attributes only for exceptional overrides and
+  rejected multiline brace structures.
+- Recorded the requirement for a visibly distinctive future slide-boundary line, while retaining
+  `@`, `=>`, and `%%` as speculative Djot-compatible surface rather than assigning grammar roles.
+- Made ordinary `![alt](path)` the official component-image form, reserving it from all extension
+  structure without adopting Marp-specific image modifiers.
+- Made `$inline$` and `$$display$$` the official mathematics forms for a repository-owned
+  MathJax-compatible port, reserving those delimiters from extension structure.
+- Kept gallery capacity and bounded reveal behavior as language requirements while leaving their
+  syntax and floating-answer geometry unassigned.
+- Expanded the unassigned Djot syntax inventory with `&&`, `|||`, `. . .`, `::name::`, and paired
+  `%%name%%` forms found in or suggested by the layout-language survey; documented their Djot
+  collision and parser-testing boundaries without assigning them semantics.
+- Recorded the instructor's preference to examine one-sided `%% name` markers without inheriting
+  Marp Extended's XML-like closing pairs or assigning a scope rule.
+- Recorded Kova's `|||` as notable delimiter prior art, while preserving the preference against
+  triple repeated characters in ordinary source.
 
 ### Fixes and Maintenance
 

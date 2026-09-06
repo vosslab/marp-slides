@@ -118,10 +118,29 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
   containers, and the simplest syntax consistent with those constraints.
 - I particularly value source that remains readable when hard-wrapped. Keep every slide directive
   short and single-line so wrapping ordinary teaching prose never creates or changes structure.
-- Avoid braces and other paired punctuation in normal slide authoring. The ordinary layout and region
-  syntax should use the fewest visible structural characters possible.
-- Couple every slide boundary with its required layout selection. Use `@ <layout>` to begin a slide
-  without a separate layout directive or boundary; choose a low-punctuation slot form separately.
+- Avoid braces and other paired punctuation in normal slide authoring. Retain one-line Djot
+  attributes for exceptional content or renderer overrides, never as the default layout, slot,
+  gallery, reveal, size, or color vocabulary; never use multiline brace structures.
+- A future slide-boundary line should be visually unique enough to divide a source file into slides.
+  `=>layout: <layout>` with short `@left` and `@right` lines is an available thought experiment, not
+  selected grammar. `@` and `=>` remain speculative.
+- I like the visual presence of Marp Extended's `%%` markers, but not their XML-like closing pairs.
+  Keep one-sided `%% name` available for future fixture tests; do not assume its scope or role yet.
+- Kova's `|||` split delimiter is notable prior art, but triple repeated characters are not ideal for
+  ordinary authoring.
+- There is no official successor-language layout catalog yet. Do not make the current implementation
+  layout names the language's future vocabulary before the teaching fixtures establish it.
+- Make ordinary `![alt](path)` the official component-image form and reserve it from all extension
+  structure. Make `$inline$` and `$$display$$` the official mathematics forms and reserve them as
+  well. The repository-owned math adapter may configure MathJax or a similar plugin to accept that
+  surface; this does not adopt Marp image modifiers.
+- Do not add a successor-language presenter-note syntax. Djot footnotes are audience-facing
+  citations or clarifications, not hidden speaker notes; the existing importer still preserves
+  notes from historical decks.
+- A declared layout, rather than image count, should ultimately own slot capacity and geometry. Do
+  not silently change a slide's selected layout because of image count.
+- Keep teaching reveals within a small predefined action set rather than a general animation
+  language. The spelling and geometry for a floating answer box remain unassigned.
 - Use Djot's emphasis on an explicit, unambiguous grammar as a design lesson, not as the current
   base language. Do not require raw HTML tags or `<!-- ... -->` comments for normal slide structure.
 - Do not call the successor language Marp+ by default. It may diverge substantially from Marp and

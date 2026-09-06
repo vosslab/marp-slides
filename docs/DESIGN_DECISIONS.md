@@ -62,6 +62,24 @@ workflow. This decision does not approve a grammar, parser change, or future gui
 explicitly approved language guide. [LECTURE_LAYOUT_SURVEY.md](LECTURE_LAYOUT_SURVEY.md) records
 the legacy-slide evidence behind the requirements.
 
+### Component images and dollar-delimited mathematics are reserved
+
+**Decision.** The future language's official component-image form is `![alt](path)`. Its official
+mathematics forms are `$inline$` and `$$display$$`. These surfaces are unavailable for future slide,
+layout, region, gallery, reveal, or styling syntax.
+
+**Why.** The image form is familiar to current Marp authors and already has native Djot image meaning.
+The dollar forms are the instructor's preferred hand-writable mathematics surface and can be mapped
+by a repository-owned MathJax-compatible adapter. Reserving all three prevents slide syntax from
+colliding with ordinary teaching content.
+
+**Consequence.** This reserves ordinary component images only, not Marp-specific image modifiers for
+backgrounds, sizing, position, or filters. It does not choose the slide boundary, layout, region,
+gallery, or reveal grammar; `@`, `=>`, and `%%` remain speculative parse-valid Djot surface.
+
+**Owner.** [djot_slide_extension_exploration.md](active_plans/decisions/djot_slide_extension_exploration.md)
+and the future approved language guide.
+
 ### Native layout registry owns geometry
 
 **Decision.** Implement all sixteen LibreOffice layout-grid patterns and `gallery` as distinct

@@ -112,17 +112,21 @@ This shape is worth exploring because it makes a layout and its regions visible 
 tags, comments, or per-slide geometry:
 
 ```markdown
-@ comparison
+@layout: two-panels
 
 # Actin and microtubules
 ```
 
 The possible reading is simple:
 
-- `@ comparison` starts a new slide and selects its required named teaching layout.
+- `@layout: two-panels` starts a new slide and selects a title-plus-two-peer-boxes layout. It does
+  not ask the renderer to infer that the material is a comparison.
 - `#` remains a familiar slide title.
-- The low-punctuation source form for named regions remains an open choice; it must not require a
-  closing fence, braces, or source-order guessing.
+- Layout names describe body geometry; the title area is assumed. No official successor-language
+  layout catalog has been selected yet.
+- The `@name: value` family leaves a visible namespace for later, explicitly defined slide
+  directives. The named-region form remains an open choice; it must not require a closing fence or
+  source-order guessing.
 
 That reading is an illustration, not a contract. The final language may keep these tokens, revise
 them, or choose a better visible form. This syntax idea does not select GFM, Djot, or Marp as its
