@@ -16,10 +16,17 @@ The future layout catalog will include every default LibreOffice layout plus the
 `multiple-choice` layout. This does not settle every slot contract or action rule, or make an
 ordinary Djot renderer a slide renderer.
 
+## Future ownership boundary
+
+The reusable slide-language work may eventually move to a separate repository from this personal
+lecture-content repository. That future split does not authorize a migration, duplicate content, or
+a new current source of truth. This page records language exploration where it is happening now.
+
 ## Provisional slide surface
 
-These roles are the current working grammar direction. They require fixture testing, a pinned Djot
-implementation, and an explicit language-adoption decision before parser or exporter work.
+These roles are the current working grammar direction. They require representative source cases, a
+pinned Djot implementation, and an explicit language-adoption decision before parser or exporter
+work.
 
 | Surface form | Provisional role | Constraint |
 | --- | --- | --- |
@@ -28,6 +35,13 @@ implementation, and an explicit language-adoption decision before parser or expo
 | `<= <action>` | A terminal animation directive applying to the preceding block or list item. | It is an action only as an exact final suffix; otherwise it is ordinary text. |
 | `=> <action>` | A prefix animation directive applying to the following block. | It has no closing marker. |
 | `=> cascade appear` | A prefix animation directive for the following outline or list. | It reveals that list's top-level items in source order. |
+
+## Candidate figure action
+
+The instructor wants to explore `<= blue overlay` as a terminal action for an authored annotation
+or popup highlight. It would be a predefined visual treatment, not a generic `color` or geometry
+attribute. A selected layout may give the preceding block a standard overlay position. A future
+figure-annotation unit is needed only when an overlay must attach to a particular image region.
 
 ## Titles and subtitles
 
@@ -45,9 +59,9 @@ drawing them somewhere else.
 ## Marp content baseline
 
 Preserve familiar Marp content where it is compatible with Djot: headings, ordinary lists, links,
-quotes, fenced code, and component images. The documented differences stay explicit: `=== layout:`
-replaces Marp's `---` slide separator, Djot supplies the underlying markup rules, and Marp-specific
-image modifiers are not adopted.
+quotes, monospace blocks, and component images. Djot tables are the official tabular surface. The
+documented differences stay explicit: `=== layout:` replaces Marp's `---` slide separator, Djot
+supplies the underlying markup rules, and Marp-specific image modifiers are not adopted.
 
 ## Linter boundary
 
@@ -122,7 +136,7 @@ semantics do not transfer to Djot merely because their raw lines parse. In parti
   surface only; it does not adopt Marp-specific background, sizing, positioning, or filter modifiers.
 - `$inline$` and `$$display$$` are the official inline and display mathematics forms. They are
   unavailable for extension structure, even though they are ordinary text under native Djot math
-  rules.
+  rules. The repository math adapter will interpret them with MathJax or a similar plugin.
 
 ## Attribute scope
 
@@ -165,14 +179,13 @@ that is a documented capability, not a recommendation for a future slide surface
 - How a floating text box is represented without turning ordinary authoring into a style-attribute
   language.
 - Whether the language uses Djot attributes only as native metadata or extends their scope.
-- Which math plugin interprets the reserved dollar-delimited math surface.
 
 ## Evidence needed before adoption
 
 1. Pin a Djot syntax-reference revision and implementation.
 2. Parse specimens using every surface form above, including code, lists, quotes, footnotes, and divs.
 3. Record the AST and ordinary rendered output.
-4. Compare the provisional spellings against the teaching fixtures before adopting a grammar.
+4. Compare the provisional spellings against the teaching source examples before adopting a grammar.
 
 ## Primary sources
 

@@ -39,8 +39,8 @@ commit `06c5a54`.
 authorable: title; title and subtitle; ordinary body; nested bulleted and numbered lists; equal and
 unequal panels; image/text on either side; three or four regions; image with caption; gallery;
 quote or callout; and reusable named teaching layouts. The layout vocabulary must include every
-default LibreOffice layout plus the custom `multiple-choice` layout. It must also support simple Markdown
-images with predictable named-region placement and both inline and display equations through
+default LibreOffice layout plus the custom `multiple-choice` layout. It must also support simple
+Markdown images with predictable named-region placement and both inline and display equations through
 LaTeX-compatible or similarly capable hand-writable syntax. It must support simple on-advance
 teaching reveals: make an authored item appear or present an outline one bullet at a time.
 
@@ -49,7 +49,7 @@ source. They define the evidence needed to choose between a small extension and 
 presentation language without presupposing either outcome.
 
 **Consequence.** The language survey uses those structures and equation support as literal source
-fixtures. A future grammar must preserve ordinary nested Markdown, avoid routine HTML-comment or
+examples. A future grammar must preserve ordinary nested Markdown, avoid routine HTML-comment or
 container scaffolding when possible, and map text, lists, practical equations, and images to typed
 editable native slide objects. Reveal semantics must remain bounded to authored appearance order and
 map to editable native presentation animation objects; motion paths, timing tracks, and complex
@@ -109,10 +109,25 @@ browser, LibreOffice, or a rendered deck.
 **Consequence.** The linter validates slide declarations, selected layouts, permitted titles and
 subtitles, slot contracts, animation attachment, and special-layout rules. It does not establish
 geometry, overflow, native animation export, or visual quality; those remain renderer and acceptance
-checks. This requirement does not authorize parser or linter implementation before the grammar is
-fixture-backed.
+checks. This requirement does not authorize parser or linter implementation before the grammar has
+representative, documented source cases. Permanent parser and linter tests keep those short inputs
+inline, as required by the pytest policy.
 
 **Owner.** A future source-language package and its deterministic tests.
+
+### Standard Djot content covers tables and sequences
+
+**Decision.** Use Djot tables for tabular content, `$inline$` and `$$display$$` through MathJax or
+a similar plugin for mathematics, and monospace blocks for aligned DNA and other fixed-width text.
+
+**Why.** The Lecture 02 survey shows all three forms in normal teaching content. They are ordinary
+content needs, not evidence for a custom biological notation or another slide-extension marker.
+
+**Consequence.** The future native implementation needs editable table, math, and monospace-block
+owners. It must not introduce custom table, DNA-sequence, or math delimiters.
+
+**Owner.** [djot_slide_extension_exploration.md](active_plans/decisions/djot_slide_extension_exploration.md)
+and [lect02_genetics_syntax_gap_survey.md](active_plans/decisions/lect02_genetics_syntax_gap_survey.md).
 
 ### Native layout registry owns geometry
 

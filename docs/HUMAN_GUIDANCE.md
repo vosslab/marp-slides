@@ -125,8 +125,7 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
   gallery, reveal, size, or color vocabulary; never use multiline brace structures.
 - The provisional Djot slide surface uses `=== layout: <name>` to start a slide and choose its
   layout, and `@<slot>` to select a predefined slot from that layout. These spellings remain
-  fixture-bound working grammar, not parser adoption or a decision about the remaining layout
-  catalog.
+  provisional working grammar, not parser adoption or a decision about the remaining layout catalog.
 - The future-language catalog will include every default LibreOffice layout plus the custom
   `multiple-choice` layout. Preserve familiar Marp content where compatible with Djot; `=== layout:`
   replaces Marp's `---` slide separator, and Marp-specific image modifiers are not adopted.
@@ -136,17 +135,19 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
   `=> <action>` as a prefix directive for the following block. `=> cascade appear` reveals the
   following outline or list one top-level item at a time in source order.
 - I like the visual presence of Marp Extended's `%%` markers, but not their XML-like closing pairs.
-  Keep one-sided `%% name` available for future fixture tests; do not assume its scope or role yet.
+  Keep one-sided `%% name` available for small parser examples; do not assume its scope or role yet.
 - Kova's `|||` split delimiter is notable prior art, but triple repeated characters are not ideal for
   ordinary authoring.
 - `multiple-choice` is an extra custom layout in addition to every default LibreOffice layout. It
-  requires `@question` and `@answer`: the question and choices
-  show initially, while the answer appears automatically on the first advance in a bottom-right
-  popup. Open-ended questions use another layout.
+  requires `@question` and `@answer`. The question and choices show initially, while the answer
+  appears automatically on the first advance in a bottom-right popup. Open-ended questions use
+  another layout.
 - Make ordinary `![alt](path)` the official component-image form and reserve it from all extension
   structure. Make `$inline$` and `$$display$$` the official mathematics forms and reserve them as
   well. The repository-owned math adapter may configure MathJax or a similar plugin to accept that
   surface; this does not adopt Marp image modifiers.
+- Use Djot tables as the tabular source surface. Use a monospace block for aligned DNA and other
+  fixed-width sequence text; do not introduce special biological-sequence syntax.
 - Do not add a successor-language presenter-note syntax. Djot footnotes are audience-facing
   citations or clarifications, not hidden speaker notes; the existing importer still preserves
   notes from historical decks.
@@ -154,6 +155,9 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
   not silently change a slide's selected layout because of image count.
 - Keep teaching reveals within a small predefined action set rather than a general animation
   language. The provisional `<=` and `=>` spellings do not settle floating-answer geometry.
+- Explore `<= blue overlay` as a bounded action for an authored annotation or popup highlight. It
+  may become a predefined treatment, never a general color or coordinate attribute bag. A standard
+  layout popup needs no target syntax; image-specific placement needs a figure-annotation contract.
 - Write a simple, fast, source-only linter with pyflakes-level enforcement. It must report
   source-located structural mistakes without rendering or opening LibreOffice; geometry, overflow,
   native animation export, and visual quality remain separate validation lanes.
@@ -163,6 +167,9 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
   should receive its own name after its grammar is selected.
 - Keep one canonical authored source. Do not characterize the language discussion as a proposal for
   a separate GFM review copy and a presentation copy.
+- Eventually separate reusable slide-language work from this repository's personal lecture content.
+  Until an explicit migration plan exists, keep the current language exploration and course content
+  together here; do not create a second content authority or prematurely split implementation.
 
 ## Working style
 

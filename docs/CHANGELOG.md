@@ -114,6 +114,17 @@
 - Required a fast, source-only, pyflakes-level linter for the future language. It reports structural
   mistakes with source locations while geometry, overflow, native animation, and visual checks stay
   in separate validation lanes.
+- Clarified that grammar validation uses small, inline source cases rather than a shared test-data
+  corpus, consistent with the repository pytest policy.
+- Recorded the future intent to separate reusable slide-language work from personal lecture content,
+  without authorizing a migration, duplicate content authority, or premature repository split.
+- Surveyed the six `genetics/lect02*` legacy decks against the proposed language. Found no gap for
+  worked-problem sequences, multiple-choice answers, or Marp images. `<= blue overlay` needs no
+  extra syntax in a standard layout popup; figure annotations are conditional only for image-specific
+  placement, never a general styling language.
+- Confirmed settled Djot content forms from the Lecture 02 survey: Djot tables, MathJax-compatible
+  `$inline$` and `$$display$$` mathematics, and monospace blocks for aligned sequence text. These
+  require native implementation, not custom table, math, or DNA syntax.
 
 ### Fixes and Maintenance
 
