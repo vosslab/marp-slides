@@ -113,6 +113,8 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 - I am leaning toward extending Djot as the source foundation. I value its removal of indented code
   blocks and its simpler list-item indentation rule; ordinary nested lists and explicit slide-layout
   semantics still need to be specified.
+- Hands-on Djot specimens reinforce that preference: its visible, line-by-line parsing behavior
+  makes the authored source easy to read and reason about.
 - I want a Djot-based slide language to retain its design goals: linear and local parsing, simple
   list and inline behavior, hard-wrap-friendly source, uniform composition, preserved attributes and
   containers, and the simplest syntax consistent with those constraints.
@@ -124,6 +126,8 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 - A future slide-boundary line should be visually unique enough to divide a source file into slides.
   `=>layout: <layout>` with short `@left` and `@right` lines is an available thought experiment, not
   selected grammar. `@` and `=>` remain speculative.
+- `===== layout: <layout>` is a tempting visually distinctive slide boundary. Keep it as an
+  unassigned Djot-compatible thought experiment until the grammar fixtures select or reject it.
 - I like the visual presence of Marp Extended's `%%` markers, but not their XML-like closing pairs.
   Keep one-sided `%% name` available for future fixture tests; do not assume its scope or role yet.
 - Kova's `|||` split delimiter is notable prior art, but triple repeated characters are not ideal for

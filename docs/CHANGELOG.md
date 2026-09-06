@@ -96,6 +96,12 @@
 - Corrected the Djot inventory table: moved reserved dollar mathematics out of the free-surface
   table and moved Kova's literal three-pipe specimen into a standalone GFM `<pre>` block so Markdown
   table renderers preserve the row.
+- Added `===== layout: name` to the unassigned Djot surface inventory and distinguished it from
+  Djot's three-character `*` and `-` thematic-break rule.
+- Recorded that a hyphen-run boundary with trailing layout text avoids a thematic break but is
+  changed by Djot smart punctuation, so it is not source-glyph-stable.
+- Recorded the instructor's stronger hands-on preference for Djot after testing its line-level
+  parsing and rendering behavior.
 
 ### Fixes and Maintenance
 

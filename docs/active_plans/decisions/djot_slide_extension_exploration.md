@@ -24,6 +24,7 @@ regions end, or make an ordinary Djot renderer a slide renderer.
 | `=> name` | Ordinary paragraph text at block level. | Parse-valid ordinary text; `=` has other Djot uses but no documented `=>` block construct. |
 | `=> name other` | Ordinary paragraph text at block level. | The same free block-level surface as above. |
 | `=>layout: name` | Ordinary paragraph text at block level. | The same free block-level surface, with a visually distinctive fixed word and colon. |
+| `===== layout: name` | Ordinary paragraph text at block level. | Parse-valid free surface. A five-equals visual break does not form a Djot heading underline or thematic break. |
 | `&& name` | No documented Djot block construct begins with `&&`. | Parse-valid free surface to test; it is not used by the layout survey and visually suggests Boolean or shell-and in some contexts. |
 | `%% name` or `%%name` | Ordinary paragraph text at block level. | Parse-valid one-sided surface; `%` is a comment delimiter inside attributes, but no closing marker is required by Djot. |
 | `%%name%%` | Ordinary paragraph text at block level. | Marp Extended uses this paired form for custom markers; Djot itself gives it no block meaning. |
@@ -70,6 +71,12 @@ that is a documented capability, not a recommendation for a future slide surface
 
 - Lines using `@`, `=>`, or `%%` are accepted as ordinary Djot paragraphs unless a future parser
   assigns them a different meaning.
+- The same is true of `===== layout: name`: even an equals-only line has no Djot block meaning.
+  Djot thematic breaks use three or more `*` or `-` characters with no other content; it has no
+  Setext-style equal-sign heading underline.
+- `----- layout: name` is likewise not a thematic break, but it is not glyph-stable: Djot smart
+  punctuation converts a run of hyphens in ordinary text to en and em dashes. It is therefore not
+  a useful visual-boundary candidate.
 - An ordinary Djot renderer displays those lines as content. Parse validity is not native slide
   support.
 - Code fences and raw blocks remain opaque: a marker-looking line inside them is code, not a future
