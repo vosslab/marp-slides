@@ -38,9 +38,8 @@ commit `06c5a54`.
 **Decision.** The future slide language must make recurring teaching structures directly
 authorable: title; title and subtitle; ordinary body; nested bulleted and numbered lists; equal and
 unequal panels; image/text on either side; three or four regions; image with caption; gallery;
-quote or callout; and reusable named teaching layouts. The layout vocabulary must include the
-common LibreOffice-style patterns: title slide, title plus content, equal and asymmetric columns,
-stacked regions, 2x2, 3x2, and related teaching layouts. It must also support simple Markdown
+quote or callout; and reusable named teaching layouts. The layout vocabulary must include every
+default LibreOffice layout plus the custom `multiple-choice` layout. It must also support simple Markdown
 images with predictable named-region placement and both inline and display equations through
 LaTeX-compatible or similarly capable hand-writable syntax. It must support simple on-advance
 teaching reveals: make an authored item appear or present an outline one bullet at a time.
@@ -74,11 +73,46 @@ by a repository-owned MathJax-compatible adapter. Reserving all three prevents s
 colliding with ordinary teaching content.
 
 **Consequence.** This reserves ordinary component images only, not Marp-specific image modifiers for
-backgrounds, sizing, position, or filters. It does not choose the slide boundary, layout, region,
-gallery, or reveal grammar; `@`, `=>`, and `%%` remain speculative parse-valid Djot surface.
+backgrounds, sizing, position, or filters. The exploration record now has a provisional working
+surface for slide starts, slots, and animations; `%%`, default-layout slot contracts, generic
+overlay geometry outside `multiple-choice`, and parser adoption remain open.
 
 **Owner.** [djot_slide_extension_exploration.md](active_plans/decisions/djot_slide_extension_exploration.md)
 and the future approved language guide.
+
+### Multiple-choice is the first official future layout
+
+**Decision.** Add `multiple-choice` as the first official layout in the future-language catalog.
+It requires exactly one `@question` slot and one `@answer` slot. The question contains the prompt
+and its ordinary choice list; the answer appears automatically on the first advance in a fixed
+bottom-right popup region.
+
+**Why.** Multiple-choice questions have a short, revealable answer. The automatic behavior removes
+redundant animation spelling while keeping open-ended questions out of a layout that would misstate
+their teaching structure.
+
+**Consequence.** Do not require `<= appear` or `=> appear` for this layout's answer, and reject them
+there as redundant. This is a source-language and layout-catalog decision only: it does not add a
+parser, exporter, native builder, or a generally available overlay slot to the current Marp system.
+
+**Owner.** [djot_slide_extension_exploration.md](active_plans/decisions/djot_slide_extension_exploration.md)
+and a future approved language guide.
+
+### Static linter enforces the source contract
+
+**Decision.** Provide a fast, source-only linter with pyflakes-level enforcement for the future
+language.
+
+**Why.** The author needs immediate, source-located feedback for structural mistakes without a
+browser, LibreOffice, or a rendered deck.
+
+**Consequence.** The linter validates slide declarations, selected layouts, permitted titles and
+subtitles, slot contracts, animation attachment, and special-layout rules. It does not establish
+geometry, overflow, native animation export, or visual quality; those remain renderer and acceptance
+checks. This requirement does not authorize parser or linter implementation before the grammar is
+fixture-backed.
+
+**Owner.** A future source-language package and its deterministic tests.
 
 ### Native layout registry owns geometry
 

@@ -1,9 +1,9 @@
 # Djot slide-extension syntax inventory
 
-Status: exploratory inventory only. This page records Djot syntax and parse-valid surface space that
-may be available to a future slide language. Component images and dollar-delimited mathematics are
-reserved separately; no slide, layout, slot, gallery, reveal, caption, note, or styling meaning is
-assigned to `@`, `=>`, or `%%`.
+Status: exploratory grammar note. This page records Djot syntax and parse-valid surface space for a
+future slide language. The instructor has designated provisional roles for `===`, `@`, `<=`, and
+`=>`; they are not parser adoption. Component images and dollar-delimited mathematics are reserved
+separately, while `%%` and the other forms below remain unassigned.
 
 ## Context
 
@@ -12,19 +12,89 @@ does not have indented code blocks. Djot itself has no slide or spatial-layout s
 prior-art evidence remains in [LAYOUT_LANGUAGE_SURVEY.md](../../LAYOUT_LANGUAGE_SURVEY.md) and
 [MARP_ADJACENT_PROJECT_COMPARISON.md](../../MARP_ADJACENT_PROJECT_COMPARISON.md).
 
-This is not a grammar proposal. In particular, it does not select a layout catalog, decide how
-regions end, or make an ordinary Djot renderer a slide renderer.
+The future layout catalog will include every default LibreOffice layout plus the custom
+`multiple-choice` layout. This does not settle every slot contract or action rule, or make an
+ordinary Djot renderer a slide renderer.
 
-## Available free block-level surface
+## Provisional slide surface
+
+These roles are the current working grammar direction. They require fixture testing, a pinned Djot
+implementation, and an explicit language-adoption decision before parser or exporter work.
+
+| Surface form | Provisional role | Constraint |
+| --- | --- | --- |
+| `=== layout: <name>` | Starts a slide and selects its layout. | It is the sole slide-start spelling; the catalog contains default LibreOffice layouts plus `multiple-choice`. |
+| `@<slot>` | Selects a predefined content slot in the selected layout. | The slot name must be declared by that layout; for example, `@left` and `@right`. |
+| `<= <action>` | A terminal animation directive applying to the preceding block or list item. | It is an action only as an exact final suffix; otherwise it is ordinary text. |
+| `=> <action>` | A prefix animation directive applying to the following block. | It has no closing marker. |
+| `=> cascade appear` | A prefix animation directive for the following outline or list. | It reveals that list's top-level items in source order. |
+
+## Titles and subtitles
+
+The language retains familiar Marp heading spelling inside a slide:
+
+```djot
+# Slide title
+## Slide subtitle
+```
+
+In a layout with a title region, `#` supplies the title. In a layout with a subtitle region, `##`
+supplies the subtitle. A layout without title placement rejects both headings rather than silently
+drawing them somewhere else.
+
+## Marp content baseline
+
+Preserve familiar Marp content where it is compatible with Djot: headings, ordinary lists, links,
+quotes, fenced code, and component images. The documented differences stay explicit: `=== layout:`
+replaces Marp's `---` slide separator, Djot supplies the underlying markup rules, and Marp-specific
+image modifiers are not adopted.
+
+## Linter boundary
+
+The future language needs a fast, deterministic, source-only linter at roughly the enforcement
+level of `pyflakes`. It reports source-located structural errors without opening LibreOffice or
+rendering a slide. It checks slide declarations, known layouts, title/subtitle permission, slot
+names and required/duplicate slots, action attachment, and special layout contracts such as
+`multiple-choice`. Geometry, overflow, animation export, and visual quality remain separate checks.
+
+## Official layout: multiple-choice
+
+`multiple-choice` is the first official future-language layout. It has exactly these predefined
+slots:
+
+- `@question` contains the question prompt and its ordinary choice list. It is visible
+  when the slide opens.
+- `@answer` contains the short answer. It appears automatically on the first advance in the
+  layout's fixed bottom-right popup region.
+
+`@question` and `@answer` are each required once. The answer slot has its own reveal behavior, so
+`<= appear` and `=> appear` are invalid on its content. Open-ended questions use another layout;
+the multiple-choice layout does not pretend their answers are short popup text.
+
+Examples:
+
+```djot
+=== layout: multiple-choice
+
+@question
+
+- Which molecule carries genetic information?
+- A. Lipid
+- B. Carbohydrate
+- C. DNA
+- D. RNA
+
+@answer
+
+Answer: C. DNA
+```
+
+## Remaining free block-level surface
 
 | Surface form | Documented Djot behavior | Availability observation |
 | --- | --- | --- |
-| `@name: value` | Ordinary paragraph text; `@` has no documented block role. | Parse-valid ordinary text; an unmodified Djot renderer displays it. |
-| `@name` | Ordinary paragraph text; `@` has no documented block role. | The same free block-level surface without a colon or value. |
-| `=> name` | Ordinary paragraph text at block level. | Parse-valid ordinary text; `=` has other Djot uses but no documented `=>` block construct. |
-| `=> name other` | Ordinary paragraph text at block level. | The same free block-level surface as above. |
-| `=>layout: name` | Ordinary paragraph text at block level. | The same free block-level surface, with a visually distinctive fixed word and colon. |
-| `===== layout: name` | Ordinary paragraph text at block level. | Parse-valid free surface. A five-equals visual break does not form a Djot heading underline or thematic break. |
+| `@name: value` | Ordinary paragraph text; `@` has no documented block role. | The provisional slot form has no colon; this remains ordinary Djot text. |
+| `===== layout: name` | Ordinary paragraph text at block level. | Parse-valid but not an alias of the provisional three-equals slide start. |
 | `&& name` | No documented Djot block construct begins with `&&`. | Parse-valid free surface to test; it is not used by the layout survey and visually suggests Boolean or shell-and in some contexts. |
 | `%% name` or `%%name` | Ordinary paragraph text at block level. | Parse-valid one-sided surface; `%` is a comment delimiter inside attributes, but no closing marker is required by Djot. |
 | `%%name%%` | Ordinary paragraph text at block level. | Marp Extended uses this paired form for custom markers; Djot itself gives it no block meaning. |
@@ -69,9 +139,10 @@ that is a documented capability, not a recommendation for a future slide surface
 
 ## Parse-validity boundaries
 
-- Lines using `@`, `=>`, or `%%` are accepted as ordinary Djot paragraphs unless a future parser
-  assigns them a different meaning.
-- The same is true of `===== layout: name`: even an equals-only line has no Djot block meaning.
+- Native Djot accepts all provisional and free forms above as ordinary paragraphs. The future slide
+  parser, not Djot itself, gives the provisional forms their roles.
+- The same is true of `=== layout: name` and `===== layout: name`: even an equals-only line has no
+  Djot block meaning.
   Djot thematic breaks use three or more `*` or `-` characters with no other content; it has no
   Setext-style equal-sign heading underline.
 - `----- layout: name` is likewise not a thematic break, but it is not glyph-stable: Djot smart
@@ -88,19 +159,20 @@ that is a documented capability, not a recommendation for a future slide surface
 
 ## Deliberately unassigned questions
 
-- Which available form, if any, starts a slide or selects a layout.
 - How content regions, galleries, captions, and repeated images are represented.
-- How an on-advance action or floating text box is represented.
+- Which action words beyond `appear` and `cascade appear` are supported, and how their targets are
+  bounded in nested content.
+- How a floating text box is represented without turning ordinary authoring into a style-attribute
+  language.
 - Whether the language uses Djot attributes only as native metadata or extends their scope.
 - Which math plugin interprets the reserved dollar-delimited math surface.
 
-## Evidence needed before assignment
+## Evidence needed before adoption
 
 1. Pin a Djot syntax-reference revision and implementation.
 2. Parse specimens using every surface form above, including code, lists, quotes, footnotes, and divs.
 3. Record the AST and ordinary rendered output.
-4. Compare a small number of complete spellings against the teaching fixtures only after the syntax
-   inventory has been reviewed.
+4. Compare the provisional spellings against the teaching fixtures before adopting a grammar.
 
 ## Primary sources
 

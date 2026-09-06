@@ -123,17 +123,26 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 - Avoid braces and other paired punctuation in normal slide authoring. Retain one-line Djot
   attributes for exceptional content or renderer overrides, never as the default layout, slot,
   gallery, reveal, size, or color vocabulary; never use multiline brace structures.
-- A future slide-boundary line should be visually unique enough to divide a source file into slides.
-  `=>layout: <layout>` with short `@left` and `@right` lines is an available thought experiment, not
-  selected grammar. `@` and `=>` remain speculative.
-- `===== layout: <layout>` is a tempting visually distinctive slide boundary. Keep it as an
-  unassigned Djot-compatible thought experiment until the grammar fixtures select or reject it.
+- The provisional Djot slide surface uses `=== layout: <name>` to start a slide and choose its
+  layout, and `@<slot>` to select a predefined slot from that layout. These spellings remain
+  fixture-bound working grammar, not parser adoption or a decision about the remaining layout
+  catalog.
+- The future-language catalog will include every default LibreOffice layout plus the custom
+  `multiple-choice` layout. Preserve familiar Marp content where compatible with Djot; `=== layout:`
+  replaces Marp's `---` slide separator, and Marp-specific image modifiers are not adopted.
+- In title-bearing layouts, `#` supplies the title; in subtitle-bearing layouts, `##` supplies the
+  subtitle. Layouts without title placement reject both headings.
+- Use `<= <action>` as a terminal animation directive for the preceding item or block and
+  `=> <action>` as a prefix directive for the following block. `=> cascade appear` reveals the
+  following outline or list one top-level item at a time in source order.
 - I like the visual presence of Marp Extended's `%%` markers, but not their XML-like closing pairs.
   Keep one-sided `%% name` available for future fixture tests; do not assume its scope or role yet.
 - Kova's `|||` split delimiter is notable prior art, but triple repeated characters are not ideal for
   ordinary authoring.
-- There is no official successor-language layout catalog yet. Do not make the current implementation
-  layout names the language's future vocabulary before the teaching fixtures establish it.
+- `multiple-choice` is an extra custom layout in addition to every default LibreOffice layout. It
+  requires `@question` and `@answer`: the question and choices
+  show initially, while the answer appears automatically on the first advance in a bottom-right
+  popup. Open-ended questions use another layout.
 - Make ordinary `![alt](path)` the official component-image form and reserve it from all extension
   structure. Make `$inline$` and `$$display$$` the official mathematics forms and reserve them as
   well. The repository-owned math adapter may configure MathJax or a similar plugin to accept that
@@ -144,7 +153,10 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 - A declared layout, rather than image count, should ultimately own slot capacity and geometry. Do
   not silently change a slide's selected layout because of image count.
 - Keep teaching reveals within a small predefined action set rather than a general animation
-  language. The spelling and geometry for a floating answer box remain unassigned.
+  language. The provisional `<=` and `=>` spellings do not settle floating-answer geometry.
+- Write a simple, fast, source-only linter with pyflakes-level enforcement. It must report
+  source-located structural mistakes without rendering or opening LibreOffice; geometry, overflow,
+  native animation export, and visual quality remain separate validation lanes.
 - Use Djot's emphasis on an explicit, unambiguous grammar as a design lesson, not as the current
   base language. Do not require raw HTML tags or `<!-- ... -->` comments for normal slide structure.
 - Do not call the successor language Marp+ by default. It may diverge substantially from Marp and

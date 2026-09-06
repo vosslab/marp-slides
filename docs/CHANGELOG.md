@@ -102,6 +102,18 @@
   changed by Djot smart punctuation, so it is not source-glyph-stable.
 - Recorded the instructor's stronger hands-on preference for Djot after testing its line-level
   parsing and rendering behavior.
+- Recorded the provisional Djot grammar direction: `=== layout: <name>` starts a slide and selects
+  its layout, `@<slot>` selects a layout-defined slot, and `<=`/`=>` attach bounded animations to
+  preceding/following content. Kept parser adoption, layout names, and floating-answer geometry open.
+- Made `multiple-choice` the first official future-language layout. Its required `@question` and
+  `@answer` slots show the prompt and choices initially, then reveal the short answer automatically
+  in a fixed bottom-right popup; open-ended questions use another layout.
+- Recorded the full future-layout scope: every default LibreOffice layout plus the custom
+  `multiple-choice` layout. Retained `#` titles and `##` subtitles only where a layout declares
+  their regions, and preserved compatible Marp content apart from explicit Djot-language changes.
+- Required a fast, source-only, pyflakes-level linter for the future language. It reports structural
+  mistakes with source locations while geometry, overflow, native animation, and visual checks stay
+  in separate validation lanes.
 
 ### Fixes and Maintenance
 
