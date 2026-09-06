@@ -27,10 +27,13 @@ regions end, or make an ordinary Djot renderer a slide renderer.
 | `&& name` | No documented Djot block construct begins with `&&`. | Parse-valid free surface to test; it is not used by the layout survey and visually suggests Boolean or shell-and in some contexts. |
 | `%% name` or `%%name` | Ordinary paragraph text at block level. | Parse-valid one-sided surface; `%` is a comment delimiter inside attributes, but no closing marker is required by Djot. |
 | `%%name%%` | Ordinary paragraph text at block level. | Marp Extended uses this paired form for custom markers; Djot itself gives it no block meaning. |
-| `|||` | No documented one-line Djot table construct is formed by this line alone. | Kova uses it as an equal-panel delimiter; it is notable compact prior art but triple repeated characters are not preferred for ordinary authoring, and `|` is table punctuation. |
+| Kova's three-vertical-bar delimiter | No documented one-line Djot table construct is formed by this line alone. | It is notable compact prior art but triple repeated characters are not preferred for ordinary authoring, and `|` is table punctuation. Its literal source is shown below the table. |
 | `. . .` | No documented Djot block construct begins with this spaced line. | Quarto Reveal uses it as a bare pause; it remains an unassigned free surface here. |
 | `::name::` | Not a Djot generic div fence, which begins with at least three colons. | Slidev uses forms such as `::right::` as named slots; Djot's inline symbol syntax also uses colons, so its exact AST needs testing. |
-| `$inline$` / `$$display$$` | Ordinary text under native Djot math rules. | Officially reserved as the future language's inline and display math surface; unavailable for extension structure. |
+
+### Literal Kova delimiter
+
+<pre>|||</pre>
 
 `## name` is deliberately absent: it is already a Djot heading, not free extension surface. The same
 is true of attributes, generic divs, definition lists, pipe tables, footnotes, native Djot math,
@@ -41,11 +44,14 @@ The layout survey is evidence of source shapes, not an adoption list: `|||` appe
 semantics do not transfer to Djot merely because their raw lines parse. In particular, the one-sided
 `%% name` form is available to test without importing Marp Extended's closing-marker requirement.
 
-`![alt](path)` is officially reserved as the component-image form. It is unavailable for slide,
-layout, region, reveal, or other extension syntax. `$inline$` and `$$display$$` are likewise
-official mathematics surface and unavailable for extension structure. The image reservation covers
-the ordinary Marp and Djot image surface only; it does not adopt Marp-specific background, sizing,
-positioning, or filter modifiers.
+## Reserved forms
+
+- `![alt](path)` is the official component-image form. It is unavailable for slide, layout, region,
+  reveal, or other extension syntax. This reservation covers the ordinary Marp and Djot image
+  surface only; it does not adopt Marp-specific background, sizing, positioning, or filter modifiers.
+- `$inline$` and `$$display$$` are the official inline and display mathematics forms. They are
+  unavailable for extension structure, even though they are ordinary text under native Djot math
+  rules.
 
 ## Attribute scope
 

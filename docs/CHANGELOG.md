@@ -93,6 +93,9 @@
   Marp Extended's XML-like closing pairs or assigning a scope rule.
 - Recorded Kova's `|||` as notable delimiter prior art, while preserving the preference against
   triple repeated characters in ordinary source.
+- Corrected the Djot inventory table: moved reserved dollar mathematics out of the free-surface
+  table and moved Kova's literal three-pipe specimen into a standalone GFM `<pre>` block so Markdown
+  table renderers preserve the row.
 
 ### Fixes and Maintenance
 
