@@ -55,6 +55,11 @@
 - Corrected the source-language status: GFM is an attractive candidate, not a selected foundation;
   the brainstorming, survey, roadmap, and TODO now retain GFM, Djot, and a Marp-derived surface as
   alternatives to compare before approving extension syntax.
+- Added a separate, timestamped analysis of the supplied John MacFarlane interview transcript so
+  its Markdown and Djot lessons remain evidence for the language choice rather than informal memory.
+- Clarified that GitHub cannot be a faithful slide renderer. The brainstorming page now records an
+  optional, derived read-only GFM display projection as a possible browsing artifact, not a second
+  source or a constraint on the source-language decision.
 
 ### Fixes and Maintenance
 

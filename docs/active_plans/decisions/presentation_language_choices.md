@@ -32,16 +32,29 @@ borrow is its specification discipline:
 - Define how a construct interacts with code fences, lists, and other blocks.
 - Reject source that has no stable native-slide meaning.
 
-## Why GFM is attractive
+The timestamped transcript analysis is in
+[markdown_djot_interview_notes.md](markdown_djot_interview_notes.md). It identifies the interview
+lessons without treating either Djot or the interview as a chosen slide-language specification.
 
-GitHub is where a deck is reviewed, linked, and read in raw source. It need not render the final
-slide layout, but a GitHub reader should understand the title, layout intent, regions, lists, images,
-and equations without a custom preview.
+## GitHub and GFM
+
+GitHub is where a deck is reviewed, linked, and read in raw source. It is not designed to display
+spatial slides, so no authoring syntax can make its normal Markdown rendering a faithful slide view.
+GitHub readability is therefore useful but must not decide the source foundation by itself.
 
 GFM cannot be the complete slide language because it has no spatial model. It is a candidate
-foundation because a small visible extension could preserve ordinary GFM content and still read well
-as a GitHub page. That readability benefit must be weighed against Djot's stronger grammar base and
-against any useful Marp source conventions; GFM is not selected.
+foundation because it offers familiar document syntax and broad generic Markdown display. That
+benefit must be weighed against Djot's stronger grammar base and against useful Marp source
+conventions; GFM is not selected.
+
+### Optional display projection
+
+The deck has one canonical authored source regardless of the foundation selected. If browsing on
+GitHub proves valuable, the pipeline could optionally emit a derived, read-only GFM-friendly display
+view: title, content in layout reading order, images, captions, and accessible links, but not a
+claim to reproduce slide geometry or builds. This is an optional display artifact, not a second
+source, authoring input, or parser input. It may be unnecessary and must not drive the language
+choice.
 
 ## What authoring should feel like
 
@@ -63,7 +76,7 @@ captions, galleries, and repeated teaching layouts explicitly.
 
 | Start with | What it contributes | Open concern |
 | --- | --- | --- |
-| GFM | Familiar source and useful GitHub display. | The extension must close Markdown's layout ambiguities. |
+| GFM | Familiar document syntax and broad generic display. | The extension must close Markdown's layout ambiguities. |
 | Djot | Deliberate grammar discipline. | GitHub does not display it as ordinary Markdown, and slide semantics still need design. |
 | Marp-derived surface | Familiar slide headings and migration continuity. | Classic Marp lacks spatial semantics and must not constrain the successor. |
 | Surveyed presentation format | Individual prior-art ideas. | No direct-adoption candidate currently meets the authoring requirements. |
