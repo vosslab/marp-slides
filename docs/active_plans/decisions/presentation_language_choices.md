@@ -1,31 +1,80 @@
-# Presentation language choices
+# Presentation-language brainstorming
 
-Status: open decision record. This is not a syntax guide and does not authorize parser work.
+Status: working thoughts, not a syntax guide. This page retains the reasons behind the source-language
+and syntax choices so that a future grammar is not designed as though its tradeoffs had never been
+discussed. It authorizes neither parser work nor a public language name.
 
-## Decision question
+## The actual problem
 
-What language should an instructor hand-write for structured, editable teaching slides?
+This is not a search for a cleverer Marp theme. Markdown is good at content hierarchy; slides also
+need spatial hierarchy. Classic Marp remains a useful migration and conformance baseline, but it
+cannot name the regions needed for the teaching layouts in this repository. The open question is
+what source language to start with and what small syntax should add those spatial semantics.
 
-The survey concludes that classic Marp lacks required spatial semantics and that no surveyed external
-format is a viable adoption target. The active direction is therefore a small extension over a
-GitHub-readable GFM content surface. GitHub need not render the slides, but its source view must
-remain clear and useful.
+The repository will own the Python parser, native editable-object builders, LibreOffice bridge, and
+validation regardless of the source language. An external renderer or presentation pipeline is
+therefore not the deciding factor. The decision is about what an instructor can comfortably write
+and what the parser can understand without guessing.
 
-## Choices considered
+## Why Djot is attractive
 
-| Choice | Status | Reason |
+A recent John MacFarlane interview prompted this line of thought: Markdown accumulated ambiguous
+cases and competing interpretations, while Djot began with a more deliberate grammar. That is an
+important design lesson for a slide language. The grammar must settle ambiguities before course decks,
+tooling, and compatibility expectations grow around them.
+
+Djot itself is not the current base-language choice. Its source would not display as ordinary
+Markdown on GitHub, and it does not by itself answer the spatial-slide question. The useful part to
+borrow is its specification discipline:
+
+- Define the legal spelling and scope of every construct.
+- State what a near-match means instead of silently guessing.
+- Define how a construct interacts with code fences, lists, and other blocks.
+- Reject source that has no stable native-slide meaning.
+
+## Why GFM is attractive
+
+GitHub is where a deck is reviewed, linked, and read in raw source. It need not render the final
+slide layout, but a GitHub reader should understand the title, layout intent, regions, lists, images,
+and equations without a custom preview.
+
+GFM cannot be the complete slide language because it has no spatial model. It is a candidate
+foundation because a small visible extension could preserve ordinary GFM content and still read well
+as a GitHub page. That readability benefit must be weighed against Djot's stronger grammar base and
+against any useful Marp source conventions; GFM is not selected.
+
+## What authoring should feel like
+
+- Write ordinary nested bulleted and numbered lists inside a named region.
+- Use ordinary Markdown image source where an image belongs.
+- Use hand-writable, LaTeX-compatible inline and display math.
+- Name a recurring teaching layout instead of repeating geometry or CSS.
+- Name the region where content belongs instead of relying on its ordinal position.
+- Keep routine structure shorter than HTML tags, HTML comments, or deeply nested containers.
+- Reveal an authored item or outline one item at a time without a general animation language.
+- Preserve text, lists, practical equations, and images as editable native PPTX and ODP objects.
+
+Raw HTML tags and `<!-- ... -->` comments are technically precise but spend too many characters on
+routine structure. They are poor default authoring syntax even when they pass through a Markdown
+renderer. Content-shape inference is also not enough: an author must be able to request asymmetry,
+captions, galleries, and repeated teaching layouts explicitly.
+
+## Starting points considered
+
+| Start with | What it contributes | Open concern |
 | --- | --- | --- |
-| Classic Marp | Baseline only | It cannot name the required content regions or teaching builds. |
-| Adopt a surveyed format | Set aside | Each sacrifices either ordinary authoring, explicit layout, or the native model. |
-| Use Djot as the base | Reference only | Its grammar discipline is valuable, but its source would not display as Markdown on GitHub. |
-| Extend GFM deliberately | Active direction | It preserves familiar content and adds only the missing spatial semantics. |
+| GFM | Familiar source and useful GitHub display. | The extension must close Markdown's layout ambiguities. |
+| Djot | Deliberate grammar discipline. | GitHub does not display it as ordinary Markdown, and slide semantics still need design. |
+| Marp-derived surface | Familiar slide headings and migration continuity. | Classic Marp lacks spatial semantics and must not constrain the successor. |
+| Surveyed presentation format | Individual prior-art ideas. | No direct-adoption candidate currently meets the authoring requirements. |
 
-The supporting evidence is in [LAYOUT_LANGUAGE_SURVEY.md](../../LAYOUT_LANGUAGE_SURVEY.md) and
+The prior-art evidence remains in [LAYOUT_LANGUAGE_SURVEY.md](../../LAYOUT_LANGUAGE_SURVEY.md) and
 [MARP_ADJACENT_PROJECT_COMPARISON.md](../../MARP_ADJACENT_PROJECT_COMPARISON.md).
 
-## Candidate surface
+## Candidate syntax idea
 
-The smallest promising shape separates a named slide layout from named content regions:
+This shape is worth exploring because it makes a layout and its regions visible without containers,
+tags, comments, or per-slide geometry:
 
 ```markdown
 @layout comparison
@@ -41,43 +90,50 @@ The smallest promising shape separates a named slide layout from named content r
   - Form the mitotic spindle
 ```
 
-This is an illustration, not selected syntax. A GitHub reader sees a legible layout name, title,
-and labeled regions; the repository parser sees explicit semantics. The layout registry, not source
-CSS, supplies geometry, reading order, and editable native-object construction.
+The possible reading is simple:
 
-## Grammar acceptance criteria
+- `@layout comparison` selects a named teaching layout.
+- `#` remains a familiar slide title.
+- `:: left` and `:: right` begin named regions.
+- Ordinary Markdown blocks continue until the next region or slide boundary.
 
-Before any spelling becomes public syntax, its specification must establish all of these rules.
+That reading is an illustration, not a contract. The final language may keep these tokens, revise
+them, or choose a better visible form. This syntax idea does not select GFM, Djot, or Marp as its
+foundation. The principle is more important than the spelling: the chosen content language needs a
+small structural layer for spatial slides.
 
-| Area | Required rule |
+## What must be unambiguous
+
+The first grammar proposal must choose exact answers rather than leaving them to implementation.
+
+| Topic | Rule the grammar must state |
 | --- | --- |
-| Layout selection | Every spatial slide names one registered layout; content shape never selects a layout implicitly. |
-| Region selection | Every non-title content region has an explicit, registered slot name. |
-| Directive scope | Structural lines are recognized only at column zero, outside YAML and fenced or indented code blocks. |
-| Token form | Each directive has one exact ASCII form and an exact name grammar; near-matches remain ordinary text or produce a source error. |
-| Slot scope | A slot ends at the next slot marker or slide boundary; duplicate, unknown, and missing required slots are errors. |
-| Markdown content | Slot bodies use a named GFM/CommonMark version and extension set; ordinary nested lists remain unchanged. |
-| No inference | Text position, heading level, image adjacency, and list shape do not silently create regions, captions, or layouts. |
-| Diagnostics | Unknown directives, illegal placement, and unsupported combinations identify the source line and corrective action. |
-| Native model | Every accepted construct maps to typed editable objects or is rejected before rendering. |
+| Slide boundary | How slides divide without confusing a normal GFM horizontal rule. |
+| Layout line | Where it may occur, its exact name syntax, and whether every slide needs one. |
+| Slot line | Where it may occur, its exact name syntax, how it ends, and how literal matching text is escaped. |
+| Title and subtitle | Which headings have slide-level meaning and which remain region content. |
+| Layout contract | Which slots are required, optional, repeatable, and ordered for each layout. |
+| Content-language scope | The selected source specification and allowed extensions inside a slot. |
+| Code and YAML | Whether directive-looking text is inert inside YAML, indented code, and fenced code. |
+| Images and captions | Whether each uses an explicit region or another equally unambiguous construct. |
+| Mathematics | The exact inline and display delimiters, including currency and escaping rules. |
+| Reveals | A short source form for item builds and arbitrary-item appearance, plus nesting behavior. |
+| Failure | The source-located error for unknown layouts, slots, directives, duplicates, and omissions. |
 
-Normal layout structure must not depend on HTML tags or HTML comments. Deliberate visible directives
-are preferable because they remain reviewable in GitHub's ordinary Markdown view.
+No grammar rule should depend on CSS, source order, content shape, accidental whitespace, or a
+browser's recovery behavior. The parser should either construct a typed native-slide model or state
+what needs correction.
 
-## Questions to settle
+## Naming thoughts
 
-- What explicitly divides slides without colliding with a GFM horizontal rule?
-- Is `@layout NAME` required as the first structural line of every slide, and how do title-only
-  slides work?
-- Is `:: SLOT` the best visible marker, and how does an author write a literal matching line?
-- Which slots are optional, repeated, or required for each layout?
-- Does an image and caption always use explicit `image` and `caption` slots?
-- What exact LaTeX-compatible inline and display math delimiters are accepted?
-- What one short directive requests an item-by-item or arbitrary-item reveal?
-- Which GFM extensions are part of the language, and which are rejected as unsupported?
+The successor should not be called Marp+ by default. It may diverge far enough from Marp that a new
+name is clearer for authors and readers. Naming should follow the approved grammar, not lead it:
+calling it Marp+ too early would suggest a compatibility promise that the project does not intend to
+make.
 
-## Next design step
+## Next small experiment
 
-Write a one-page grammar proposal that answers the questions above and expresses all fifteen survey
-fixtures. Review its unambiguous parse and native-model mapping before naming the language or
-creating a guide for it.
+Compare small candidate grammars over GFM, Djot, and a Marp-derived surface. Express all fifteen
+survey fixtures and deliberately ambiguous near-matches in each serious candidate. Review the source
+readability, written grammar, resulting parse, diagnostics, and native model together before
+selecting the foundation, naming the language, creating its guide, or writing implementation code.

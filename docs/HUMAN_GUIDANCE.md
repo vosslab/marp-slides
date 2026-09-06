@@ -107,12 +107,15 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 - Regardless of the chosen source language, the repository will own the parser, native editable
   PPTX/ODP builders, LibreOffice bridge, and validation. "Adopt a language" means adopt or adapt
   its source grammar and semantics, never its runtime or presentation pipeline.
-- After reviewing the language survey, I see no viable external format to adopt. Keep GFM as the
-  readable content base for a small extension whose source remains understandable on GitHub.
+- After reviewing the language survey, I see no viable presentation format to adopt directly. Keep
+  the source-language choice open: assess GFM, Djot, and a Marp-derived surface before selecting
+  the foundation and spatial syntax of a separately named language.
 - Use Djot's emphasis on an explicit, unambiguous grammar as a design lesson, not as the current
   base language. Do not require raw HTML tags or `<!-- ... -->` comments for normal slide structure.
 - Do not call the successor language Marp+ by default. It may diverge substantially from Marp and
   should receive its own name after its grammar is selected.
+- Keep one canonical authored source. Do not characterize the language discussion as a proposal for
+  a separate GFM review copy and a presentation copy.
 
 ## Working style
 

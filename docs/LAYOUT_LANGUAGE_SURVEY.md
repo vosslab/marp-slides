@@ -810,10 +810,11 @@ explain individual scores. In brief:
 ## Post-survey direction
 
 Standard Marp remains a compatibility baseline and migration reference, not a viable spatial-slide
-language. No surveyed external format is currently a viable adoption target. The active design
-direction is a small, GitHub-readable extension whose content remains ordinary GFM. The exact
-grammar remains open in the [presentation language choices](active_plans/decisions/presentation_language_choices.md)
-record; this survey does not select a public syntax or authorize implementation.
+language. No surveyed presentation format is currently a viable direct-adoption target. The source
+foundation remains open: GFM, Djot, and a Marp-derived surface each have different authoring and
+GitHub-view tradeoffs. The [presentation language choices](active_plans/decisions/presentation_language_choices.md)
+record explores those choices and possible spatial syntax; this survey does not select a public
+grammar or authorize implementation.
 
 ### Prior-art mechanisms
 

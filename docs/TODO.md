@@ -8,7 +8,9 @@ literal evidence remains [LAYOUT_LANGUAGE_SURVEY.md](LAYOUT_LANGUAGE_SURVEY.md).
 ## Language design
 
 - [x] Review the fifteen-fixture source comparison with the instructor.
-- [x] Set aside adopting the surveyed external formats as the source-language path.
+- [x] Set aside surveyed presentation formats as direct-adoption targets.
+- [ ] Compare GFM, Djot, and a Marp-derived surface as the language foundation.
+- [ ] Decide whether GitHub source readability outweighs Djot's stricter underlying grammar.
 - [ ] Write a one-page candidate grammar for explicit named layouts and regions.
 - [ ] Define slide boundaries, directive scope, token syntax, slot closure, and literal escaping.
 - [ ] Specify title, subtitle, caption, required/optional/repeated slot, math, and reveal behavior.

@@ -2,13 +2,14 @@
 
 Status: open design work. Classic Marp Core v5 remains the migration and conformance baseline;
 [MARP_SYNTAX_GUIDE.md](MARP_SYNTAX_GUIDE.md) remains its classic Marp / Marp CLI guide. The
-successor language is independent, unnamed, and not yet implemented.
+successor language, its source foundation, and its name all remain open.
 
 ## Purpose
 
 Classic Marp cannot express the required spatial teaching layouts. The language survey found no
-external format suitable for adoption. The next work is to specify a small, GitHub-readable language
-whose content remains ordinary GFM and whose layout structure is explicit, visible, and unambiguous.
+presentation format suitable for direct adoption. The next work is to choose whether GFM, Djot, or
+a Marp-derived surface is the best foundation, then specify a small spatial layer that is explicit,
+visible, and unambiguous.
 
 The active choice record is
 [presentation_language_choices.md](active_plans/decisions/presentation_language_choices.md). It
@@ -19,14 +20,16 @@ begins.
 
 | M | Title | Outcome | Gate |
 | --- | --- | --- | --- |
-| M1 | Grammar proposal | One concise candidate grammar covers every fixture | Instructor approval |
+| M1 | Source and grammar | One foundation plus concise candidate grammar covers every fixture | Instructor approval |
 | M2 | Parse contract | Accepted and rejected source maps to a typed slide model | Grammar approval |
 | M3 | Native layouts | Named slots become editable native layout objects | Parse-contract review |
 | M4 | Teaching content | Images, math, and simple reveals have native mappings | Layout evidence |
 | M5 | Guide and migration | Named language guide and canonical-deck migration | Independent verification |
 
-## M1: grammar proposal
+## M1: source and grammar
 
+- Compare GFM, Djot, and a Marp-derived surface against GitHub readability and the full fixture set.
+- Select the source foundation before treating its extension syntax as public.
 - Specify slide boundaries without a horizontal-rule ambiguity.
 - Specify the exact layout and slot directives, including legal positions and literal escapes.
 - Define title, subtitle, required slot, optional slot, repeated slot, image, and caption behavior.
@@ -35,8 +38,8 @@ begins.
 - State the GFM/CommonMark version and extensions accepted inside a slot.
 - Express all fifteen language-survey fixtures and their invalid near-matches.
 
-The candidate `@layout NAME` and `:: SLOT` surface is an illustration only. It has no special
-status until M1 approval.
+The candidate `@layout NAME` and `:: SLOT` surface is an illustration only. It can be evaluated
+against each possible foundation and has no special status until M1 approval.
 
 ## M2: parse contract
 

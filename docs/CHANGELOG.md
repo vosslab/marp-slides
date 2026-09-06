@@ -48,6 +48,13 @@
   post-survey status.
 - Set aside the comment-based `_cell` transition candidate. Reframed the roadmap and TODO around a
   grammar-design gate before any parser, exporter, importer, deck, or language-guide work.
+- Expanded the open language-choice record into a brainstorming page that preserves the Djot/GFM
+  tradeoff, GitHub-readable-source goal, low-character authoring preference, and grammar questions.
+- Corrected the brainstorming record: the language discussion retains one canonical source and does
+  not propose a separate GFM review copy alongside a presentation source.
+- Corrected the source-language status: GFM is an attractive candidate, not a selected foundation;
+  the brainstorming, survey, roadmap, and TODO now retain GFM, Djot, and a Marp-derived surface as
+  alternatives to compare before approving extension syntax.
 
 ### Fixes and Maintenance
 
