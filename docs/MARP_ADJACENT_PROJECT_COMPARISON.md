@@ -46,7 +46,7 @@ row is not permission to copy code, assets, themes, or syntax.
 | [Slidev] | MIT web slide system | Named layouts plus named slots in slide front matter | Strong candidate syntax pattern; Vue/theme coupling remains outside scope |
 | [Kova] | GPL-3.0 desktop Markdown presenter | H1/H2 and content shape infer layouts; `|||` splits equal columns | Best low-punctuation panel precedent, but too heuristic |
 | [reveal.js Markdown] | MIT browser framework | Markdown is hosted in HTML; layout returns to HTML and comment attributes | Negative baseline for comment/HTML-driven spatial syntax |
-| [Marp Extended] | MIT Obsidian Marp preprocessor | `%%marp-*%%` markers add columns, cards, callouts, and subtitle blocks | Real Marp+ attempt; useful evidence of marker and closing-block burden |
+| [Marp Extended] | MIT Obsidian Marp preprocessor | `%%marp-*%%` markers add columns, cards, callouts, and subtitle blocks | Real Marp-adjacent extension; useful evidence of marker and closing-block burden |
 | [Awesome Marp Template] | MIT custom Marp engine/template | Markdown-it container fences and CSS classes create columns | Real Marp extension route; useful nesting-cost counterexample |
 | [Microsoft MarkItDown] | MIT PPTX-to-Markdown converter | Its output can become target-language parser input; it has no layout vocabulary | Source-import bridge, not a hand-authoring layout language |
 

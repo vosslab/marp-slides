@@ -13,8 +13,8 @@ that gap without making a hand-authored lecture deck a forest of comments, HTML,
 Classic Marp Core v5 remains the upstream baseline. [MARP_SYNTAX_GUIDE.md](MARP_SYNTAX_GUIDE.md)
 describes only source compatible with Marp CLI; it deliberately does not define local slide regions.
 The repository-owned Python parser and native editable-object exporter are the future
-interpretation and rendering boundary. A later extension need not run through Marp CLI. "Marp+"
-below is a working label, not an approved name or decision.
+interpretation and rendering boundary. A later extension need not run through Marp CLI. The
+successor language remains unnamed until its grammar is selected.
 
 Both branches keep that repository-owned pipeline. "Adopt" means reuse or adapt another language's
 source grammar and semantics, then implement them locally; it never means adopting the candidate's
@@ -714,7 +714,7 @@ Structure constrains cellular movement.
 %%/marp-callout%%
 ```
 
-This is a clear existing Marp+ attempt: it names columns, cards, callouts, metadata, and subtitle
+This is a clear Marp-adjacent extension: it names columns, cards, callouts, metadata, and subtitle
 behavior. It also exposes the cost of nesting and closing every region with `%%marp-*%%`
 punctuation, and of tight Obsidian and Marp CLI integration.
 
@@ -797,35 +797,25 @@ reveals. The table is sorted by that descriptive average; it is not a recommenda
 | Awesome Marp Template | 3 | 3 | 4 | 2 | 2 | 1 | 2 | 3 | 2 | 2.4 |
 | reveal.js Markdown | 1 | 1 | 5 | 2 | 2 | 2 | 2 | 2 | 2 | 2.1 |
 
-### Scorecard context
+### Reading the scores
 
-The averages are compact navigation, not a claim that the highest-scoring grammar is the right
-choice. The rationale below keeps the scorecard readable while recording the material tradeoff for
-each source form.
+The score measures source-language coverage, not adoption fitness. The detailed examples above
+explain individual scores. In brief:
 
-| System | Context for the score |
-| --- | --- |
-| Slidev | Named layouts and slots, image handling, math, and click components are unusually complete. Its layout and reveal constructs are Vue-like extensions, rather than plain Markdown. |
-| Quarto Reveal | Supports columns, equations, list builds, fragment blocks, and the bare `. . .` pause. Fenced divs and attributes make multi-region source denser than ordinary Markdown. |
-| Kova | Content-shape inference and the `|||` separator keep ordinary prose exceptionally light. The source cannot explicitly describe much asymmetry, named regions, or a teaching build. |
-| Lectern | Directives name layouts and regions and its `incremental` container handles direct-child builds. Deeply nested or multi-region material becomes directive-heavy. |
-| Quarto PowerPoint | Strong document, column, equation, and list-build syntax. Its reference-presentation model offers fewer source-level named teaching layouts. |
-| Pandoc PowerPoint | Provides ordinary Markdown, equations, columns, and incremental lists. Named reusable teaching layouts are mainly a reference-layout concern, not a compact source construct. |
-| Classic Marp | Ideal ordinary Markdown readability, but its theme classes do not define content regions and it has no standard teaching-build syntax. |
-| Marp Extended | Adds named structures through visible markers, cards, and columns. Those markers improve parseability while adding repeated structural punctuation. |
-| MDPR override model | The YAML override is readable and can name a layout. It is a separate, title-addressed source that must stay coordinated with the Markdown slide. |
-| MarkItDown output | A readable Markdown import format for existing PPTX content. It does not preserve or express presentation layouts, equations, or reveals by itself. |
-| MarpX | Semantic classes offer layout names, but region structure remains CSS/HTML-oriented; surveyed animation is media, not a teaching build. |
-| Awesome Marp Template | Markdown-it containers can express layout structure, but nesting introduces increasingly dense fence punctuation. |
-| reveal.js Markdown | Markdown remains familiar, but attributes and per-item fragments use HTML comments, which makes structural source noisy. |
+- Slidev and Quarto are broad but bring components, fences, or attributes.
+- Kova is terse but cannot name enough structure for durable layouts.
+- Lectern and Marp Extended are explicit but punctuation-heavy.
+- Classic Marp, MDPR, MarkItDown, MarpX, and reveal.js leave a required language gap.
 
-## Decision branches, not a recommendation
+## Post-survey direction
 
-Standard Marp is a compatibility baseline and migration reference, not a viable final language for
-spatial slides. The remaining choices are to extend it or to adopt another Markdown presentation
-language. This survey does not recommend either branch.
+Standard Marp remains a compatibility baseline and migration reference, not a viable spatial-slide
+language. No surveyed external format is currently a viable adoption target. The active design
+direction is a small, GitHub-readable extension whose content remains ordinary GFM. The exact
+grammar remains open in the [presentation language choices](active_plans/decisions/presentation_language_choices.md)
+record; this survey does not select a public syntax or authorize implementation.
 
-### Branch A: define a small extension
+### Prior-art mechanisms
 
 Existing Marp extensions expose several viable mechanisms. Each has a different tradeoff:
 
@@ -838,7 +828,7 @@ Existing Marp extensions expose several viable mechanisms. Each has a different 
 | Fenced containers | Quarto and Markdown-it extensions | Complete nested structure and easy AST | Verbose for a simple two-panel slide |
 | Layout plus slots | Slidev | Concise named layout with explicit regions | Current examples couple it to Vue/theme components |
 
-One possible, deliberately unadopted, container-free design is a layout line plus named slots:
+One candidate, deliberately unadopted, is a layout line plus named slots:
 
 ```markdown
 @layout comparison
@@ -856,14 +846,14 @@ One possible, deliberately unadopted, container-free design is a layout line plu
 
 Here, `@layout NAME` would select a registered teaching layout and `:: SLOT` would begin a named
 region through the next slot or slide boundary. The layout registry would own slot names, geometry,
-reading order, and the editable PPTX/ODP builder. This illustrates a low-punctuation option; it is
-not a proposal that has been selected over comment markers, delimiters, or fenced containers.
+reading order, and the editable PPTX/ODP builder. The open decision record specifies the
+ambiguities that must be resolved before this or another candidate can be adopted.
 
-### Branch B: adopt another source grammar
+### External grammars as reference
 
-The FOSS candidates provide different source grammars and semantic models. In every case, the
-repository reimplements the selected semantics in its own parser and native editable-object output
-pipeline:
+The FOSS candidates remain useful sources of individual ideas. They are not current adoption
+targets. The repository would reimplement any borrowed semantics in its own parser and native
+editable-object output pipeline:
 
 | Candidate | Source semantics to adapt into the local parser |
 | --- | --- |
@@ -874,10 +864,9 @@ pipeline:
 | Kova | Content-shape inference and the `|||` equal-panel delimiter |
 | reveal.js Markdown | Markdown slide boundaries and HTML-attribute extension boundary |
 
-Before either branch is chosen, complete the fifteen-fixture deck for source review, parser
+Before a grammar is adopted, complete the fifteen-fixture deck for source review, parser
 diagnostics, editable native-object evidence, and rendered teaching-slide review. Create neither an
-extension-language guide nor implementation changes until the instructor selects a branch and
-language form.
+extension-language guide nor implementation changes until the instructor approves a language form.
 
 ## Primary sources
 

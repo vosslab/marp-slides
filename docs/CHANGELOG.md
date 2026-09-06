@@ -42,6 +42,12 @@
 - Narrowed and sorted the wishlist-completeness scorecard, moved its rationale to a separate
   context table, and recorded Quarto Reveal's bare `. . .` arbitrary-content pause as a full
   simple-reveal capability.
+- Added an open presentation-language choices record: retain GFM-readable content, use Djot's
+  grammar discipline as a reference, and resolve every structural ambiguity before adopting a
+  small, independently named language. Condensed the survey's score explanation and updated its
+  post-survey status.
+- Set aside the comment-based `_cell` transition candidate. Reframed the roadmap and TODO around a
+  grammar-design gate before any parser, exporter, importer, deck, or language-guide work.
 
 ### Fixes and Maintenance
 

@@ -37,9 +37,8 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 - Use layouts `title-content-over-content`, `title-two-content-over-content`,
   `title-four-content`, `title-six-content`, `vertical-title-vertical-text`,
   `vertical-title-text-chart`, `title-vertical-text`, `title-two-vertical-text-clipart`, and `gallery`.
-- Give every slide exactly one explicit layout class. Replace blockquote layout cells with explicit
-  comment-based cell markers. Keep `-` as ordinary list syntax and let `>` return to its standard
-  Markdown blockquote meaning.
+- Give every slide exactly one explicit layout class. Keep `-` as ordinary list syntax and `>` as
+  a standard Markdown blockquote; do not use comment-based cell markers for normal layout structure.
 - Use a bounded Marp `font-size-N` companion class when an H1 such as `THE END` should occupy the
   slide; keep the title editable and leave normal slide text at its layout size.
 - Preserve text, lists, component images, links, layouts, and presenter notes as native objects.
@@ -76,8 +75,8 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
   trivial details.
 - Review each repository for whether it improves an active task, offers a stronger pipeline model,
   or shows a useful possibility for Marp and its themes.
-- Marp is not feature-complete for the planned teaching layouts. Explore a coherent extension
-  language instead of adopting CDL or a rushed Marp-plus language wholesale.
+- Marp is not feature-complete for the planned teaching layouts. Explore a coherent, independently
+  named language instead of adopting CDL or a rushed custom language wholesale.
 - Do not route an extension language through Marp CLI. The repository-owned native exporter is the
   rendering boundary.
 - Survey every `OTHER_REPOS/` project for how it handles Marp's missing layout vocabulary. Separate
@@ -108,6 +107,12 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 - Regardless of the chosen source language, the repository will own the parser, native editable
   PPTX/ODP builders, LibreOffice bridge, and validation. "Adopt a language" means adopt or adapt
   its source grammar and semantics, never its runtime or presentation pipeline.
+- After reviewing the language survey, I see no viable external format to adopt. Keep GFM as the
+  readable content base for a small extension whose source remains understandable on GitHub.
+- Use Djot's emphasis on an explicit, unambiguous grammar as a design lesson, not as the current
+  base language. Do not require raw HTML tags or `<!-- ... -->` comments for normal slide structure.
+- Do not call the successor language Marp+ by default. It may diverge substantially from Marp and
+  should receive its own name after its grammar is selected.
 
 ## Working style
 

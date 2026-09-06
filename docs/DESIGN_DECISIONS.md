@@ -93,25 +93,20 @@ Subtitles, body text, cells, links, notes, and pagination remain layout-defined.
 **Owner.** `marp_lib/native_model.py`, `marp_lib/marp_parser.py`, `marp_lib/layouts.py`, and
 `themes/genetics.css`.
 
-### Explicit named cell markers are a provisional transition candidate
+### Comment-based cell markers are set aside
 
-**Decision.** Retain named cell markers as one implementation candidate for the existing native
-transition, but do not treat `<!-- _cell: <slot> -->` as an adopted public language. The language
-choice between a small extension and an adopted Markdown presentation format remains open.
+**Decision.** Do not use `<!-- _cell: <slot> -->` as the successor language's normal layout syntax.
+The successor language remains unnamed and its visible region syntax is still open.
 
-**Why.** Standard Markdown already assigns `>` to blockquotes. A named marker would state placement
-directly, keep `-` unambiguously available for list items, and avoid depending on cell order for
-geometry. The layout survey now compares that comment-based candidate with other source forms before
-it can become a language decision.
+**Why.** The survey shows that comment structure is precise but costly to hand-write. The desired
+source must remain legible in a GitHub Markdown view without routine HTML or comment scaffolding.
 
-**Consequence.** Do not add a public `_cell` contract to `MARP_SYNTAX_GUIDE.md` or implement this
-candidate until the language decision is approved. If selected, the parser, native model, layout
-registry, importers, canonical decks, preview behavior, tests, and a separately named extension
-guide would migrate together. Generic Marp would ignore the comments and show a readable sequential
-fallback, but that fallback is no longer a reason to prefer comments over a clearer language form.
+**Consequence.** Do not add or migrate `_cell` parsing, imports, decks, preview behavior, or tests.
+Use the marker only as prior-art evidence in the survey. Define a visible, unambiguous layout and
+slot grammar before creating a language guide or parser work.
 
-**Owner.** [ROADMAP.md](ROADMAP.md), `marp_lib/marp_parser.py`, `marp_lib/native_model.py`,
-`marp_lib/layouts.py`, and `themes/genetics.css`.
+**Owner.** [presentation_language_choices.md](active_plans/decisions/presentation_language_choices.md)
+and [LAYOUT_LANGUAGE_SURVEY.md](LAYOUT_LANGUAGE_SURVEY.md).
 
 ### ODP-derived PDF is the only PDF path
 
