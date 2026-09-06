@@ -32,6 +32,8 @@ earlier behavior is outside the compatibility target.
 - If an extension is approved, choose its region syntax before considering `_cell` markers.
 - Classify every Marp Core v5 author-facing feature as accepted, planned, or a non-goal.
 - Expand authoring syntax only after each feature has a native editable-object owner.
+- Define simple on-advance reveal semantics for authored items and outlines only after the source
+  language is selected.
 - Keep parser behavior, native output, importers, preview behavior, tests, and documentation
   aligned.
 - Preserve source-located errors for every rejected or malformed construct.
@@ -78,7 +80,7 @@ The roadmap classifies every item currently listed as unsupported.
 | Markdown tables | Editable native table objects | M2 |
 | Fenced or indented code | Editable monospace code frames | M2 |
 | Strikethrough and `fit` headings | Typed editable runs and bounded title fitting | M2 |
-| Fragmented-list markers | Static editable lists in PPTX, ODP, and PDF | M2 |
+| Fragmented-list markers | Editable lists and simple on-advance reveal semantics | M2 |
 | Inline text mixed with images | Typed block flow with explicit fit rules | M2 |
 | Background images | Native background image with fit and description | M3 |
 | Per-image pixel geometry | Bounded portable geometry owned by layouts | M3 |
@@ -153,8 +155,8 @@ The initial slot registry is:
 ### Milestone M2: Editable content
 
 - Depends on: M1, because tables, code, and mixed blocks need stable cell boundaries.
-- Deliverables: typed table, code-block, strikethrough, title-fit, fragmented-list, and mixed-flow
-  models with native renderers.
+- Deliverables: typed table, code-block, strikethrough, title-fit, simple reveal, fragmented-list,
+  and mixed-flow models with native renderers.
 - Entry criteria: named cells pass parser, preview-fallback, importer, and native-output gates.
 - Exit criteria: representative content remains editable in PPTX and ODP with source-located
   capacity errors.
@@ -193,7 +195,7 @@ The initial slot registry is:
 | WP-T1 | Coder | Add native editable tables | WP-C4 |
 | WP-T2 | Coder | Add native editable code blocks | WP-T1 |
 | WP-T3 | Coder | Add typed mixed text-and-image flow | WP-T2 |
-| WP-T4 | Coder | Add v5 inline, fit, and fragmented-list semantics | WP-T3 |
+| WP-T4 | Coder | Add v5 inline, fit, fragmented-list, and simple reveal semantics | WP-T3 |
 | WP-I1 | Coder | Add native background-image semantics | WP-C4 |
 | WP-I2 | Coder | Add bounded component-image geometry | WP-I1 |
 | WP-I3 | Coder | Add explicit remote/data asset localization | WP-I2 |

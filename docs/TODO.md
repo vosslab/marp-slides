@@ -7,7 +7,7 @@ candidate, and [MARP_SYNTAX_GUIDE.md](MARP_SYNTAX_GUIDE.md) for classic Marp syn
 
 ## Language choice
 
-- [ ] Review the fourteen-fixture source comparison with the instructor.
+- [ ] Review the fifteen-fixture source comparison with the instructor.
 - [ ] Choose either an adopted Markdown presentation language or a separately named small
   extension language.
 - [ ] Do not add parser or exporter language features before that choice.
@@ -41,7 +41,8 @@ candidate, and [MARP_SYNTAX_GUIDE.md](MARP_SYNTAX_GUIDE.md) for classic Marp syn
 
 - [ ] Add native editable table ownership before accepting Markdown tables.
 - [ ] Add native editable code-block ownership before accepting fenced or indented code.
-- [ ] Add native strikethrough, title-fit, and static fragmented-list semantics.
+- [ ] Add native strikethrough, title-fit, and simple on-advance reveal semantics for authored
+  items and outline bullets.
 - [ ] Define mixed text-and-image flow rules for one cell or root body.
 - [ ] Define native background-image fit, crop, description, and source-location behavior.
 - [ ] Define bounded component-image geometry instead of accepting arbitrary pixel instructions.

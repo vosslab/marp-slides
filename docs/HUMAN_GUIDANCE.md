@@ -99,6 +99,8 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
   - Equation support, using LaTeX-compatible syntax or a similarly capable hand-writable equation
     syntax, for both inline and display math without turning the language into a
     scientific-publishing framework.
+  - Simple teaching animation: on an advance, make an authored item appear or reveal an outline one
+    bullet at a time. Complex motion paths, timing tracks, and animation choreography are not needed.
   - Hand-writable source with very little structural punctuation or comment scaffolding.
   - Native editable output: text, lists, practical equations, and images remain real PPTX and ODP
     objects, never slide screenshots.

@@ -22,11 +22,12 @@ renderer, browser, Node tooling, or output pipeline.
 
 For local-project inventory and broader relevance, see
 [MARP_ADJACENT_PROJECT_COMPARISON.md](MARP_ADJACENT_PROJECT_COMPARISON.md). The broader visitor
-guide remains [RELATED_PROJECTS.md](RELATED_PROJECTS.md).
+guide remains [RELATED_PROJECTS.md](RELATED_PROJECTS.md). Rendered legacy-deck evidence is recorded
+separately in [LECTURE_LAYOUT_SURVEY.md](LECTURE_LAYOUT_SURVEY.md).
 
 ## Method
 
-Every candidate is checked against these fourteen one-slide fixtures. Source is literal where a
+Every candidate must be checked against these fifteen one-slide fixtures. Source is literal where a
 documented form exists. "No documented form" is a result, not an invitation to invent a CSS
 convention. Assets are local and content is intentionally short so structural punctuation is clear.
 The `<!-- Fixture ... -->` lines inside some specimens are survey labels only; they are not
@@ -48,6 +49,7 @@ required source unless the surrounding discussion identifies them as a candidate
 | 12 | Quote or callout |
 | 13 | Reusable custom named teaching layout |
 | 14 | Minimal inline and display equation |
+| 15 | Simple staged reveal: appear an authored item or outline one bullet at a time |
 
 ### Shared Markdown fixtures
 
@@ -97,6 +99,26 @@ $$
 \Delta G = \Delta G^\circ + RT \ln Q
 $$
 ```
+
+### Reveal fixture
+
+Fixture 15 specifies teaching behavior, not a chosen spelling. It must keep the slide source
+ordinary and readable while presenting the three outline items in source order on successive
+advances. A future literal comparison must show the source each candidate requires for this fixture,
+including a nested-list example.
+
+```markdown
+## Types of gene disorders
+
+- Point mutation
+- Chromosome deletion
+- Chromosome duplication
+```
+
+The required behavior is intentionally narrow: reveal an authored content item or one list item at
+a time. It does not require motion paths, timing tracks, coordinated effects, or a general-purpose
+animation language. The rendered legacy-deck audit found no stored ODP animations, so this is a new
+capability requirement rather than an inferred legacy syntax.
 
 ## Established presentation languages
 
@@ -493,6 +515,95 @@ equation without an external scientific-writing workflow.
 | MDPR | No equation-output contract surveyed | Intermediate model evidence is insufficient |
 | MarkItDown | Not an equation renderer | Its Markdown output is a candidate input to the target parser |
 
+## Simple staged-reveal handling
+
+Fixture 15 asks only for an authored item to appear on advance or an outline to build one item at a
+time. The source forms below are evidence for the language score; they do not imply that the
+repository will adopt any candidate renderer, runtime, or animation model.
+
+| System | Literal source or documented boundary | Hand-authoring result |
+| --- | --- | --- |
+| Classic Marp | No fragment or incremental-list construct is documented in the Marp Core v5 author guide. | No standard source form for a teaching build |
+| Quarto Reveal | `::: {.incremental}` around a list, `::: {.fragment}` around one content block, or a bare `. . .` pause between blocks. | Global `incremental: true` keeps lists ordinary; the pause is a compact arbitrary-content form |
+| Quarto PowerPoint | `incremental: true` in `format: pptx`, or `::: {.incremental}` around one list. | Strong list-only form; no compact arbitrary-item form documented |
+| Pandoc PowerPoint | `incremental: true`, or `::: incremental` around one list. | Strong list-only form; fenced override is readable but structural |
+| Slidev | `<v-clicks depth="2">` around a list; `<v-click>` around one item. | Covers nested lists and arbitrary items, but imports Vue-like tags |
+| Kova | No incremental or fragment source form is documented in the current layout and feature guides. | No documented teaching build |
+| reveal.js Markdown | `- Item <!-- .element: class="fragment" -->` for each list item. | Works, but routine comments make source noisy |
+| MarpX | Its examples use GIFs and embedded content for animation, not authored stepped items. | Media animation is not a teaching-build form |
+| Lectern | `::: incremental` around a list; each direct child is one build step. | Concise fence, but nested items ride with their parent |
+| Marp Extended | No stepped-item form was found in the surveyed extension syntax. | No documented teaching build |
+| Awesome Marp Template | No stepped-item form was found in the surveyed container syntax. | No documented teaching build |
+| MDPR override model | No source-level build or reveal operation is documented. | No documented teaching build |
+| MarkItDown output | Conversion output has no presentation-time reveal semantics. | Import format only |
+
+The positive forms reduce to four concise source shapes:
+
+```markdown
+::: {.incremental}
+- Point mutation
+- Chromosome deletion
+:::
+```
+
+Quarto Reveal, Quarto PowerPoint, and Pandoc PowerPoint document this fenced-list override.
+Quarto and Pandoc also document a global `incremental: true` setting when every list should build.
+
+```markdown
+## Slide with a pause
+
+content before the pause
+
+. . .
+
+content after the pause
+```
+
+Quarto Reveal also recognizes the bare `. . .` line as a pause: the preceding content is visible
+first and the following content appears on the next advance. Unlike a fragment fence, this puts no
+container punctuation around either block. It raises Quarto Reveal's simple-reveal score to 5; the
+language still carries the fenced-div and attribute cost for spatial layouts.
+
+```markdown
+<v-clicks depth="2">
+
+- Point mutation
+- Chromosome abnormality
+  - Deletion
+  - Duplication
+
+</v-clicks>
+```
+
+Slidev uses its `v-clicks` component for an incremental outline and its `v-click` component for an
+arbitrary individual item. The component is explicit but non-Markdown.
+
+```markdown
+::: incremental
+
+- Point mutation
+- Chromosome deletion
+
+:::
+```
+
+Lectern makes each direct child of its `incremental` container a build step. The container keeps the
+Markdown list readable, but a nested child remains attached to its parent.
+
+```markdown
+- Point mutation <!-- .element: class="fragment" -->
+- Chromosome deletion <!-- .element: class="fragment" -->
+```
+
+reveal.js Markdown requires a comment on every element. It works but demonstrates why routine
+comment-based structure is a poor default for hand-authored teaching slides.
+
+The compact positive forms are intentionally narrower than general animation languages. Quarto
+Reveal also permits a fragment fence for one arbitrary content item. Slidev's `v-clicks` documents a
+`depth` control for nested lists, while Lectern deliberately treats a nested list as part of its
+parent build. That difference matters: the future language must state whether a child item is a
+separate advance or arrives with its parent.
+
 ## Marp extensions and Marp-adjacent attempts
 
 These projects are attempts to bridge a linear Marp document into a spatial slide model. Their added
@@ -667,30 +778,46 @@ renderer; the target parser must still recover or assign slide boundaries and sp
 Scores are 1 (missing or poor fit) through 5 (strong fit) for the source language or format
 against the instructor's wishlist. They do not score a renderer, import pipeline, parser, or native
 PPTX/ODP output. Native editable objects remain a separate, non-negotiable acceptance requirement.
-Average is the equal-weight mean of the eight numeric language dimensions; it excludes comments and
-is descriptive, not a recommendation.
+Average is the equal-weight mean of the nine numeric language dimensions, including simple staged
+reveals. The table is sorted by that descriptive average; it is not a recommendation.
 
-| System | Layout coverage | Named layouts | Nested lists | Image placement | Equations | Low punctuation | Readable | Hand-write | Average | Comments |
+| System | Layout coverage | Named layouts | Nested lists | Image placement | Equations | Simple reveal | Low punctuation | Readable | Hand-write | Average |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Classic Marp | 1 | 2 | 5 | 2 | 3 | 5 | 5 | 5 | 3.5 | Theme classes only |
-| Quarto Reveal | 5 | 3 | 5 | 4 | 5 | 2 | 3 | 3 | 3.8 | Not normal |
-| Quarto PowerPoint | 5 | 2 | 5 | 4 | 4 | 2 | 3 | 3 | 3.5 | Not normal |
-| Pandoc PowerPoint | 5 | 1 | 5 | 4 | 4 | 2 | 3 | 3 | 3.4 | Not normal |
-| Slidev | 4 | 5 | 5 | 5 | 4 | 4 | 4 | 4 | 4.4 | Not normal |
-| Kova | 3 | 2 | 5 | 3 | 4 | 5 | 5 | 5 | 4.0 | Override only |
-| reveal.js Markdown | 1 | 1 | 5 | 2 | 2 | 2 | 2 | 2 | 2.1 | Normal for attributes |
-| MarpX | 2 | 4 | 5 | 2 | 3 | 2 | 3 | 2 | 2.9 | Normal for classes |
-| Lectern | 5 | 4 | 5 | 4 | 4 | 2 | 3 | 2 | 3.6 | Normal for placement |
-| Marp Extended | 4 | 4 | 5 | 3 | 3 | 3 | 3 | 3 | 3.5 | Marker syntax |
-| Awesome Marp Template | 3 | 3 | 4 | 2 | 2 | 2 | 3 | 2 | 2.6 | Nested fences |
-| MDPR override model | 4 | 4 | 5 | 2 | 1 | 3 | 4 | 3 | 3.3 | Separate YAML |
-| MarkItDown output | 1 | 1 | 5 | 2 | 2 | 5 | 5 | 5 | 3.3 | PPTX-to-Markdown input |
+| Slidev | 4 | 5 | 5 | 5 | 4 | 4 | 4 | 4 | 4 | 4.3 |
+| Quarto Reveal | 5 | 3 | 5 | 4 | 5 | 5 | 2 | 3 | 3 | 3.9 |
+| Kova | 3 | 2 | 5 | 3 | 4 | 1 | 5 | 5 | 5 | 3.7 |
+| Lectern | 5 | 4 | 5 | 4 | 4 | 3 | 2 | 3 | 2 | 3.6 |
+| Quarto PowerPoint | 5 | 2 | 5 | 4 | 4 | 3 | 2 | 3 | 3 | 3.4 |
+| Pandoc PowerPoint | 5 | 1 | 5 | 4 | 4 | 3 | 2 | 3 | 3 | 3.3 |
+| Classic Marp | 1 | 2 | 5 | 2 | 3 | 1 | 5 | 5 | 5 | 3.2 |
+| Marp Extended | 4 | 4 | 5 | 3 | 3 | 1 | 3 | 3 | 3 | 3.2 |
+| MDPR override model | 4 | 4 | 5 | 2 | 1 | 1 | 3 | 4 | 3 | 3.0 |
+| MarkItDown output | 1 | 1 | 5 | 2 | 2 | 1 | 5 | 5 | 5 | 3.0 |
+| MarpX | 2 | 4 | 5 | 2 | 3 | 1 | 2 | 3 | 2 | 2.7 |
+| Awesome Marp Template | 3 | 3 | 4 | 2 | 2 | 1 | 2 | 3 | 2 | 2.4 |
+| reveal.js Markdown | 1 | 1 | 5 | 2 | 2 | 2 | 2 | 2 | 2 | 2.1 |
 
-Kova and Slidev offer the strongest authoring lessons. Kova shows that a one-line separator is
-pleasant but too implicit for asymmetry and durable output mapping. Slidev shows that a named
-layout plus named slot can stay short. Quarto, Marp Extended, and Lectern show the opposite
-tradeoff: explicit grouping parses well but becomes fence or marker heavy. MarpX, CDL, and
-reveal.js show that CSS classes, comments, and raw HTML do not solve the source-language problem.
+### Scorecard context
+
+The averages are compact navigation, not a claim that the highest-scoring grammar is the right
+choice. The rationale below keeps the scorecard readable while recording the material tradeoff for
+each source form.
+
+| System | Context for the score |
+| --- | --- |
+| Slidev | Named layouts and slots, image handling, math, and click components are unusually complete. Its layout and reveal constructs are Vue-like extensions, rather than plain Markdown. |
+| Quarto Reveal | Supports columns, equations, list builds, fragment blocks, and the bare `. . .` pause. Fenced divs and attributes make multi-region source denser than ordinary Markdown. |
+| Kova | Content-shape inference and the `|||` separator keep ordinary prose exceptionally light. The source cannot explicitly describe much asymmetry, named regions, or a teaching build. |
+| Lectern | Directives name layouts and regions and its `incremental` container handles direct-child builds. Deeply nested or multi-region material becomes directive-heavy. |
+| Quarto PowerPoint | Strong document, column, equation, and list-build syntax. Its reference-presentation model offers fewer source-level named teaching layouts. |
+| Pandoc PowerPoint | Provides ordinary Markdown, equations, columns, and incremental lists. Named reusable teaching layouts are mainly a reference-layout concern, not a compact source construct. |
+| Classic Marp | Ideal ordinary Markdown readability, but its theme classes do not define content regions and it has no standard teaching-build syntax. |
+| Marp Extended | Adds named structures through visible markers, cards, and columns. Those markers improve parseability while adding repeated structural punctuation. |
+| MDPR override model | The YAML override is readable and can name a layout. It is a separate, title-addressed source that must stay coordinated with the Markdown slide. |
+| MarkItDown output | A readable Markdown import format for existing PPTX content. It does not preserve or express presentation layouts, equations, or reveals by itself. |
+| MarpX | Semantic classes offer layout names, but region structure remains CSS/HTML-oriented; surveyed animation is media, not a teaching build. |
+| Awesome Marp Template | Markdown-it containers can express layout structure, but nesting introduces increasingly dense fence punctuation. |
+| reveal.js Markdown | Markdown remains familiar, but attributes and per-item fragments use HTML comments, which makes structural source noisy. |
 
 ## Decision branches, not a recommendation
 
@@ -747,7 +874,7 @@ pipeline:
 | Kova | Content-shape inference and the `|||` equal-panel delimiter |
 | reveal.js Markdown | Markdown slide boundaries and HTML-attribute extension boundary |
 
-Before either branch is chosen, use the complete fourteen-fixture deck for source review, parser
+Before either branch is chosen, complete the fifteen-fixture deck for source review, parser
 diagnostics, editable native-object evidence, and rendered teaching-slide review. Create neither an
 extension-language guide nor implementation changes until the instructor selects a branch and
 language form.
@@ -760,7 +887,9 @@ language form.
 - [Pandoc PowerPoint writer]
 - [Slidev layout guide]
 - [Slidev built-in layouts]
+- [Slidev animation guide]
 - [reveal.js Markdown guide]
+- [Marp Core v5 Markdown]
 - [Marp Extended]
 - [Awesome Marp Template]
 - [MDPR]
@@ -773,7 +902,9 @@ language form.
 [Pandoc PowerPoint writer]: https://pandoc.org/MANUAL.html
 [Slidev layout guide]: https://sli.dev/guide/layout
 [Slidev built-in layouts]: https://sli.dev/builtin/layouts
+[Slidev animation guide]: https://sli.dev/guide/animations
 [reveal.js Markdown guide]: https://revealjs.com/markdown/
+[Marp Core v5 Markdown]: https://github.com/marp-team/marp-core/blob/main/docs/markdown.md
 [Marp Extended]: https://github.com/shuuul/obsidian-marp-extended
 [Awesome Marp Template]: https://github.com/yKicchan/awesome-marp-template
 [MDPR]: https://github.com/ch040602/MdPr

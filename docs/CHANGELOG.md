@@ -33,6 +33,15 @@
   the pipeline-oriented native-parse score and adding a score for MarkItDown's Markdown output.
 - Clarified that every language branch retains the repository-owned parser and native editable-object
   pipeline; adoption concerns source grammar and semantics, not an external renderer or build stack.
+- Added a rendered-legacy lecture layout survey and recorded simple on-advance reveals as a
+  language requirement: appear an authored item or outline one bullet at a time, without requiring
+  a general animation language.
+- Completed the literal source comparison and language-only scorecard dimension for simple staged
+  reveals; it distinguishes list builds, arbitrary-item appearance, nested-list behavior, and
+  comment or container burden.
+- Narrowed and sorted the wishlist-completeness scorecard, moved its rationale to a separate
+  context table, and recorded Quarto Reveal's bare `. . .` arbitrary-content pause as a full
+  simple-reveal capability.
 
 ### Fixes and Maintenance
 

@@ -71,7 +71,8 @@ distinct patterns:
 
 The layout survey tests these patterns against the same classroom fixtures. The comparison document
 does not choose between a new language and adoption. The required outcome also includes minimal
-inline/display equations and editable native text, list, equation, and image objects.
+inline/display equations, simple staged reveals, and editable native text, list, equation, image,
+and animation objects.
 
 [Quarto Reveal]: https://quarto.org/docs/presentations/revealjs/
 [Quarto PowerPoint]: https://quarto.org/docs/presentations/powerpoint.html

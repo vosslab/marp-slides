@@ -65,6 +65,8 @@ authoring source.
 - [docs/MARP_SYNTAX_GUIDE.md](docs/MARP_SYNTAX_GUIDE.md) - classic Marp Core v5 / Marp CLI syntax.
 - [docs/LAYOUT_LANGUAGE_SURVEY.md](docs/LAYOUT_LANGUAGE_SURVEY.md) - evidence for choosing a
   successor slide language.
+- [docs/LECTURE_LAYOUT_SURVEY.md](docs/LECTURE_LAYOUT_SURVEY.md) - rendered legacy-slide evidence
+  for the required teaching layouts and reveals.
 - [docs/MARP_ADJACENT_PROJECT_COMPARISON.md](docs/MARP_ADJACENT_PROJECT_COMPARISON.md) - Marp and
   Markdown-presentation prior art for that decision.
 - [docs/ROADMAP.md](docs/ROADMAP.md) - provisional native-syntax transition research.

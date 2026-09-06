@@ -42,7 +42,8 @@ quote or callout; and reusable named teaching layouts. The layout vocabulary mus
 common LibreOffice-style patterns: title slide, title plus content, equal and asymmetric columns,
 stacked regions, 2x2, 3x2, and related teaching layouts. It must also support simple Markdown
 images with predictable named-region placement and both inline and display equations through
-LaTeX-compatible or similarly capable hand-writable syntax.
+LaTeX-compatible or similarly capable hand-writable syntax. It must support simple on-advance
+teaching reveals: make an authored item appear or present an outline one bullet at a time.
 
 **Why.** These are the lecture structures that classic Marp cannot express as portable semantic
 source. They define the evidence needed to choose between a small extension and an adopted Markdown
@@ -51,12 +52,15 @@ presentation language without presupposing either outcome.
 **Consequence.** The language survey uses those structures and equation support as literal source
 fixtures. A future grammar must preserve ordinary nested Markdown, avoid routine HTML-comment or
 container scaffolding when possible, and map text, lists, practical equations, and images to typed
-editable native slide objects. Equation support must not require a scientific-publishing workflow.
-This decision does not approve a grammar, parser change, or future guide.
+editable native slide objects. Reveal semantics must remain bounded to authored appearance order and
+map to editable native presentation animation objects; motion paths, timing tracks, and complex
+choreography are outside this requirement. Equation support must not require a scientific-publishing
+workflow. This decision does not approve a grammar, parser change, or future guide.
 
 **Owner.** [LAYOUT_LANGUAGE_SURVEY.md](LAYOUT_LANGUAGE_SURVEY.md),
 [MARP_ADJACENT_PROJECT_COMPARISON.md](MARP_ADJACENT_PROJECT_COMPARISON.md), and a future
-explicitly approved language guide.
+explicitly approved language guide. [LECTURE_LAYOUT_SURVEY.md](LECTURE_LAYOUT_SURVEY.md) records
+the legacy-slide evidence behind the requirements.
 
 ### Native layout registry owns geometry
 
