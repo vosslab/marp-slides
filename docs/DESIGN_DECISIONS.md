@@ -23,10 +23,12 @@ product requirement.
 The production dependency graph contains no Marp code, CLI, Node, browser, or render stage.
 `MARP_SYNTAX_GUIDE.md` describes only standard Marp Core v5 / Marp CLI-compatible syntax. Classic
 Marp is known not to express the required spatial layouts, so a separate language-choice decision
-will determine whether the repository adopts another format or defines a new extension. Marp Core
-v4 and earlier behavior is not supported. Optional v5 Shiki, Mermaid, KaTeX, and MathJax features
-require explicit native capability decisions rather than implicit `/full` compatibility. The
-current local evidence snapshot is Marp Core 5.0.1 at commit `06c5a54`.
+will determine whether the repository adapts another format's grammar or defines a new extension.
+Either outcome retains the repository-owned parser and native editable-output pipeline; it does not
+adopt an external runtime or renderer. Marp Core v4 and earlier behavior is not supported. Optional
+v5 Shiki, Mermaid, KaTeX, and MathJax features require explicit native capability decisions rather
+than implicit `/full` compatibility. The current local evidence snapshot is Marp Core 5.0.1 at
+commit `06c5a54`.
 
 **Owner.** `marp_lib/marp_parser.py`, [MARP_SYNTAX_GUIDE.md](MARP_SYNTAX_GUIDE.md),
 [ROADMAP.md](ROADMAP.md), and [PIPELINE.md](PIPELINE.md).

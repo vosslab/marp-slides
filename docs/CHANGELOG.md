@@ -25,6 +25,14 @@
   hand-writable syntax for both inline and display mathematics.
 - Corrected the authoring-property scorecard's GFM separator row so its ten columns render on
   GitHub.
+- Reclassified MarkItDown as a PPTX-to-Markdown source-import bridge and added a descriptive,
+  equal-weight average to the authoring-property scorecard.
+- Recalibrated the MDPR YAML override model as readable and practical to hand-write, while retaining
+  the title-addressed sidecar as its source-coordination limitation.
+- Reframed the scorecard as language-format completeness against the instructor wishlist, replacing
+  the pipeline-oriented native-parse score and adding a score for MarkItDown's Markdown output.
+- Clarified that every language branch retains the repository-owned parser and native editable-object
+  pipeline; adoption concerns source grammar and semantics, not an external renderer or build stack.
 
 ### Fixes and Maintenance
 

@@ -16,6 +16,10 @@ The repository-owned Python parser and native editable-object exporter are the f
 interpretation and rendering boundary. A later extension need not run through Marp CLI. "Marp+"
 below is a working label, not an approved name or decision.
 
+Both branches keep that repository-owned pipeline. "Adopt" means reuse or adapt another language's
+source grammar and semantics, then implement them locally; it never means adopting the candidate's
+renderer, browser, Node tooling, or output pipeline.
+
 For local-project inventory and broader relevance, see
 [MARP_ADJACENT_PROJECT_COMPARISON.md](MARP_ADJACENT_PROJECT_COMPARISON.md). The broader visitor
 guide remains [RELATED_PROJECTS.md](RELATED_PROJECTS.md).
@@ -233,8 +237,9 @@ Structure constrains cellular movement.
 ```
 
 This is explicit and easy to parse, but a two-panel slide adds eight fence lines. It is an
-excellent semantic benchmark, not an attractive smallest hand-written grammar. In Quarto
-PowerPoint, Pandoc's writer selects a reference layout and does not honor the shown widths.
+excellent semantic benchmark, not an attractive smallest hand-written grammar. The source can
+express unequal widths; the local pipeline would map those semantics to its own layout registry
+rather than inheriting Quarto PowerPoint's layout behavior.
 
 ### Pandoc PowerPoint
 
@@ -279,9 +284,10 @@ Microtubules separate chromosomes.
 > Form follows biological function.
 ```
 
-The PowerPoint writer ignores column widths, so it cannot state fixture 6's ratio. Fixtures 9, 11,
-and 13 have no stable documented source-level layout selection. Pandoc is evidence for keeping
-native geometry in an explicit layout registry, not for adopting its source grammar wholesale.
+Pandoc Markdown can state fixture 6's ratio with its column attributes, although its own PowerPoint
+writer may not honor them. Fixtures 9, 11, and 13 have no stable documented source-level layout
+selection. A local parser could retain the useful source semantics while mapping them to its own
+native layout registry.
 
 ### Slidev
 
@@ -473,19 +479,19 @@ The equation fixture is deliberately a separate requirement from layout. A langu
 excellent columns yet be unsuitable if it cannot handle a short inline equation and one displayed
 equation without an external scientific-writing workflow.
 
-| System | Literal source for fixture 14 | Boundary |
+| System | Literal source for fixture 14 | Source-language boundary |
 | --- | --- | --- |
-| Classic Marp | `$...$` and `$$...$$` with an enabled KaTeX or MathJax plugin | Optional Marp Core capability; native editable mapping remains unchosen |
+| Classic Marp | `$...$` and `$$...$$` with an enabled KaTeX or MathJax plugin | Optional Marp Core source capability |
 | Quarto Reveal and PowerPoint | The shared equation fixture | Pandoc mathematics is built into the authoring model |
-| Pandoc PowerPoint | The shared equation fixture | PPTX rendering and editability depend on the writer's math route |
-| Slidev | The shared equation fixture | Math support is renderer/theme configuration |
+| Pandoc PowerPoint | The shared equation fixture | Equation syntax is present; source layout remains limited |
+| Slidev | The shared equation fixture | Math syntax is part of its extended Markdown authoring model |
 | Kova | `$...$` and `$$...$$` | Its documented math layout recognizes display-math slides |
 | reveal.js Markdown | The shared equation fixture plus a math plugin | Not part of Markdown layout syntax itself |
 | MarpX and Marp Extended | Marp math source inherited by their Marp engine | Still depends on the Marp math capability |
-| Lectern | The shared equation fixture | Its renderer owns math output behavior |
+| Lectern | The shared equation fixture | Its source form is compatible with its math extension |
 | Awesome Marp Template | No compact equation contract surveyed | Plugin configuration would be another extension layer |
 | MDPR | No equation-output contract surveyed | Intermediate model evidence is insufficient |
-| MarkItDown | Not applicable | It is not a presentation language |
+| MarkItDown | Not an equation renderer | Its Markdown output is a candidate input to the target parser |
 
 ## Marp extensions and Marp-adjacent attempts
 
@@ -642,38 +648,43 @@ operations:
       reason: "Keep the two polymers visually comparable."
 ```
 
-This is valuable native-export architecture and an honest escape hatch, but a title-addressed
-override file is not pleasant source for a hand-authored gallery or reusable teaching layout. Its
-public repository had no explicit license file or GitHub license label during this review, so it is
-excluded from the FOSS adoption set.
+This is valuable native-export architecture and an honest escape hatch. The YAML is structured,
+readable, and reasonable to hand-write; the weakness is specifically its title-addressed,
+per-slide override shape, which adds a second coordinated source for a gallery or reusable teaching
+layout. A stable slide or layout identifier could improve that boundary. Its public repository had
+no explicit license file or GitHub license label during this review, so it is excluded from the
+FOSS adoption set.
 
-### Microsoft MarkItDown: not a presentation language
+### Microsoft MarkItDown: input format, not layout language
 
-MarkItDown is MIT-licensed, but it converts files to Markdown for text analysis. It has no
-deck-input syntax for fixtures 1 through 14, no layout language, and no presentation renderer. It
-belongs only in a later import/evidence comparison.
+MarkItDown is MIT-licensed and converts PPTX to Markdown. Its output format can be accepted as
+input to the repository's future parser, so it belongs in the source-import path rather than being
+excluded from it. It does not itself define a presentation layout language, named regions, or a
+renderer; the target parser must still recover or assign slide boundaries and spatial semantics.
 
-## Authoring-property scorecard
+## Wishlist-completeness scorecard
 
-Scores are 1 (weak or high burden) through 5 (strong or low burden). They rate source language for
-these fixtures, not the overall quality of a project. The final column says whether structural HTML
-comments are a normal authoring mechanism.
+Scores are 1 (missing or poor fit) through 5 (strong fit) for the source language or format
+against the instructor's wishlist. They do not score a renderer, import pipeline, parser, or native
+PPTX/ODP output. Native editable objects remain a separate, non-negotiable acceptance requirement.
+Average is the equal-weight mean of the eight numeric language dimensions; it excludes comments and
+is descriptive, not a recommendation.
 
-| System | Overhead | Readable | Hand-write | Nesting | Equations | Semantic clarity | Reuse | Native parse | Comments |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Classic Marp | 5 | 5 | 5 | 5 | 3 | 1 | 2 | 2 | Optional directives |
-| Quarto Reveal | 2 | 3 | 3 | 5 | 5 | 5 | 4 | 5 | Not normal |
-| Quarto PowerPoint | 2 | 3 | 3 | 5 | 4 | 4 | 4 | 4 | Not normal |
-| Pandoc PowerPoint | 2 | 3 | 3 | 5 | 4 | 3 | 3 | 4 | Not normal |
-| Slidev | 4 | 4 | 4 | 5 | 4 | 4 | 5 | 4 | Not normal |
-| Kova | 5 | 5 | 5 | 5 | 4 | 3 | 3 | 3 | Override only |
-| reveal.js Markdown | 2 | 2 | 2 | 5 | 2 | 1 | 4 | 2 | Normal for attributes |
-| MarpX | 2 | 3 | 2 | 5 | 3 | 3 | 3 | 2 | Normal for classes |
-| Lectern | 2 | 3 | 2 | 5 | 4 | 5 | 4 | 5 | Normal for placement |
-| Marp Extended | 3 | 3 | 3 | 5 | 3 | 4 | 4 | 4 | Marker syntax |
-| Awesome Marp Template | 2 | 3 | 2 | 4 | 2 | 3 | 3 | 4 | No, but nested fences |
-| MDPR override model | 1 | 3 | 1 | 5 | 1 | 3 | 4 | 4 | Separate YAML |
-| MarkItDown | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A |
+| System | Layout coverage | Named layouts | Nested lists | Image placement | Equations | Low punctuation | Readable | Hand-write | Average | Comments |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Classic Marp | 1 | 2 | 5 | 2 | 3 | 5 | 5 | 5 | 3.5 | Theme classes only |
+| Quarto Reveal | 5 | 3 | 5 | 4 | 5 | 2 | 3 | 3 | 3.8 | Not normal |
+| Quarto PowerPoint | 5 | 2 | 5 | 4 | 4 | 2 | 3 | 3 | 3.5 | Not normal |
+| Pandoc PowerPoint | 5 | 1 | 5 | 4 | 4 | 2 | 3 | 3 | 3.4 | Not normal |
+| Slidev | 4 | 5 | 5 | 5 | 4 | 4 | 4 | 4 | 4.4 | Not normal |
+| Kova | 3 | 2 | 5 | 3 | 4 | 5 | 5 | 5 | 4.0 | Override only |
+| reveal.js Markdown | 1 | 1 | 5 | 2 | 2 | 2 | 2 | 2 | 2.1 | Normal for attributes |
+| MarpX | 2 | 4 | 5 | 2 | 3 | 2 | 3 | 2 | 2.9 | Normal for classes |
+| Lectern | 5 | 4 | 5 | 4 | 4 | 2 | 3 | 2 | 3.6 | Normal for placement |
+| Marp Extended | 4 | 4 | 5 | 3 | 3 | 3 | 3 | 3 | 3.5 | Marker syntax |
+| Awesome Marp Template | 3 | 3 | 4 | 2 | 2 | 2 | 3 | 2 | 2.6 | Nested fences |
+| MDPR override model | 4 | 4 | 5 | 2 | 1 | 3 | 4 | 3 | 3.3 | Separate YAML |
+| MarkItDown output | 1 | 1 | 5 | 2 | 2 | 5 | 5 | 5 | 3.3 | PPTX-to-Markdown input |
 
 Kova and Slidev offer the strongest authoring lessons. Kova shows that a one-line separator is
 pleasant but too implicit for asymmetry and durable output mapping. Slidev shows that a named
@@ -721,18 +732,20 @@ region through the next slot or slide boundary. The layout registry would own sl
 reading order, and the editable PPTX/ODP builder. This illustrates a low-punctuation option; it is
 not a proposal that has been selected over comment markers, delimiters, or fenced containers.
 
-### Branch B: adopt another language
+### Branch B: adopt another source grammar
 
-The FOSS candidates provide different complete answers rather than interchangeable syntax:
+The FOSS candidates provide different source grammars and semantic models. In every case, the
+repository reimplements the selected semantics in its own parser and native editable-object output
+pipeline:
 
-| Candidate | What would be adopted with the source grammar |
+| Candidate | Source semantics to adapt into the local parser |
 | --- | --- |
-| Quarto Reveal | Pandoc document model, fenced-div layout syntax, and browser presentation route |
-| Quarto PowerPoint | Pandoc source and reference-PPTX inference model |
-| Pandoc PowerPoint | Reference-document-driven PPTX writer with limited source geometry |
-| Slidev | YAML layouts, named slots, Vue/theme components, and Node tooling |
-| Kova | Desktop presentation application and inference-first layout engine |
-| reveal.js Markdown | Browser host, HTML slide structure, and Markdown plugin |
+| Quarto Reveal | Pandoc document model, fenced-div regions, figures, and callouts |
+| Quarto PowerPoint | Pandoc source model, columns, figures, and template-oriented layout semantics |
+| Pandoc PowerPoint | Pandoc headings, divs, attributes, and reference-layout vocabulary |
+| Slidev | YAML layout selector and named slot syntax |
+| Kova | Content-shape inference and the `|||` equal-panel delimiter |
+| reveal.js Markdown | Markdown slide boundaries and HTML-attribute extension boundary |
 
 Before either branch is chosen, use the complete fourteen-fixture deck for source review, parser
 diagnostics, editable native-object evidence, and rendered teaching-slide review. Create neither an

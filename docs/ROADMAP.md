@@ -8,7 +8,7 @@ extension language.
 This roadmap records a pre-existing implementation candidate after a language choice is approved.
 It does not authorize parser, exporter, importer, canonical-deck, or syntax-guide changes. The
 decision is documented in [LAYOUT_LANGUAGE_SURVEY.md](LAYOUT_LANGUAGE_SURVEY.md): define a small
-extension or adopt another Markdown presentation language.
+extension or adapt another Markdown presentation grammar into the repository-owned pipeline.
 
 ## Context
 
@@ -27,8 +27,8 @@ earlier behavior is outside the compatibility target.
 
 ## Objectives
 
-- Decide whether to adopt another Markdown language or approve a small extension before making a
-  source-language change.
+- Decide whether to adapt another Markdown grammar or approve a small extension before making a
+  source-language change. Either choice keeps the repository-owned pipeline.
 - If an extension is approved, choose its region syntax before considering `_cell` markers.
 - Classify every Marp Core v5 author-facing feature as accepted, planned, or a non-goal.
 - Expand authoring syntax only after each feature has a native editable-object owner.

@@ -7,6 +7,9 @@ or a source-language decision. Classic Marp is known not to provide the spatial-
 this repository needs. For literal syntax comparisons and the two decision branches, see
 [LAYOUT_LANGUAGE_SURVEY.md](LAYOUT_LANGUAGE_SURVEY.md).
 
+In either branch, the repository keeps its own parser and native editable-object pipeline. A source
+grammar may be adapted from a candidate, but its runtime, renderer, and build stack are not adopted.
+
 | Project | What it contributes | Decision for this repository | Review |
 | --- | --- | --- | --- |
 | AI lesson planner | Teaching objectives and slide cues | Keep planning separate from slide syntax | [AI_LESSON_PLANNER.md](OTHER_REPOS/AI_LESSON_PLANNER.md) |
@@ -45,7 +48,7 @@ row is not permission to copy code, assets, themes, or syntax.
 | [reveal.js Markdown] | MIT browser framework | Markdown is hosted in HTML; layout returns to HTML and comment attributes | Negative baseline for comment/HTML-driven spatial syntax |
 | [Marp Extended] | MIT Obsidian Marp preprocessor | `%%marp-*%%` markers add columns, cards, callouts, and subtitle blocks | Real Marp+ attempt; useful evidence of marker and closing-block burden |
 | [Awesome Marp Template] | MIT custom Marp engine/template | Markdown-it container fences and CSS classes create columns | Real Marp extension route; useful nesting-cost counterexample |
-| [Microsoft MarkItDown] | MIT file-to-Markdown converter | No presentation input or layout language | Import evidence only; not a language candidate |
+| [Microsoft MarkItDown] | MIT PPTX-to-Markdown converter | Its output can become target-language parser input; it has no layout vocabulary | Source-import bridge, not a hand-authoring layout language |
 
 ## External project screened out of the FOSS set
 
@@ -64,7 +67,7 @@ distinct patterns:
 | Raw HTML/CSS | MarpX, CDL, reveal.js | `div` containers, inline styling, or custom classes | Precise but makes source renderer-specific |
 | Preprocessed markers | Marp Extended | Open, split, and close `%%marp-*%%` blocks | Keeps bodies Markdown, but punctuation grows with nesting |
 | Markdown containers | Awesome Marp Template | Nested `:::` fences and classes | Parseable but visually dense for multi-region teaching slides |
-| Intermediate-model overrides | MDPR | Markdown plus title-addressed YAML operations | Strong architecture, but an awkward separate authoring surface |
+| Intermediate-model overrides | MDPR | Markdown plus title-addressed YAML operations | Strong architecture; sidecar coordination is the main authoring cost |
 
 The layout survey tests these patterns against the same classroom fixtures. The comparison document
 does not choose between a new language and adoption. The required outcome also includes minimal

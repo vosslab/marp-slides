@@ -103,6 +103,9 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
   - Native editable output: text, lists, practical equations, and images remain real PPTX and ODP
     objects, never slide screenshots.
 - These are requirements for the language choice, not approval for a particular grammar.
+- Regardless of the chosen source language, the repository will own the parser, native editable
+  PPTX/ODP builders, LibreOffice bridge, and validation. "Adopt a language" means adopt or adapt
+  its source grammar and semantics, never its runtime or presentation pipeline.
 
 ## Working style
 
