@@ -23,6 +23,8 @@
   hand-authoring, and editable native-object output.
 - Clarified that required equation support means LaTeX-compatible or similarly capable,
   hand-writable syntax for both inline and display mathematics.
+- Corrected the authoring-property scorecard's GFM separator row so its ten columns render on
+  GitHub.
 
 ### Fixes and Maintenance
 

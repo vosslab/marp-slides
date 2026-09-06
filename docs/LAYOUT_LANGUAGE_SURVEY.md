@@ -660,7 +660,7 @@ these fixtures, not the overall quality of a project. The final column says whet
 comments are a normal authoring mechanism.
 
 | System | Overhead | Readable | Hand-write | Nesting | Equations | Semantic clarity | Reuse | Native parse | Comments |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Classic Marp | 5 | 5 | 5 | 5 | 3 | 1 | 2 | 2 | Optional directives |
 | Quarto Reveal | 2 | 3 | 3 | 5 | 5 | 5 | 4 | 5 | Not normal |
 | Quarto PowerPoint | 2 | 3 | 3 | 5 | 4 | 4 | 4 | 4 | Not normal |
