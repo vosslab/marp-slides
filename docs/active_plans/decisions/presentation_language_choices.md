@@ -32,6 +32,11 @@ borrow is its specification discipline:
 - Define how a construct interacts with code fences, lists, and other blocks.
 - Reject source that has no stable native-slide meaning.
 
+Djot's published syntax also includes tables, mathematics, footnotes, definition lists, attributes,
+and generic containers. Those are useful document-language features, but none names a slide layout
+or a content region. A future language could adopt selected features without adopting Djot's
+container syntax or its nested-list rules.
+
 The timestamped transcript analysis is in
 [markdown_djot_interview_notes.md](markdown_djot_interview_notes.md). It identifies the interview
 lessons without treating either Djot or the interview as a chosen slide-language specification.
@@ -46,6 +51,9 @@ GFM cannot be the complete slide language because it has no spatial model. It is
 foundation because it offers familiar document syntax and broad generic Markdown display. That
 benefit must be weighed against Djot's stronger grammar base and against useful Marp source
 conventions; GFM is not selected.
+
+CommonMark itself does not define tables. GFM adds a table extension, which makes GFM rather than
+bare CommonMark the relevant familiar-document starting point when ordinary source tables matter.
 
 ### Optional display projection
 
@@ -83,6 +91,18 @@ captions, galleries, and repeated teaching layouts explicitly.
 
 The prior-art evidence remains in [LAYOUT_LANGUAGE_SURVEY.md](../../LAYOUT_LANGUAGE_SURVEY.md) and
 [MARP_ADJACENT_PROJECT_COMPARISON.md](../../MARP_ADJACENT_PROJECT_COMPARISON.md).
+
+## Primary technical sources
+
+- [CommonMark specification](https://spec.commonmark.org/): the core Markdown grammar and its
+  intentionally small feature set.
+- [GitHub Flavored Markdown specification](https://github.github.com/gfm/): the GitHub-readable
+  CommonMark extension set, including tables.
+- [Djot](https://djot.net/): Djot's published feature overview, syntax status, and implementations.
+- [Djot repository](https://github.com/jgm/djot): the reference implementation and its rationale
+  for unambiguous parsing, local inline parsing, and list behavior.
+- [markdown_djot_interview_notes.md](markdown_djot_interview_notes.md): timestamped analysis of the
+  supplied John MacFarlane interview transcript, kept separate from these primary specifications.
 
 ## Candidate syntax idea
 

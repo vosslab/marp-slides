@@ -60,6 +60,9 @@
 - Clarified that GitHub cannot be a faithful slide renderer. The brainstorming page now records an
   optional, derived read-only GFM display projection as a possible browsing artifact, not a second
   source or a constraint on the source-language decision.
+- Added direct CommonMark, GFM, Djot, and Djot-reference-implementation links to the presentation
+  language brainstorming record, distinguishing document-language features from missing slide
+  spatial semantics.
 
 ### Fixes and Maintenance
 
