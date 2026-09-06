@@ -6,8 +6,9 @@ specification.
 
 ## Source and limits
 
-The evidence is the supplied automatic-caption transcript:
-[Club_TWiT-Off_by_One_with_Jeff_Atwood_5-Markdown_Mayhem_with_John_MacFarlane-yt-oVIQ0rR_BF0.en.srt](../../../Club_TWiT-Off_by_One_with_Jeff_Atwood_5-Markdown_Mayhem_with_John_MacFarlane-yt-oVIQ0rR_BF0.en.srt).
+The evidence is a supplied automatic-caption transcript of the
+[John MacFarlane interview](https://www.youtube.com/watch?v=oVIQ0rR_BF0). The transcript is not a
+tracked repository artifact.
 
 Automatic captions are useful for locating discussion, not for exact quotation. The notes below
 paraphrase the relevant passages and retain timestamps so a reader can check the source. The

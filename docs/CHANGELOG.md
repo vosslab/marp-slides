@@ -63,6 +63,22 @@
 - Added direct CommonMark, GFM, Djot, and Djot-reference-implementation links to the presentation
   language brainstorming record, distinguishing document-language features from missing slide
   spatial semantics.
+- Recorded the instructor's current preference to extend Djot, particularly its lack of indented
+  code blocks and simpler list-item indentation rule, without treating the source foundation or
+  spatial grammar as settled.
+- Added an exploratory Djot slide-extension record. It evaluates parse-valid `@layout:` and
+  `@slot:` directives, Djot-native alternatives, reserved syntax, Jotdown implementation prior art,
+  and the fixture evidence needed before a grammar decision.
+- Recorded the instructor's requirement that a Djot-based slide language preserve Djot's parsing,
+  composition, simple-source, attributes, and generic-container design goals.
+- Clarified that hard-wrap-friendly source is a specific instructor priority and that Djot attributes
+  remain content metadata rather than a second layout syntax.
+- Replaced the missing local automatic-caption transcript link in the Djot interview note with the
+  source video, while retaining the note's limits on caption-derived evidence.
+- Recorded the instructor's preference to avoid braces and other paired punctuation in normal slide
+  authoring, while retaining Djot attributes as optional content metadata.
+- Coupled the candidate slide boundary with its required layout: `@ <layout>` begins every slide
+  without a separate boundary directive, while the low-punctuation named-region form remains open.
 
 ### Fixes and Maintenance
 

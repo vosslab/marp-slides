@@ -40,6 +40,8 @@ container syntax or its nested-list rules.
 The timestamped transcript analysis is in
 [markdown_djot_interview_notes.md](markdown_djot_interview_notes.md). It identifies the interview
 lessons without treating either Djot or the interview as a chosen slide-language specification.
+The narrower [djot_slide_extension_exploration.md](djot_slide_extension_exploration.md) records a
+candidate `@` directive surface and the experiments needed to evaluate it.
 
 ## GitHub and GFM
 
@@ -110,25 +112,17 @@ This shape is worth exploring because it makes a layout and its regions visible 
 tags, comments, or per-slide geometry:
 
 ```markdown
-@layout comparison
+@ comparison
 
 # Actin and microtubules
-
-:: left
-- Actin filaments
-  - Support membrane shape
-
-:: right
-- Microtubules
-  - Form the mitotic spindle
 ```
 
 The possible reading is simple:
 
-- `@layout comparison` selects a named teaching layout.
+- `@ comparison` starts a new slide and selects its required named teaching layout.
 - `#` remains a familiar slide title.
-- `:: left` and `:: right` begin named regions.
-- Ordinary Markdown blocks continue until the next region or slide boundary.
+- The low-punctuation source form for named regions remains an open choice; it must not require a
+  closing fence, braces, or source-order guessing.
 
 That reading is an illustration, not a contract. The final language may keep these tokens, revise
 them, or choose a better visible form. This syntax idea does not select GFM, Djot, or Marp as its

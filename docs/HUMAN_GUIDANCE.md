@@ -110,6 +110,18 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 - After reviewing the language survey, I see no viable presentation format to adopt directly. Keep
   the source-language choice open: assess GFM, Djot, and a Marp-derived surface before selecting
   the foundation and spatial syntax of a separately named language.
+- I am leaning toward extending Djot as the source foundation. I value its removal of indented code
+  blocks and its simpler list-item indentation rule; ordinary nested lists and explicit slide-layout
+  semantics still need to be specified.
+- I want a Djot-based slide language to retain its design goals: linear and local parsing, simple
+  list and inline behavior, hard-wrap-friendly source, uniform composition, preserved attributes and
+  containers, and the simplest syntax consistent with those constraints.
+- I particularly value source that remains readable when hard-wrapped. Keep every slide directive
+  short and single-line so wrapping ordinary teaching prose never creates or changes structure.
+- Avoid braces and other paired punctuation in normal slide authoring. The ordinary layout and region
+  syntax should use the fewest visible structural characters possible.
+- Couple every slide boundary with its required layout selection. Use `@ <layout>` to begin a slide
+  without a separate layout directive or boundary; choose a low-punctuation slot form separately.
 - Use Djot's emphasis on an explicit, unambiguous grammar as a design lesson, not as the current
   base language. Do not require raw HTML tags or `<!-- ... -->` comments for normal slide structure.
 - Do not call the successor language Marp+ by default. It may diverge substantially from Marp and
