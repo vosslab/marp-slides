@@ -1,0 +1,837 @@
+=== layout: title-slide
+
+# Lecture 2E
+
+## Restriction Enzymes
+## Chapter 2
+## Dr. Neil Voss
+## Sept 2, 2025
+
+=== layout: title-content
+
+# Chapter 2 Outline
+
+@body
+
+- DNA Structure
+  - History
+  - Review
+- DNA Analysis
+  - Restriction Enzymes
+  - Gel electrophoresis analysis
+- DNA Profiling
+  - Blood typing
+  - HLA typing
+  - STR fingerprint
+  - Single Nucleotide Polymorphisms
+  - Whole Genome Analysis
+
+=== layout: title-only
+
+# What is a palindrome?
+
+=== layout: two-panels
+
+# Literary Palindromes
+
+@left
+
+- A palindrome is a word, phrase, number, or other sequence of characters which reads the same backward or forward.
+
+@right
+
+![Slide image 1](assets/lect02e-restriction_enzymes/image_001.png)
+![Slide image 2](assets/lect02e-restriction_enzymes/image_002.png)
+
+=== layout: title-content
+
+# Literary Palindromes
+
+@body
+
+- Madam
+- Race car
+- Never odd or Even
+- Go Hang a Salami I’m a lasagna hog
+- Literary Palindromes are same both forwards and backwards
+
+=== layout: title-content
+
+# Slide 6
+
+@body
+
+![Slide image 3](assets/lect02e-restriction_enzymes/image_003.png)
+
+=== layout: two-panels
+
+# “Weird Al” Yankovic – “Bob”
+
+@left
+
+- I, man, am Regal, a German am I
+- Never odd or even
+- If I had a Hi-Fi
+- Madam, I′m Adam
+- Too hot to hoot
+- No lemons, no melon
+- Too bad I hid a boot
+- Lisa Bonet ate no basil
+- Warsaw was raw
+- Was it a car or a cat I saw?
+- [https://www.musixmatch.com/lyrics/Weird-Al-Yankovic-2/Bob](https://www.musixmatch.com/lyrics/Weird-Al-Yankovic-2/Bob)
+
+@right
+
+![Slide image 4](assets/lect02e-restriction_enzymes/image_004.png)
+
+=== layout: two-panels
+
+# “Weird Al” Yankovic – “Bob”
+
+@left
+
+![Slide image 5](assets/lect02e-restriction_enzymes/image_005.png)
+
+@right
+
+- Rise to vote, sir
+- Do geese see God?
+- Do nine men interpret? Nine men I nod
+- Rats live on no evil star
+- Won't lovers revolt now?
+- Race fast safe car
+- Pa′s a sap
+- Ma is as selfless as I am
+- May a moody baby doom a yam
+- [https://www.musixmatch.com/lyrics/Weird-Al-Yankovic-2/Bob](https://www.musixmatch.com/lyrics/Weird-Al-Yankovic-2/Bob)
+
+=== layout: two-panels
+
+# “Weird Al” Yankovic – “Bob”
+
+@left
+
+- Ah Satan sees Natasha
+- No devil lived on
+- Lonely Tylenol
+- Not a banana baton
+- No X in Nixon
+- O stone, be not so
+- O Geronimo, no minor ego
+- "Naomi" I moan
+- A Toyota's a Toyota
+- A dog, a panic, in a pagoda
+- [https://www.musixmatch.com/lyrics/Weird-Al-Yankovic-2/Bob](https://www.musixmatch.com/lyrics/Weird-Al-Yankovic-2/Bob)
+
+@right
+
+![Slide image 6](assets/lect02e-restriction_enzymes/image_006.png)
+
+=== layout: two-panels
+
+# “Weird Al” Yankovic – “Bob”
+
+@left
+
+![Slide image 7](assets/lect02e-restriction_enzymes/image_007.png)
+
+@right
+
+- Oh no, Don Ho
+- Nurse, I spy gypsies, run!
+- Senile felines
+- Now I see bees, I won
+- UFO tofu
+- We panic in a pew
+- Oozy rat in a sanitary zoo
+- God, a red nugget, a fat egg under a dog
+- Go hang a salami, I'm a lasagna hog
+- [https://www.musixmatch.com/lyrics/Weird-Al-Yankovic-2/Bob](https://www.musixmatch.com/lyrics/Weird-Al-Yankovic-2/Bob)
+
+=== layout: title-only
+
+# Palindrome DNA Sequences
+
+=== layout: title-content
+
+# Genetic Palindromes
+
+@body
+
+- A palindromic sequence is one where the 5&prime; to 3&prime; sequence is identical on both strands of a double strand polynucleotide
+- 5&prime;-`AGTACT`-3&prime;
+
+=== layout: title-content
+
+# Genetic Palindromes
+
+@body
+
+- A palindromic sequence is one where the 5&prime; to 3&prime; sequence is identical on both strands of a double strand polynucleotide
+- 5&prime;-`AGTACT`-3&prime;
+- 5&prime;-`AGTACT`-3&prime;
+
+=== layout: title-content
+
+# Genetic Palindromes
+
+@body
+
+- A palindromic sequence is one where the 5&prime; to 3&prime; sequence is identical on both strands of a double strand polynucleotide
+- 5&prime;-`AGTACT`-3&prime;
+- 5&prime;-`AGTACT`-3&prime;
+
+=== layout: title-content
+
+# Genetic Palindromes
+
+@body
+
+- A palindromic sequence is one where the 5&prime; to 3&prime; sequence is identical on both strands of a double strand polynucleotide
+- 5&prime;-`AGTACT`-3&prime;
+- 5&prime;-`AGTACT`-3&prime;
+
+=== layout: title-content
+
+# Genetic Palindromes
+
+@body
+
+- A palindromic sequence is one where the 5&prime; to 3&prime; sequence is identical on both strands of a double strand polynucleotide
+- 5&prime;-`AGTACT`-3&prime;
+- 5&prime;-`AGTACT`-3&prime;
+
+=== layout: title-content
+
+# Genetic Palindromes
+
+@body
+
+- A palindromic sequence is one where the 5&prime; to 3&prime; sequence is identical on both strands of a double strand polynucleotide
+- 5&prime;-`AGTACT`-3&prime;
+- 5&prime;-`AGTACT`-3&prime;
+
+=== layout: title-content
+
+# Genetic Palindromes
+
+@body
+
+- A palindromic sequence is one where the 5&prime; to 3&prime; sequence is identical on both strands of a double strand polynucleotide
+- 5&prime;-`AGTACT`-3&prime;
+- 5&prime;-`AGTACT`-3&prime;
+
+=== layout: title-content
+
+# Genetic Palindromes
+
+@body
+
+- A palindromic sequence is one where the 5&prime; to 3&prime; sequence is identical on both strands of a double strand polynucleotide
+- 5&prime;-`AGTACT`-3&prime;
+- 3&prime;-`TCATGA`-3&prime;
+- 5&prime;-`AGTACT`-3&prime;
+
+=== layout: title-content
+
+# Genetic Palindromes
+
+@body
+
+- A palindromic sequence is one where the 5&prime; to 3&prime; sequence is identical on both strands of a double strand polynucleotide
+- 5&prime;-`AGTACT`-3&prime;
+- 3&prime;-`TCATGA`-3&prime;
+
+=== layout: title-content
+
+# Genetic Palindromes
+
+@body
+
+- A palindromic sequence is one where the 5&prime; to 3&prime; sequence is identical on both strands of a double strand polynucleotide
+- 5&prime;-`AGTACT`-3&prime;
+- 3&prime;-`TCATGA`-3&prime;
+
+=== layout: title-content
+
+# Genetic Palindromes
+
+@body
+
+- A palindromic sequence is one where the 5&prime; to 3&prime; sequence is identical on both strands of a double strand polynucleotide
+- 5&prime;-`AGTACT`-3&prime;
+- 3&prime;-`TCATGA`-5&prime;
+
+=== layout: title-content
+
+# Genetic Palindromes
+
+@body
+
+- A palindromic sequence is one where the 5&prime; to 3&prime; sequence is identical on both strands of a double strand polynucleotide
+- 5&prime;-`AGTACT`-3&prime;
+- 3&prime;-`TCATGA`-5&prime;
+- all the base pairs match
+
+=== layout: title-content
+
+# Base Pair from Front to Back
+
+@body
+
+- 5&prime;-`AGTACT`-3&prime;
+
+=== layout: title-content
+
+# Base Pair from Front to Back
+
+@body
+
+- A-T pair
+- T-A pair
+- 5&prime;-`AGTACT`-3&prime;
+- 5&prime;-`AGTACT`-3&prime;
+- YES, it’s a
+- palindrome
+- 3&prime;-`TCATGA`-3&prime;
+- G-C pair
+
+=== layout: title-content
+
+# Base Pair from Front to Back
+
+@body
+
+- A-T pair
+- T-G pair
+- 5&prime;-`AGTGCT`-3&prime;
+- 5&prime;-`AGTGCT`-3&prime;
+- NO, it’s not a
+- palindrome
+- 3&prime;-`TCGTGA`-3&prime;
+- G-C pair
+
+=== layout: title-content
+
+# Base Pair from Front to Back
+
+@body
+
+- you cannot have
+- an odd number of
+- nucleotides in a
+- genetic palindrome
+- A-T pair
+- T-A pair
+- 5&prime;-`AGTGACT`-3&prime;
+- central
+- unpaired
+- 5&prime;-`AGTGACT`-3&prime;
+- NO, it’s not a
+- palindrome
+- G-C pair
+- 3&prime;-`TCAGTGA`-3&prime;
+
+=== layout: title-only
+
+# Restriction Enzymes
+
+=== layout: title-content
+
+# Restriction enzymes cleave DNA at a specific sequence
+
+@body
+
+![Slide image 8](assets/lect02e-restriction_enzymes/image_008.jpg)
+
+=== layout: two-panels
+
+# Restriction enzymes
+
+@left
+
+![Slide image 9](assets/lect02e-restriction_enzymes/image_009.png)
+
+@right
+
+- The DNA recognition sequence is usually a 4-6 bp palindrome
+- Restriction enzymes are named after the organisms from which they were isolated
+- The cuts may result in blunt or sticky ends
+- Sticky ends may have 5&prime; or 3&prime;-overhangs
+
+=== layout: title-content
+
+# Slide 31
+
+@body
+
+![Slide image 10](assets/lect02e-restriction_enzymes/image_010.png)
+
+=== layout: title-content
+
+# Slide 32
+
+@body
+
+![Slide image 11](assets/lect02e-restriction_enzymes/image_011.png)
+
+=== layout: title-content
+
+# Restriction enzymes and their recognition sites
+
+@body
+
+- HaeIII | Haemophilus aegiptius | `GG/CC` | Blunt cut
+- Sau3A | Staphylococcus aureus | /`GATC` | 5&prime;-overhang
+- HhaI | Haemophilus haemolyticus | `GCG/C` | 3&prime;-overhang
+- SmaI | Serratia marcescens | CCC / GGG | Blunt cut
+- EcoRI | Escherichia coli RY13 | G / `AATTC` | 5&prime;-overhang
+- PstI | Providencia Stuartii | `CTGCA` / G | 3&prime;-overhang
+- HaeII | Haemophilus aegiptius | RGCGC / Y | Ambiguous sequence
+- NotI | Nocardia otitidis | GC / `GGCCGC` | 8 nt sequence
+
+=== layout: title-only
+
+# Sample Problems
+
+=== layout: title-content
+
+# Restriction Enzyme: EcoRI
+
+@body
+
+- `G|AATTC`
+- Draw the double strand?
+- EcoRI
+
+=== layout: title-content
+
+# Restriction Enzyme: EcoRI
+
+@body
+
+- `G|AATTC`
+- Draw the double strand?
+  - 5&prime;-`G|AATTC`-3&prime;
+  - 3&prime;-`CTTAA|G`-5&prime;
+- Is it a blunt or sticky end?
+- EcoRI
+
+=== layout: title-content
+
+# Restriction Enzyme: EcoRI
+
+@body
+
+- `G|AATTC`
+- Draw the double strand?
+  - 5&prime;-`G|AATTC`-3&prime;
+  - 3&prime;-`CTTAA|G`-5&prime;
+- Is it a blunt or sticky end?
+  - 5&prime;-G
+  - 3&prime;-`CTTAA`-5&prime;
+- What is the overhang?
+- EcoRI
+
+=== layout: title-content
+
+# Restriction Enzyme: EcoRI
+
+@body
+
+- `G|AATTC`
+- Draw the double strand?
+  - 5&prime;-`G|AATTC`-3&prime;
+  - 3&prime;-`CTTAA|G`-5&prime;
+- Is it a blunt or sticky end?
+  - 5&prime;-G-3&prime;
+  - 3&prime;-`CTTAA`-5&prime;
+- What is the overhang?
+  - 5&prime; overhang (the 5&prime; is all alone at the end)
+  - 3&prime;-`TTAA`-5&prime; or 5&prime;-`AATT`-3&prime;
+- EcoRI
+
+=== layout: title-content
+
+# Restriction Enzyme: PstI
+
+@body
+
+- `CTGCA|G`
+- Draw the double strand?
+- PstI
+
+=== layout: title-content
+
+# Restriction Enzyme: PstI
+
+@body
+
+- `CTGCA|G`
+- Draw the double strand?
+  - 5&prime;-`CTGCA|G`-3&prime;
+  - 3&prime;-`G|ACGTC`-5&prime;
+- Is it a blunt or sticky end?
+- PstI
+
+=== layout: title-content
+
+# Restriction Enzyme: PstI
+
+@body
+
+- `CTGCA|G`
+- Draw the double strand?
+  - 5&prime;-`CTGCA|G`-3&prime;
+  - 3&prime;-`G|ACGTC`-5&prime;
+- Is it a blunt or sticky end?
+  - 5&prime;-`CTGCA`-3&prime;
+  - 3&prime;-G
+- What is the overhang?
+- PstI
+
+=== layout: title-content
+
+# Restriction Enzyme: PstI
+
+@body
+
+- `CTGCA|G`
+- Draw the double strand?
+  - 5&prime;-`CTGCA|G`-3&prime;
+  - 3&prime;-`G|ACGTC`-5&prime;
+- Is it a blunt or sticky end?
+  - 5&prime;-`CTGCA`-3&prime;
+  - 3&prime;-G
+- What is the overhang?
+  - 3&prime; overhang (the 3&prime; is all alone at the end)
+  - 5&prime;-`TGCA`-3&prime; or 3&prime;-`ACGT`-5&prime;
+- PstI
+
+=== layout: title-content
+
+# Restriction Enzyme: HaeIII
+
+@body
+
+- `GG|CC`
+- Draw the double strand?
+- HaeIII
+
+=== layout: title-content
+
+# Restriction Enzyme: HaeIII
+
+@body
+
+- `GG|CC`
+- Draw the double strand?
+  - 5&prime;-`GG|CC`-3&prime;
+  - 3&prime;-`CC|GG`-5&prime;
+- Is it a blunt or sticky end?
+- HaeIII
+
+=== layout: title-content
+
+# Restriction Enzyme: HaeIII
+
+@body
+
+- `GG|CC`
+- Draw the double strand?
+  - 5&prime;-`GG|CC`-3&prime;
+  - 3&prime;-`CC|GG`-5&prime;
+- Is it a blunt or sticky end?
+  - 5&prime;-GG
+  - 3&prime;-CC
+- What is the overhang?
+- HaeIII
+
+=== layout: title-content
+
+# Restriction Enzyme: HaeIII
+
+@body
+
+- `GG|CC`
+- Draw the double strand?
+  - 5&prime;-`GG|CC`-3&prime;
+  - 3&prime;-`CC|GG`-5&prime;
+- Is it a blunt or sticky end?
+  - 5&prime;-GG
+  - 3&prime;-CC
+- What is the overhang?
+  - none
+- HaeIII
+
+=== layout: title-content
+
+# Restriction Enzyme: Sau3A
+
+@body
+
+- |`GATC`
+- Draw the double strand?
+- Sau3A
+
+=== layout: title-content
+
+# Restriction Enzyme: Sau3A
+
+@body
+
+- |`GATC`
+- Draw the double strand?
+  - 5&prime;-|`GATC`-3&prime;
+  - 3&prime;-`CTAG`|-5&prime;
+- Is it a blunt or sticky end?
+- Sau3A
+
+=== layout: title-content
+
+# Restriction Enzyme: Sau3A
+
+@body
+
+- |`GATC`
+- Draw the double strand?
+  - 5&prime;-|`GATC`-3&prime;
+  - 3&prime;-`CTAG`|-5&prime;
+- Is it a blunt or sticky end?
+  - 5&prime;-...-3&prime;
+  - 3&prime;-...`CTAG`-5&prime;
+- What is the overhang?
+- Sau3A
+
+=== layout: title-content
+
+# Restriction Enzyme: Sau3A
+
+@body
+
+- |`GATC`
+- Draw the double strand?
+  - 5&prime;-|`GATC`-3&prime;
+  - 3&prime;-`CTAG`|-5&prime;
+- Is it a blunt or sticky end?
+  - 5&prime;-...-3&prime;
+  - 3&prime;-...`CTAG`-5&prime;
+- What is the overhang?
+  - 5&prime; overhang (the 5&prime; is all alone at the end)
+  - 3&prime;-`CTAG`-5&prime; or 5&prime;-`GATC`-3&prime;
+- Sau3A
+
+=== layout: title-content
+
+# Restriction Enzyme: ClaI
+
+@body
+
+- `AT|CGAT`
+- Draw the double strand?
+- Is it a blunt or sticky end?
+- What is the overhang?
+
+=== layout: title-only
+
+# What are Restriction Sites useful for?
+
+=== layout: two-panels
+
+# Figure 20.6a
+
+@left
+
+- Bacterial plasmid
+- Restriction site
+- 5&prime;
+- 3&prime;
+- `GAATTC`
+- DNA
+- `CTTAAG`
+- 3&prime;
+- 5&prime;
+- Restriction enzyme cuts the sugar-phosphate backbones at each arrow.
+- 1
+- 5&prime;
+- 3&prime;
+- 3&prime;
+- 5&prime;
+- `AATTC`
+- G
+- `CTTAA`
+- G
+- 5&prime;
+- 3&prime;
+- 5&prime;
+- 3&prime;
+- Sticky end
+
+@right
+
+![Slide image 12](assets/lect02e-restriction_enzymes/image_012.jpg)
+
+=== layout: two-panels
+
+# Figure 20.UN04
+
+@left
+
+- 5&prime;
+- 3&prime;
+- 5&prime;
+- 3&prime;
+- G
+- `AATTC`
+- G
+- `CTTAA`
+- 3&prime;
+- 5&prime;
+- 3&prime;
+- 5&prime;
+- Sticky end
+
+@right
+
+![Slide image 13](assets/lect02e-restriction_enzymes/image_013.jpg)
+
+=== layout: two-panels
+
+# Figure 20.6b
+
+@left
+
+- 5&prime;
+- 3&prime;
+- 3&prime;
+- 5&prime;
+- `AATTC`
+- G
+- `CTTAA`
+- G
+- 5&prime;
+- 3&prime;
+- 3&prime;
+- 5&prime;
+- Sticky end
+- 5&prime;
+- 3&prime;
+- `AATTC`
+- Base pairing of sticky ends produces various combinations.
+- G
+- 2
+- G
+- `CTTAA`
+- 3&prime;
+- 5&prime;
+- Fragment from different DNA molecule cut by the same restriction enzyme
+- 5&prime;
+- 3&prime;
+- 5&prime;
+- 3&prime;
+- 3&prime;
+- 5&prime;
+- `AATT`
+- `AATT`
+- G
+- C
+- G
+- C
+- C
+- G
+- `TTAA`
+- `TTAA`
+- G
+- C
+- 5&prime;
+- 5&prime;
+- 3&prime;
+- 3&prime;
+- 5&prime;
+- 3&prime;
+- One possible combination
+
+@right
+
+![Slide image 14](assets/lect02e-restriction_enzymes/image_014.jpg)
+
+=== layout: two-panels
+
+# Figure 20.6c
+
+@left
+
+- 3&prime;
+- 5&prime;
+- 3&prime;
+- 5&prime;
+- 3&prime;
+- 5&prime;
+- `AATT`
+- `AATT`
+- G
+- C
+- G
+- C
+- `TTAA`
+- `TTAA`
+- C
+- G
+- C
+- G
+- 5&prime;
+- 5&prime;
+- 3&prime;
+- 3&prime;
+- 5&prime;
+- 3&prime;
+- One possible combination
+- DNA ligase seals the strands
+- 3
+- 3&prime;
+- 5&prime;
+- 5&prime;
+- 3&prime;
+- Recombinant DNA molecule
+- Recombinant plasmid
+
+@right
+
+![Slide image 15](assets/lect02e-restriction_enzymes/image_015.jpg)
+
+=== layout: title-only
+
+# Sample Problems
+
+=== layout: title-content
+
+# Slide 58
+
+@body
+
+![Slide image 16](assets/lect02e-restriction_enzymes/image_016.png)
+
+=== layout: title-content
+
+# Slide 59
+
+@body
+
+![Slide image 17](assets/lect02e-restriction_enzymes/image_017.png)
+
+=== layout: title-only
+
+# Summary
+
+=== layout: title-content
+
+# Slide 61
+
+@body
+
+![Slide image 18](assets/lect02e-restriction_enzymes/image_018.png)
+
+=== layout: title-only
+
+# THE END

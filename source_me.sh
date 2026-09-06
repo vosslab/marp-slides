@@ -13,6 +13,14 @@ set | grep -q '^BASH_VERSION=' || exit 1
 # this line, or ~/.bashrc would wipe it.
 source ~/.bashrc
 
+# Make Cargo-installed optional source validators, including Jotdown, available
+# to repository commands when the conventional per-user Cargo bin directory exists.
+CARGO_BIN="$HOME/.cargo/bin"
+if [[ -d "$CARGO_BIN" ]]; then
+	export PATH="$CARGO_BIN:$PATH"
+fi
+unset CARGO_BIN
+
 # Python runtime defaults: unbuffered stdout/stderr, and no .pyc/__pycache__
 # files written on import.
 export PYTHONUNBUFFERED=1

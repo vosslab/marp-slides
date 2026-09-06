@@ -15,12 +15,14 @@ formatter, editor rule, and linter in the project's pinned compatibility suite. 
 adds slide semantics after that gate; it can never waive a Djot failure or accept syntax that strict
 Djot rejects.
 
-No Djot implementation is yet pinned, and Djot does not advertise an official standalone linter.
-Before implementation, the project must record the exact Djot syntax revision, parser, formatter,
-editor rules, and linter tools that make up the suite. "Passes all Djot linters" then means a clean
-result from every applicable tool in that recorded suite, rather than an untestable claim about an
-unnamed future tool. Any newly discovered applicable Djot lint tool joins the suite or receives a
-documented compatibility decision before the language accepts source through it.
+Jotdown 0.10.0 is the first pinned native parser in the compatibility suite. It was installed with
+the optional CLI and is invoked once per source before the local extension check; its zero exit
+status is parser evidence, not an assertion that it is a formatter or linter. Djot does not
+advertise an official standalone linter. Before the language accepts source, the project must still
+record the exact Djot syntax revision and every applicable formatter, editor rule, and lint tool.
+"Passes all Djot linters" then means a clean result from every applicable tool in that recorded
+suite, rather than an untestable claim about an unnamed future tool. Any newly discovered applicable
+Djot lint tool joins the suite or receives a documented compatibility decision before acceptance.
 
 ## ASCII source and Unicode projection
 
@@ -33,6 +35,13 @@ as `5′-ACGT-3′`, with only `ACGT` in an inline-verbatim run.
 projection to U+2032 PRIME. This is a controlled project vocabulary, not adoption of a general HTML
 entity parser. Verbatim and raw content remain opaque, so their literal source is never rewritten.
 Each additional character reference needs an explicit documented mapping and compatibility case.
+
+## Source suffix
+
+Use the upstream Djot `.djot` suffix for presentation source. Slide semantics belong to the extended
+Djot grammar, not a separate `.djp`, `.djs`, or `.djots` filename convention. The source folder and
+its `=== layout:` declarations make a deck's presentation role clear while standard Djot tooling
+continues to recognize the file.
 
 ## Context
 
@@ -50,6 +59,21 @@ ordinary Djot renderer a slide renderer.
 The reusable slide-language work may eventually move to a separate repository from this personal
 lecture-content repository. That future split does not authorize a migration, duplicate content, or
 a new current source of truth. This page records language exploration where it is happening now.
+
+## Experimental genetics corpus
+
+[`genetics/djot/`](../../../genetics/djot/README.md) holds a source-level import of the eight
+visible `lect0*` genetics presentations. It exists to test whether the current authoring forms make
+real teaching material legible; it is neither a replacement for the existing Marp source nor proof
+that a renderer or grammar has been adopted. Its dedicated ODP/PPTX importers preserve source order,
+component images, and source-hidden-slide state, while deliberately omitting presenter notes and
+declining to infer arbitrary visual styling or animations.
+
+`tools/djot_slide_lint.py` now supplies the proposed pyflakes-scale, source-only structural check.
+It reports slide declarations, documented slot contracts, action placement, and local image paths;
+it invokes the pinned Jotdown 0.10.0 parser before its own checks. The eight imported decks passed
+that native-first parser check. This remains only one lane of the required suite: its local
+structural result is not a claim that no formatter, editor rule, or future applicable linter exists.
 
 ## Provisional slide surface
 

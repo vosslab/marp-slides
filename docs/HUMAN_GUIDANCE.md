@@ -154,6 +154,8 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
   validation, the pipeline maps a small documented character-reference vocabulary; for example,
   `&prime;` becomes `′`. This is a project projection rather than native Djot entity parsing, and it
   must not rewrite verbatim or raw content.
+- Use the upstream `.djot` suffix for extended-Djot presentation source. The extension's slide
+  semantics come from its grammar, not a separate `.djp`, `.djs`, or `.djots` filename convention.
 - Do not add a successor-language presenter-note syntax. Djot footnotes are audience-facing
   citations or clarifications, not hidden speaker notes; the existing importer still preserves
   notes from historical decks.

@@ -1,0 +1,405 @@
+{
+  "source": "lect02a-2025_announcements.odp",
+  "slide_count": 75,
+  "visible_slides": 43,
+  "hidden_slides": [
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    31,
+    32,
+    33,
+    34,
+    35,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    60,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74
+  ],
+  "slides": [
+    {
+      "source_slide": 1,
+      "layout": "title-slide",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 2,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 3,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 10,
+      "layout": "title-content",
+      "text_blocks": 0,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 11,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 12,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 13,
+      "layout": "two-panels",
+      "text_blocks": 1,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 14,
+      "layout": "two-panels",
+      "text_blocks": 1,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 15,
+      "layout": "two-panels",
+      "text_blocks": 1,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 16,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": [
+        "dense text requires post-conversion polish"
+      ]
+    },
+    {
+      "source_slide": 17,
+      "layout": "two-panels",
+      "text_blocks": 2,
+      "images": 2,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 18,
+      "layout": "two-panels",
+      "text_blocks": 1,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": [
+        "ignored non-content shape type AUTO_SHAPE (1)"
+      ]
+    },
+    {
+      "source_slide": 19,
+      "layout": "two-panels",
+      "text_blocks": 1,
+      "images": 2,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 20,
+      "layout": "title-content",
+      "text_blocks": 0,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": [
+        "ignored non-content shape type AUTO_SHAPE (1)"
+      ]
+    },
+    {
+      "source_slide": 21,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 22,
+      "layout": "two-panels",
+      "text_blocks": 3,
+      "images": 2,
+      "notes_omitted": 0,
+      "review_reasons": [
+        "ignored non-content shape type AUTO_SHAPE (1)"
+      ]
+    },
+    {
+      "source_slide": 23,
+      "layout": "two-panels",
+      "text_blocks": 1,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 24,
+      "layout": "two-panels",
+      "text_blocks": 1,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 25,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 26,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": [
+        "dense text requires post-conversion polish"
+      ]
+    },
+    {
+      "source_slide": 27,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 28,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 29,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": [
+        "dense text requires post-conversion polish"
+      ]
+    },
+    {
+      "source_slide": 30,
+      "layout": "title-content",
+      "text_blocks": 2,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 36,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 37,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 38,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 47,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 48,
+      "layout": "title-content",
+      "text_blocks": 2,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": [
+        "dense text requires post-conversion polish"
+      ]
+    },
+    {
+      "source_slide": 49,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 50,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 51,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": [
+        "dense text requires post-conversion polish"
+      ]
+    },
+    {
+      "source_slide": 52,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 53,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 54,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 55,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 56,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 57,
+      "layout": "two-panels",
+      "text_blocks": 1,
+      "images": 2,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 58,
+      "layout": "title-content",
+      "text_blocks": 0,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": [
+        "ignored non-content shape type AUTO_SHAPE (1)"
+      ]
+    },
+    {
+      "source_slide": 59,
+      "layout": "title-content",
+      "text_blocks": 2,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 61,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 62,
+      "layout": "two-panels",
+      "text_blocks": 2,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 75,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": [
+        "ignored non-content shape type AUTO_SHAPE (1)"
+      ]
+    }
+  ]
+}

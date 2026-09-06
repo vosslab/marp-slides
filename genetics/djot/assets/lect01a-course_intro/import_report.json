@@ -1,0 +1,286 @@
+{
+  "source": "lect01a-course_intro.odp",
+  "slide_count": 40,
+  "visible_slides": 31,
+  "hidden_slides": [
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    38,
+    39
+  ],
+  "slides": [
+    {
+      "source_slide": 1,
+      "layout": "title-slide",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 2,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 3,
+      "layout": "two-panels",
+      "text_blocks": 1,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 4,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": [
+        "dense text requires post-conversion polish"
+      ]
+    },
+    {
+      "source_slide": 5,
+      "layout": "two-panels",
+      "text_blocks": 1,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 6,
+      "layout": "two-panels",
+      "text_blocks": 1,
+      "images": 2,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 7,
+      "layout": "title-content",
+      "text_blocks": 0,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": [
+        "ignored non-content shape type AUTO_SHAPE (1)"
+      ]
+    },
+    {
+      "source_slide": 8,
+      "layout": "two-panels",
+      "text_blocks": 1,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": [
+        "ignored non-content shape type AUTO_SHAPE (1)"
+      ]
+    },
+    {
+      "source_slide": 9,
+      "layout": "two-panels",
+      "text_blocks": 2,
+      "images": 2,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 10,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 11,
+      "layout": "two-panels",
+      "text_blocks": 3,
+      "images": 2,
+      "notes_omitted": 0,
+      "review_reasons": [
+        "ignored non-content shape type AUTO_SHAPE (1)"
+      ]
+    },
+    {
+      "source_slide": 12,
+      "layout": "two-panels",
+      "text_blocks": 1,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 13,
+      "layout": "two-panels",
+      "text_blocks": 1,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 14,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 15,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": [
+        "dense text requires post-conversion polish"
+      ]
+    },
+    {
+      "source_slide": 16,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 17,
+      "layout": "title-content",
+      "text_blocks": 0,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 18,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 26,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 27,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 28,
+      "layout": "two-panels",
+      "text_blocks": 1,
+      "images": 2,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 29,
+      "layout": "title-content",
+      "text_blocks": 0,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": [
+        "ignored non-content shape type AUTO_SHAPE (1)"
+      ]
+    },
+    {
+      "source_slide": 30,
+      "layout": "two-panels",
+      "text_blocks": 2,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": [
+        "ignored non-content shape type AUTO_SHAPE (1)"
+      ]
+    },
+    {
+      "source_slide": 31,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": [
+        "dense text requires post-conversion polish"
+      ]
+    },
+    {
+      "source_slide": 32,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 33,
+      "layout": "gallery",
+      "text_blocks": 0,
+      "images": 3,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 34,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 35,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": [
+        "dense text requires post-conversion polish"
+      ]
+    },
+    {
+      "source_slide": 36,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 37,
+      "layout": "two-panels",
+      "text_blocks": 2,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 40,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": [
+        "ignored non-content shape type AUTO_SHAPE (1)"
+      ]
+    }
+  ]
+}

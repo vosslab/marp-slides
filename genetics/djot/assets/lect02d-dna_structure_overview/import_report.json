@@ -1,0 +1,358 @@
+{
+  "source": "lect02d-dna_structure_overview.odp",
+  "slide_count": 43,
+  "visible_slides": 43,
+  "hidden_slides": [],
+  "slides": [
+    {
+      "source_slide": 1,
+      "layout": "title-slide",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 2,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": [
+        "dense text requires post-conversion polish"
+      ]
+    },
+    {
+      "source_slide": 3,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 4,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 5,
+      "layout": "title-content",
+      "text_blocks": 0,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 6,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 7,
+      "layout": "title-content",
+      "text_blocks": 0,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 8,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 9,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 10,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 11,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 12,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 13,
+      "layout": "title-content",
+      "text_blocks": 0,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 14,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 15,
+      "layout": "title-content",
+      "text_blocks": 0,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 16,
+      "layout": "two-panels",
+      "text_blocks": 1,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 17,
+      "layout": "title-content",
+      "text_blocks": 0,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 18,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 19,
+      "layout": "two-panels",
+      "text_blocks": 1,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 20,
+      "layout": "gallery",
+      "text_blocks": 0,
+      "images": 2,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 21,
+      "layout": "two-panels",
+      "text_blocks": 3,
+      "images": 2,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 22,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 23,
+      "layout": "two-panels",
+      "text_blocks": 1,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 24,
+      "layout": "title-content",
+      "text_blocks": 0,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 25,
+      "layout": "title-content",
+      "text_blocks": 0,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 26,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": [
+        "ignored non-content shape type AUTO_SHAPE (1)"
+      ]
+    },
+    {
+      "source_slide": 27,
+      "layout": "two-panels",
+      "text_blocks": 2,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 28,
+      "layout": "title-content",
+      "text_blocks": 2,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 29,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 30,
+      "layout": "title-content",
+      "text_blocks": 2,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 31,
+      "layout": "title-content",
+      "text_blocks": 2,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 32,
+      "layout": "title-content",
+      "text_blocks": 2,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 33,
+      "layout": "title-content",
+      "text_blocks": 2,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 34,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 35,
+      "layout": "title-content",
+      "text_blocks": 0,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 36,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 37,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 38,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 39,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 40,
+      "layout": "title-content",
+      "text_blocks": 1,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 41,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 42,
+      "layout": "title-content",
+      "text_blocks": 0,
+      "images": 1,
+      "notes_omitted": 0,
+      "review_reasons": []
+    },
+    {
+      "source_slide": 43,
+      "layout": "title-only",
+      "text_blocks": 0,
+      "images": 0,
+      "notes_omitted": 0,
+      "review_reasons": [
+        "ignored non-content shape type AUTO_SHAPE (1)"
+      ]
+    }
+  ]
+}

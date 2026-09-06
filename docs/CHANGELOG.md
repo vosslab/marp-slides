@@ -134,6 +134,14 @@
 - Defined an ASCII-to-Unicode native projection after strict Djot validation. The initial documented
   mapping is ordinary Djot text `&prime;` to U+2032 PRIME (`′`); this is a narrow project vocabulary,
   not a general HTML-entity parser, and does not rewrite verbatim or raw content.
+- Selected the upstream `.djot` suffix for extended-Djot presentation source, retaining standard
+  Djot tooling association instead of inventing a slide-specific filename extension.
+- Added an experimental, ODP-derived extended-Djot corpus for all eight `genetics/lect0*` decks:
+  336 visible slides, source-hidden slides excluded, component images retained, and presenter notes
+  deliberately omitted. Added dedicated ODP/PPTX-to-Djot import commands and a fast structural
+  linter. Pinned Jotdown 0.10.0 as its native-first parser and verified all eight sources through
+  it; formatter, editor-rule, and linter-suite selection remain open. `source_me.sh` now exposes
+  an installed Cargo-bin validator to repository commands. The Marp import commands remain unchanged.
 
 ### Fixes and Maintenance
 

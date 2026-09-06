@@ -1,0 +1,867 @@
+=== layout: title-slide
+
+# Lecture 2B
+
+## Genes, Genomes, and Genetic Analysis
+## Chapter 1
+## Dr. Neil Voss
+## Sept 2, 2025
+
+=== layout: title-only
+
+# Define Genetics?
+
+=== layout: title-content
+
+# Inheritance Genetics
+
+@body
+
+- the study of heredity and the variation of inherited characteristics.
+- study of genes, genetic variation, and heredity in organisms.
+- resemblances and differences of related organisms resulting from the interaction of their genes
+- scientific study of how genes control the characteristics of plants and animals
+- study of both trait and molecular inheritance mechanisms of genes
+- modern genetics has expanded beyond inheritance to studying the function and behavior of genes
+
+=== layout: title-only
+
+# What is genomics? What is the different between genetics and genomics?
+
+=== layout: title-content
+
+# Genes, Genomes, and Genetic Analysis
+
+@body
+
+- Genetics is the study of heredity
+  - and how genes control the inherited characteristics
+- Genomics is the study of all of the genes in an organism
+  - the structure, function, evolution, and mapping of genomes
+- Genes are the elements of heredity
+
+=== layout: title-only
+
+# What are the differences between molecular biology, biochemistry, cell biology, and genetics?
+
+=== layout: title-content
+
+# Definitions of Biological Fields
+
+@body
+
+- Biochemistry is the study of the chemical substances and vital processes occurring in living organisms.
+  - Biochemists focus heavily on the role, function, and structure of biomolecules. The study of the chemistry behind biological processes and the synthesis of biologically active molecules.
+- Genetics is the study of the effect of genetic differences on organisms.
+  - Often this can be inferred by the absence of a normal component (e.g., one gene). It is the study of mutants with respect to the normal phenotype. Genetic interactions can often confound simple interpretations of such "knock-out" studies.
+- Molecular biology is the study of molecular underpinnings of the processes of replication, transcription, translation, and cell function.
+  - The central dogma of molecular biology where genetic material is transcribed into RNA and then translated into protein.
+- Cell biology is the study of cells, organelles, cell cycle, and cell division
+  - their physiological properties, their structure, the organelles they contain, interactions with their environment, their life cycle, division and death. This is done both on a microscopic and molecular level.
+
+=== layout: two-panels
+
+# Fundamental concepts
+
+@left
+
+- Each organism has its own “Genetic Blueprint” that makes it different from others.
+- The genetic information is stored in the chromosomes located in the nucleus.
+- The genetic information is stored as discrete instructions called “genes”.
+
+@right
+
+![Slide image 1](assets/lect02b-genes_dogma/image_001.png)
+
+=== layout: title-content
+
+# History of Genetics
+
+@body
+
+- The existence of genes was first suggested by the work of Gregor Mendel in 1866
+  - Classical genetics is the approach to the study of genetics through analysis of the offspring of matings.
+- Friedrich Meischer discovered nucleic acids in 1869.
+  - Molecular genetics is the analysis of differences between species through the study of DNA itself.
+
+=== layout: two-panels
+
+# Figure 14.3-3
+
+@left
+
+- Experiment
+- P Generation
+- (true-breeding
+- parents)
+- Purple
+- flowers
+- White
+- flowers
+- F 1 Generation
+- (hybrids)
+- All plants had purple flowers
+- Self- or cross-pollination
+- F 2 Generation
+- 705 purple-flowered
+- plants
+- 224 white-flowered
+- plants
+
+@right
+
+![Slide image 2](assets/lect02b-genes_dogma/image_002.jpg)
+
+=== layout: title-content
+
+# Evidence for Chromosomes
+
+@body
+
+- Nuclei of male and female reproductive cells undergo fusion during fertilization
+  - Chromosomes split and each daughter cell receives an identical set
+- Chromosome number may differ between species but is the same within a particular species
+
+=== layout: two-panels
+
+# Figure 15.2b
+
+@left
+
+- All F 1 plants produce yellow-round seeds (YyRr).
+- F 1 Generation
+- R
+- R
+- y
+- y
+- r
+- r
+- Y
+- Y
+- LAW OF INDEPENDENT ASSORTMENT Alleles of genes on non-homologous chromosomes assort independently.
+- LAW OF SEGREGATION The two alleles for each gene separate.
+- Meiosis
+- r
+- r
+- R
+- R
+- Metaphase I
+- Y
+- y
+- y
+- Y
+- 1
+- 1
+- r
+- r
+- R
+- R
+- Anaphase I
+- Y
+- Y
+- y
+- y
+- Metaphase II
+- r
+- R
+- R
+- r
+- 2
+- 2
+- y
+- Y
+- y
+- Y
+- y
+- Y
+- Y
+- y
+- Y
+- y
+- Y
+- y
+- r
+- R
+- R
+- r
+- r
+- r
+- R
+- R
+- 1 4
+- 1 4
+- 1 4
+- 1 4
+- Yr
+- yr
+- yR
+- YR
+
+@right
+
+![Slide image 3](assets/lect02b-genes_dogma/image_003.jpg)
+
+=== layout: title-only
+
+# The Idea of the Gene
+
+=== layout: two-panels
+
+# Mendel’s experiments with pea plants led him to postulate on the existence of “heritable factors” In 1909, Archibald Gerrod suggested that genotype dictates phenotype through enzymes that catalyze specific chemical reactions
+
+@left
+
+- Early History
+
+@right
+
+![Slide image 4](assets/lect02b-genes_dogma/image_004.png)
+
+=== layout: title-content
+
+# Metabolism as a cause of hereditary disease
+
+@body
+
+- Blocks in metabolic pathways can cause disease
+  - Alkaptonuria – excretion of homogentisic acid
+  - Phenylketonuria – phenylalanine accumulation
+
+=== layout: two-panels
+
+# Linking genes and enzymes was helped by understanding that cells synthesize and degrade most organic molecules in a series of steps, a metabolic pathway.
+
+@left
+
+- Gene = Enzyme
+- Enzyme 1
+- Enzyme 2
+- Enzyme 3
+- A
+- B
+- C
+- D
+- Reaction 1
+- Reaction 2
+- Reaction 3
+- Product
+- Starting
+- molecule
+
+@right
+
+![Slide image 5](assets/lect02b-genes_dogma/image_005.jpg)
+
+=== layout: title-content
+
+# George Beadle and Edward Tatum exposed bread mold to X-rays, creating mutants that were unable to survive on minimal medium as a result of inability to synthesize certain molecules Using crosses, they identified three classes of arginine-deficient mutants, each lacking a different enzyme necessary for synthesizing arginine They developed a one gene–one enzyme hypothesis, which states that each gene dictates production of a specific enzyme
+
+@body
+
+- Nutritional Mutants in Neurospora
+
+=== layout: two-panels
+
+# X-rays
+
+@left
+
+- EXPERIMENT
+- No growth:Mutant cells cannot grow and divide
+- Growth:Wild-type cells growing and dividing
+- Minimal medium
+
+@right
+
+![Slide image 6](assets/lect02b-genes_dogma/image_006.jpg)
+
+=== layout: two-panels
+
+# RESULTS
+
+@left
+
+- Classes of Neurospora crassa
+- Class III mutants
+- Class II mutants
+- Class I mutants
+- Wild type
+- Minimal medium(MM)
+- (control)
+- Growth
+- No growth
+- MM ornithine
+- Condition
+- MM citrulline
+- MM arginine(control)
+- Can grow on ornithine,citrulline, or arginine
+- Can grow with or without any supplements
+- Require arginine to grow
+- Can grow only on citrulline or arginine
+- Summary of results
+
+@right
+
+![Slide image 7](assets/lect02b-genes_dogma/image_007.png)
+
+=== layout: two-panels
+
+# RESULTS
+
+@left
+
+- Classes of Neurospora crassa
+- Class III mutants
+- Class II mutants
+- Class I mutants
+- Wild type
+- Minimal medium(MM)
+- (control)
+- Growth
+- No growth
+- MM ornithine
+- Condition
+- MM citrulline
+- MM arginine(control)
+- Can grow on ornithine,citrulline, or arginine
+- Can grow with or without any supplements
+- Require arginine to grow
+- Can grow only on citrulline or arginine
+- Summary of results
+
+@right
+
+![Slide image 7](assets/lect02b-genes_dogma/image_007.png)
+
+=== layout: two-panels
+
+# RESULTS
+
+@left
+
+- Classes of Neurospora crassa
+- Class III mutants
+- Class II mutants
+- Class I mutants
+- Wild type
+- Minimal medium(MM)
+- (control)
+- Growth
+- No growth
+- MM ornithine
+- Condition
+- MM citrulline
+- MM arginine(control)
+- Can grow on ornithine,citrulline, or arginine
+- Can grow with or without any supplements
+- Require arginine to grow
+- Can grow only on citrulline or arginine
+- Summary of results
+
+@right
+
+![Slide image 7](assets/lect02b-genes_dogma/image_007.png)
+
+=== layout: two-panels
+
+# RESULTS
+
+@left
+
+- Classes of Neurospora crassa
+- Class III mutants
+- Class II mutants
+- Class I mutants
+- Wild type
+- Minimal medium(MM)
+- (control)
+- Growth
+- No growth
+- MM ornithine
+- Condition
+- MM citrulline
+- MM arginine(control)
+- Can grow on ornithine,citrulline, or arginine
+- Can grow with or without any supplements
+- Require arginine to grow
+- Can grow only on citrulline or arginine
+- Summary of results
+
+@right
+
+![Slide image 7](assets/lect02b-genes_dogma/image_007.png)
+
+=== layout: two-panels
+
+# RESULTS
+
+@left
+
+- Classes of Neurospora crassa
+- Class III mutants
+- Class II mutants
+- Class I mutants
+- Wild type
+- Minimal medium(MM)
+- (control)
+- Growth
+- No growth
+- MM ornithine
+- Condition
+- MM citrulline
+- MM arginine(control)
+- Can grow on ornithine,citrulline, or arginine
+- Can grow with or without any supplements
+- Require arginine to grow
+- Can grow only on citrulline or arginine
+- Summary of results
+
+@right
+
+![Slide image 7](assets/lect02b-genes_dogma/image_007.png)
+
+=== layout: two-panels
+
+# CONCLUSION
+
+@left
+
+- Gene (codes for enzyme)
+- Class II mutants(mutation in gene B)
+- Class III mutants(mutation in gene C)
+- Class I mutants(mutation in gene A)
+- Wild type
+- Precursor
+- Precursor
+- Precursor
+- Precursor
+- Gene A
+- Enzyme A
+- Enzyme A
+- Enzyme A
+- Enzyme A
+- Ornithine
+- Ornithine
+- Ornithine
+- Ornithine
+- Gene B
+- Enzyme B
+- Enzyme B
+- Enzyme B
+- Enzyme B
+- Citrulline
+- Citrulline
+- Citrulline
+- Citrulline
+- Enzyme C
+- Gene C
+- Enzyme C
+- Enzyme C
+- Enzyme C
+- Arginine
+- Arginine
+- Arginine
+- Arginine
+
+@right
+
+![Slide image 8](assets/lect02b-genes_dogma/image_008.jpg)
+
+=== layout: two-panels
+
+# CONCLUSION
+
+@left
+
+- Gene (codes for enzyme)
+- Class II mutants(mutation in gene B)
+- Class III mutants(mutation in gene C)
+- Class I mutants(mutation in gene A)
+- Wild type
+- Precursor
+- Precursor
+- Precursor
+- Precursor
+- Gene A
+- Enzyme A
+- Enzyme A
+- Enzyme A
+- Enzyme A
+- Ornithine
+- Ornithine
+- Ornithine
+- Ornithine
+- Gene B
+- Enzyme B
+- Enzyme B
+- Enzyme B
+- Enzyme B
+- Citrulline
+- Citrulline
+- Citrulline
+- Citrulline
+- Enzyme C
+- Gene C
+- Enzyme C
+- Enzyme C
+- Enzyme C
+- Arginine
+- Arginine
+- Arginine
+- Arginine
+
+@right
+
+![Slide image 8](assets/lect02b-genes_dogma/image_008.jpg)
+
+=== layout: two-panels
+
+# CONCLUSION
+
+@left
+
+- Gene (codes for enzyme)
+- Class II mutants(mutation in gene B)
+- Class III mutants(mutation in gene C)
+- Class I mutants(mutation in gene A)
+- Wild type
+- Precursor
+- Precursor
+- Precursor
+- Precursor
+- Gene A
+- Enzyme A
+- Enzyme A
+- Enzyme A
+- Enzyme A
+- Ornithine
+- Ornithine
+- Ornithine
+- Ornithine
+- Gene B
+- Enzyme B
+- Enzyme B
+- Enzyme B
+- Enzyme B
+- Citrulline
+- Citrulline
+- Citrulline
+- Citrulline
+- Enzyme C
+- Gene C
+- Enzyme C
+- Enzyme C
+- Enzyme C
+- Arginine
+- Arginine
+- Arginine
+- Arginine
+
+@right
+
+![Slide image 8](assets/lect02b-genes_dogma/image_008.jpg)
+
+=== layout: two-panels
+
+# CONCLUSION
+
+@left
+
+- Class III mutants(mutation in gene C)
+- Class I mutants(mutation in gene A)
+- Gene (codes for enzyme)
+- Class II mutants(mutation in gene B)
+- Wild type
+- Precursor
+- Precursor
+- Precursor
+- Precursor
+- Gene A
+- Enzyme A
+- Enzyme A
+- Enzyme A
+- Enzyme A
+- Ornithine
+- Ornithine
+- Ornithine
+- Ornithine
+- Gene B
+- Enzyme B
+- Enzyme B
+- Enzyme B
+- Enzyme B
+- Citrulline
+- Citrulline
+- Citrulline
+- Citrulline
+- Enzyme C
+- Gene C
+- Enzyme C
+- Enzyme C
+- Enzyme C
+- Arginine
+- Arginine
+- Arginine
+- Arginine
+
+@right
+
+![Slide image 8](assets/lect02b-genes_dogma/image_008.jpg)
+
+=== layout: two-panels
+
+# The figure above shows a simple metabolic pathway. According to Beadle and Tatum's hypothesis, how many genes are necessary for this pathway? A. 1 B. 2 C. 3 D. It cannot be determined from the pathway.
+
+@left
+
+- Answer: B
+
+@right
+
+![Slide image 9](assets/lect02b-genes_dogma/image_009.emf)
+
+=== layout: two-panels
+
+# Product C is required for growth. Strains mutant for the gene-encoding enzyme A would be able to grow on medium supplemented with _____. A. nutrient A only B. nutrient B only C. nutrient C only D. nutrients B or C E. nutrients A or C
+
+@left
+
+- Answer: D
+
+@right
+
+![Slide image 9](assets/lect02b-genes_dogma/image_009.emf)
+
+=== layout: two-panels
+
+# Product C is required for growth. Strains mutant for the gene-encoding enzyme B would be able to grow on medium supplemented with _____. A. nutrient A only B. nutrient B only C. nutrient C only D. nutrients B or C E. nutrients A or C
+
+@left
+
+- Answer: C
+
+@right
+
+![Slide image 9](assets/lect02b-genes_dogma/image_009.emf)
+
+=== layout: title-content
+
+# Molecule D is the only molecule required for growth. Strains mutant for the gene-encoding enzyme B would be able to grow on medium supplemented with _____. A) nutrient D only B) nutrients A and D C) nutrients B and D D) nutrients C and D E) nutrients B, C, and D F) nutrients A, B, and D G) nutrients A, C, and D
+
+@body
+
+- Enzyme A
+- Enzyme B
+- Enzyme C
+- A  →  B  →  C  →  D
+- Answer: D
+
+=== layout: title-content
+
+# Gene = Polypeptide
+
+@body
+
+- Many proteins are composed of several polypeptides, each of which has its own gene. Beadle and Tatum’s hypothesis is now:
+  - one gene–one polypeptide
+- Note that it is common to refer to gene products as proteins rather than polypeptides
+
+=== layout: title-content
+
+# Which of the following contradicts the one-gene, one-enzyme hypothesis? A) A mutation in a single gene can result in a defective protein. B) Alkaptonuria results when individuals lack a single enzyme involved in the catalysis of homogentisic acid. C) Sickle-cell anemia results in defective hemoglobin. D) A single antibody gene can code for different related proteins, depending on the splicing that takes place post-transcriptionally.
+
+@body
+
+- Answer: D
+
+=== layout: title-only
+
+# The Genetic Code From RNA to Protein
+
+=== layout: two-panels
+
+# Fig. 17-4
+
+@left
+
+- Gene 2
+- DNA
+- molecule
+- Gene 1
+- Gene 3
+- DNA
+- template
+- strand
+- TRANSCRIPTION
+- mRNA
+- Codon
+- TRANSLATION
+- Protein
+- Amino acid
+
+@right
+
+![Slide image 10](assets/lect02b-genes_dogma/image_010.jpg)
+
+=== layout: title-content
+
+# The genetic code
+
+@body
+
+![Slide image 11](assets/lect02b-genes_dogma/image_011.jpg)
+
+=== layout: title-content
+
+# What does it mean when we say the genetic code is redundant? A) A single codon (three nucleotides) can specify the addition of more than one amino acid. B) The genetic code is different for different domains of organisms. C) The genetic code is universal (the same for all organisms). D) More than one codon can specify the addition of the same amino acid.
+
+@body
+
+- Answer: D
+
+=== layout: title-content
+
+# Genetic Code
+
+@body
+
+- The genetic code is redundant and unambiguous
+  - Redundant:
+    - degenerate; being in excess; characterized by verbosity or unnecessary repetition
+    - two different codons can specify the same amino acid
+  - Unambiguous:
+    - unequivocal; clear; indistinct; having only a single meaning or interpretation
+    - no codon specifies more than one amino acid
+- codon
+- amino acid
+- codon
+- amino acid
+- codon
+
+=== layout: title-only
+
+# Mutation
+
+=== layout: two-panels
+
+# Mutations can lead to altered proteins
+
+@left
+
+- The M1V mutant in the PAH gene.
+- The R408W mutant in the PAH gene.
+
+@right
+
+![Slide image 12](assets/lect02b-genes_dogma/image_012.jpg)
+![Slide image 13](assets/lect02b-genes_dogma/image_013.jpg)
+
+=== layout: two-panels
+
+# Fig. 17-22
+
+@left
+
+- Mutant hemoglobin DNA
+- Wild-type hemoglobin DNA
+- C
+- T
+- T
+- C
+- 5&prime;
+- 3&prime;
+- 3&prime;
+- A
+- T
+- 5&prime;
+- T
+- G
+- 5&prime;
+- A
+- A
+- A
+- G
+- 5&prime;
+- 3&prime;
+- 3&prime;
+- mRNA
+- mRNA
+- A
+- A
+- 5&prime;
+- G
+- G
+- U
+- A
+- 3&prime;
+- 5&prime;
+- 3&prime;
+- Normal hemoglobin
+- Sickle-cell hemoglobin
+- Val
+- Glu
+
+@right
+
+![Slide image 14](assets/lect02b-genes_dogma/image_014.jpg)
+
+=== layout: gallery
+
+# Slide 42
+
+@gallery
+
+![Slide image 16](assets/lect02b-genes_dogma/image_016.png)
+![Slide image 15](assets/lect02b-genes_dogma/image_015.png)
+
+=== layout: title-content
+
+# Slide 43
+
+@body
+
+![Slide image 17](assets/lect02b-genes_dogma/image_017.jpg)
+
+=== layout: title-content
+
+# Slide 44
+
+@body
+
+![Slide image 18](assets/lect02b-genes_dogma/image_018.png)
+
+=== layout: title-content
+
+# Slide 45
+
+@body
+
+![Slide image 19](assets/lect02b-genes_dogma/image_019.png)
+
+=== layout: title-content
+
+# Slide 46
+
+@body
+
+![Slide image 20](assets/lect02b-genes_dogma/image_020.png)
+
+=== layout: title-content
+
+# Slide 47
+
+@body
+
+![Slide image 21](assets/lect02b-genes_dogma/image_021.png)
+
+=== layout: title-content
+
+# Slide 48
+
+@body
+
+![Slide image 22](assets/lect02b-genes_dogma/image_022.png)
+
+=== layout: title-only
+
+# THE END

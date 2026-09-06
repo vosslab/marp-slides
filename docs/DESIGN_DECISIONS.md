@@ -24,7 +24,14 @@ fork with an incompatible parser.
 implementation. The extension linter adds source-located layout, slot, and animation diagnostics;
 it never excuses a Djot failure. Djot has no advertised official standalone linter, so a concrete
 parser/formatter/editor-rule/linter inventory is required before any claim that source "passes all
-Djot linters." No parser, exporter, or linter is added by this decision.
+Djot linters." Extended-Djot presentation source uses the upstream `.djot` suffix, so standard
+Djot tooling continues to recognize it. This decision adds no language-accepting parser or renderer:
+the experimental source-only linter cannot accept a source until its pinned native Djot gate passes.
+
+**Initial suite member.** Jotdown 0.10.0, installed with its CLI, is the pinned native parser. It
+runs before the source-only extension linter and accepts every imported genetics source. It is a
+parser, not a formatter, editor rule, or standalone linter, so its clean result does not close the
+remaining compatibility-suite selection.
 
 **Owner.** [djot_slide_extension_exploration.md](active_plans/decisions/djot_slide_extension_exploration.md)
 and a future approved language guide.

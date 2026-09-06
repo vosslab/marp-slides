@@ -22,10 +22,12 @@ site/
 # -------------------- LOCAL REPOSITORY RULES --------------------
 # ADD YOUR CUSTOM IGNORES BELOW
 # Propagation preserves this section.
-# ------------------ END LOCAL REPOSITORY RULES ------------------
-# Template-only ignores.
+*.png
+*.jpg
+*.jpeg
 slide_*source.png
 *.ot?
 *.od?
 *.pdf
 *.pptx
+# ------------------ END LOCAL REPOSITORY RULES ------------------
