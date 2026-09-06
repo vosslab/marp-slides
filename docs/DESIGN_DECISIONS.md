@@ -9,11 +9,31 @@ the reasoning a later reader needs. Guidance Neil Voss states belongs in
 
 ## Native presentation design
 
+### Strict Djot compatibility governs the successor language
+
+**Decision.** The successor language is an extended Djot language. It inherits every construct
+supported by the pinned Djot syntax revision. Every source it accepts must be valid strict Djot and
+pass every applicable Djot parser, formatter, editor rule, and linter in the project's pinned
+compatibility suite before the repository's extension linter evaluates its slide semantics.
+
+**Why.** Djot's linear, local, hard-wrap-friendly grammar is the selected authoring foundation. A
+compatibility gate prevents convenience slide syntax from silently turning the language into a Djot
+fork with an incompatible parser.
+
+**Consequence.** Pin the exact Djot syntax revision and all compatibility tools before
+implementation. The extension linter adds source-located layout, slot, and animation diagnostics;
+it never excuses a Djot failure. Djot has no advertised official standalone linter, so a concrete
+parser/formatter/editor-rule/linter inventory is required before any claim that source "passes all
+Djot linters." No parser, exporter, or linter is added by this decision.
+
+**Owner.** [djot_slide_extension_exploration.md](active_plans/decisions/djot_slide_extension_exploration.md)
+and a future approved language guide.
+
 ### Marp is an authoring-language specification
 
 **Decision.** Retain canonical Marp Markdown as the current migration baseline, adopt Marp Core v5
 as the only upstream compatibility baseline, and independently implement its supported language
-subset in repository-owned Python while the successor-language decision remains open.
+subset in repository-owned Python while the extended-Djot successor grammar remains unimplemented.
 
 **Why.** Marp Core v5 offers a mature authoring language and separates built-in behavior from
 optional plugins. Its runtime and browser render paths do not meet the editable native-object
@@ -22,18 +42,17 @@ product requirement.
 **Consequence.** `OTHER_REPOS/marp-core` and `OTHER_REPOS/marp-cli` are conformance evidence only.
 The production dependency graph contains no Marp code, CLI, Node, browser, or render stage.
 `MARP_SYNTAX_GUIDE.md` describes only standard Marp Core v5 / Marp CLI-compatible syntax. Classic
-Marp is known not to express the required spatial layouts, so a separate language-choice decision
-will determine whether the repository adapts another format's grammar or defines a new extension.
-Either outcome retains the repository-owned parser and native editable-output pipeline; it does not
-adopt an external runtime or renderer. Marp Core v4 and earlier behavior is not supported. Optional
-v5 Shiki, Mermaid, KaTeX, and MathJax features require explicit native capability decisions rather
-than implicit `/full` compatibility. The current local evidence snapshot is Marp Core 5.0.1 at
-commit `06c5a54`.
+Marp is known not to express the required spatial layouts; it remains a migration baseline while
+the extended-Djot grammar is specified. The repository-owned parser and native editable-output
+pipeline do not adopt an external runtime or renderer. Marp Core v4 and earlier behavior is not
+supported. Optional v5 Shiki, Mermaid, KaTeX, and MathJax features require explicit native
+capability decisions rather than implicit `/full` compatibility. The current local evidence snapshot
+is Marp Core 5.0.1 at commit `06c5a54`.
 
 **Owner.** `marp_lib/marp_parser.py`, [MARP_SYNTAX_GUIDE.md](MARP_SYNTAX_GUIDE.md),
 [ROADMAP.md](ROADMAP.md), and [PIPELINE.md](PIPELINE.md).
 
-### Slide-language requirements precede grammar choice
+### Slide-language requirements inform the Djot extension grammar
 
 **Decision.** The future slide language must make recurring teaching structures directly
 authorable: title; title and subtitle; ordinary body; nested bulleted and numbered lists; equal and
@@ -49,12 +68,13 @@ source. They define the evidence needed to choose between a small extension and 
 presentation language without presupposing either outcome.
 
 **Consequence.** The language survey uses those structures and equation support as literal source
-examples. A future grammar must preserve ordinary nested Markdown, avoid routine HTML-comment or
-container scaffolding when possible, and map text, lists, practical equations, and images to typed
-editable native slide objects. Reveal semantics must remain bounded to authored appearance order and
-map to editable native presentation animation objects; motion paths, timing tracks, and complex
-choreography are outside this requirement. Equation support must not require a scientific-publishing
-workflow. This decision does not approve a grammar, parser change, or future guide.
+examples. The Djot extension grammar must preserve ordinary nested Djot content, avoid routine
+HTML-comment or container scaffolding when possible, and map text, lists, practical equations, and
+images to typed editable native slide objects. Reveal semantics must remain bounded to authored
+appearance order and map to editable native presentation animation objects; motion paths, timing
+tracks, and complex choreography are outside this requirement. Equation support must not require a
+scientific-publishing workflow. This decision does not approve a grammar, parser change, or future
+guide.
 
 **Owner.** [LAYOUT_LANGUAGE_SURVEY.md](LAYOUT_LANGUAGE_SURVEY.md),
 [MARP_ADJACENT_PROJECT_COMPARISON.md](MARP_ADJACENT_PROJECT_COMPARISON.md), and a future
@@ -106,28 +126,48 @@ language.
 **Why.** The author needs immediate, source-located feedback for structural mistakes without a
 browser, LibreOffice, or a rendered deck.
 
-**Consequence.** The linter validates slide declarations, selected layouts, permitted titles and
-subtitles, slot contracts, animation attachment, and special-layout rules. It does not establish
-geometry, overflow, native animation export, or visual quality; those remain renderer and acceptance
-checks. This requirement does not authorize parser or linter implementation before the grammar has
-representative, documented source cases. Permanent parser and linter tests keep those short inputs
-inline, as required by the pytest policy.
+**Consequence.** It runs after the required strict-Djot compatibility suite, then validates slide
+declarations, selected layouts, permitted titles and subtitles, slot contracts, animation attachment,
+and special-layout rules. It does not establish geometry, overflow, native animation export, or
+visual quality; those remain renderer and acceptance checks. This requirement does not authorize
+parser or linter implementation before the grammar has representative, documented source cases.
+Permanent parser and linter tests keep those short inputs inline, as required by the pytest policy.
 
 **Owner.** A future source-language package and its deterministic tests.
 
 ### Standard Djot content covers tables and sequences
 
-**Decision.** Use Djot tables for tabular content, `$inline$` and `$$display$$` through MathJax or
-a similar plugin for mathematics, and monospace blocks for aligned DNA and other fixed-width text.
+**Decision.** The future language extends Djot and supports its normal content syntax: tables,
+inline verbatim, and fenced code blocks. Use `$inline$` and `$$display$$` through MathJax or a
+similar plugin for mathematics.
 
-**Why.** The Lecture 02 survey shows all three forms in normal teaching content. They are ordinary
+**Why.** The Lecture 02 survey shows all four forms in normal teaching content. They are ordinary
 content needs, not evidence for a custom biological notation or another slide-extension marker.
 
-**Consequence.** The future native implementation needs editable table, math, and monospace-block
-owners. It must not introduce custom table, DNA-sequence, or math delimiters.
+**Consequence.** The future native implementation needs editable table, inline-verbatim,
+monospace-block, and math owners. It must not introduce custom table, DNA-sequence, or math
+delimiters.
 
 **Owner.** [djot_slide_extension_exploration.md](active_plans/decisions/djot_slide_extension_exploration.md)
 and [lect02_genetics_syntax_gap_survey.md](active_plans/decisions/lect02_genetics_syntax_gap_survey.md).
+
+### ASCII character references project Unicode
+
+**Decision.** Permit documented ASCII character references in ordinary Djot text and project them to
+Unicode only in the native-output pipeline after strict Djot validation. The initial mapping is
+`&prime;` to U+2032 PRIME (`′`).
+
+**Why.** The author can keep source ASCII-only where typing literal Unicode is inconvenient without
+abandoning Djot compatibility or accepting inaccurate curly quotes for biological 5′ and 3′ labels.
+
+**Consequence.** `&prime;` remains ordinary valid Djot text until the project projection transforms
+it. This is a small project-owned vocabulary, not an HTML-entity parser; add each mapping explicitly.
+Never transform raw or verbatim content, whose literal spelling is part of its meaning. The future
+compatibility suite and extension linter must test both the strict-Djot source and the Unicode native
+output.
+
+**Owner.** [djot_slide_extension_exploration.md](active_plans/decisions/djot_slide_extension_exploration.md)
+and a future approved language guide.
 
 ### Native layout registry owns geometry
 

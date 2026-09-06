@@ -47,36 +47,33 @@ extension punctuation. The future implementation must render them as native edit
 | Need | Lecture 02 evidence | Required behavior |
 | --- | --- | --- |
 | Tables | Experimental-result grids, genome comparisons, recognition-site reference | Use Djot tables and render them as native readable tables. Table cells may remain static across a slide series. |
-| Fixed-width sequence text | Complementary-DNA and restriction-site exercises | Use a native editable monospace block; no DNA-specific syntax is needed. |
+| Fixed-width sequence text | Complementary-DNA and restriction-site exercises | Use Djot inline verbatim for short sequences and fenced code blocks for aligned multi-line sequences. |
 | Inline and display mathematics | Base composition, genome-size values, and chemistry notation | Use reserved `$inline$` and `$$display$$` forms through MathJax or a similar plugin. |
-## Conditional syntax gap
+## Slides outside the proposed surface
 
-### Image-specific overlay anchoring
+None. The four non-multiple-choice click builds are covered by slot-scoped `blue overlay` behavior:
 
-Several slides place explanatory labels, arrows, colored callouts, or highlighted bands over a
-diagram. The clearest examples are the stepwise restriction-site diagrams in `lect02e` and the
-electrophoresis problem in `lect02f`. The present `<=` action can apply to a preceding text block or
-list item. It is sufficient when the selected layout places that preceding block in its standard
-popup or overlay region.
+| Deck slide | Current legacy behavior | Proposed source coverage |
+| --- | --- | --- |
+| `lect02e-restriction_enzymes`, slide 25 | Five on-click labels and highlights on a palindrome diagram | One image in a selected slot, followed by overlay blocks |
+| `lect02e-restriction_enzymes`, slide 26 | Six on-click labels and highlights on a palindrome diagram | One image in a selected slot, followed by overlay blocks |
+| `lect02e-restriction_enzymes`, slide 27 | Eight on-click labels and highlights on a palindrome diagram | One image in a selected slot, followed by overlay blocks |
+| `lect02f-dna_electrophoresis`, slide 15 | Three on-click gel-band labels | One image in a selected slot, followed by overlay blocks |
 
-There is no further syntax gap if `text <= blue overlay` always uses that standard layout-defined
-position. The language needs one additional figure-annotation contract only when a popup must point
-to or highlight a particular region inside a Marp image:
+The slot supplies the image coordinate system. A `blue overlay` block in a slot containing exactly
+one Marp image is anchored to that image. Multiple overlay blocks may use the same image; no
+image-specific identifier, coordinate, or style bag is needed. The linter rejects a `blue overlay`
+block if the selected slot has zero or more than one Marp image.
 
-- An authored annotation is a semantic unit containing its text or highlight.
-- It attaches to a figure or a declared diagram target, rather than an arbitrary page coordinate.
-- It can receive a bounded terminal action such as `<= appear`.
-- A layout or annotation recipe chooses native placement and any arrow or highlight treatment.
+For example:
 
-This is not a request for CSS-like `x`, `y`, `color`, or `size` attributes. Static legacy diagrams
-remain Marp images; the contract is needed only for image-specific, on-click annotations.
+```djot
+@left
 
-### Candidate `blue overlay` action
+![Palindrome diagram](assets/palindrome.png)
 
-The instructor wants to explore `<= blue overlay` for a popup highlight over an authored unit. It
-would be a predefined terminal action, not a general styling language. A standard layout-defined
-overlay position needs no additional target syntax; an image-specific overlay uses the conditional
-annotation contract above.
+Central unpaired base <= blue overlay unpaired
+```
 
 ## Deliberately not gaps
 
@@ -92,7 +89,6 @@ annotation contract above.
 
 ## Survey outcome
 
-Djot tables, monospace blocks, dollar-delimited math, Marp images, and accessible text are settled
-coverage. No additional slide layout, worked-problem, or multiple-choice syntax is indicated. The
-only conditional addition is a figure-annotation target for image-specific overlays; a standard
-layout popup with `<= blue overlay` needs no further syntax.
+Djot tables, inline verbatim, fenced code blocks, dollar-delimited math, Marp images, slot-scoped
+blue overlays, and accessible text cover every surveyed slide. No additional slide layout,
+worked-problem, multiple-choice, or figure-anchor syntax is indicated.

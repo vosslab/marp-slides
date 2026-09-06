@@ -1,8 +1,8 @@
 # Markdown and Djot interview notes
 
-Status: research notes for the open presentation-language choice. This page records what a supplied
-John MacFarlane interview contributes to the decision; it is not a Djot tutorial or a slide-language
-specification.
+Status: research notes supporting the selected Djot foundation. This page records what a supplied
+John MacFarlane interview contributes to the extension's design; it is not a Djot tutorial or a
+slide-language specification.
 
 ## Source and limits
 
@@ -33,8 +33,8 @@ interview discusses general markup design, not this repository's layout grammar.
 - Test friendly-looking syntax against accidental structural matches and clear diagnostics.
 - Treat source readability and punctuation cost as first-class constraints, alongside formal
   regularity.
-- Keep the base-language choice open: GFM favors GitHub display, Djot favors a deliberate grammar,
-  and Marp favors migration continuity.
+- Djot is now the selected base language. Retain the historical GFM-display and Marp-migration
+  tradeoffs, but test every proposed spatial extension against strict Djot compatibility.
 
 ## What this does not support
 

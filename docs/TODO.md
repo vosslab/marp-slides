@@ -1,20 +1,24 @@
 # TODO
 
-Use this file for small, concrete language-design tasks. Classic Marp remains the compatibility
-baseline but cannot express the required spatial layouts. The active decision record is
-[presentation_language_choices.md](active_plans/decisions/presentation_language_choices.md); the
-literal evidence remains [LAYOUT_LANGUAGE_SURVEY.md](LAYOUT_LANGUAGE_SURVEY.md).
+Use this file for small, concrete extended-Djot language-design tasks. Classic Marp remains the
+migration compatibility baseline but cannot express the required spatial layouts. The active grammar
+record is [djot_slide_extension_exploration.md](active_plans/decisions/djot_slide_extension_exploration.md);
+the historical rationale is
+[presentation_language_choices.md](active_plans/decisions/presentation_language_choices.md), and
+the literal evidence remains [LAYOUT_LANGUAGE_SURVEY.md](LAYOUT_LANGUAGE_SURVEY.md).
 
 ## Language design
 
 - [x] Review the fifteen-fixture source comparison with the instructor.
 - [x] Set aside surveyed presentation formats as direct-adoption targets.
-- [ ] Compare GFM, Djot, and a Marp-derived surface as the language foundation.
-- [ ] Decide whether GitHub source readability outweighs Djot's stricter underlying grammar.
+- [x] Select Djot as the source-language foundation.
+- [ ] Pin the Djot revision and every parser, formatter, editor rule, and linter in the strict
+  compatibility suite.
 - [ ] Write a one-page candidate grammar for explicit named layouts and regions.
 - [ ] Define slide boundaries, directive scope, token syntax, slot closure, and literal escaping.
 - [ ] Specify title, subtitle, caption, required/optional/repeated slot, math, and reveal behavior.
 - [ ] Add an accepted-source and rejected-near-match specimen for every grammar construct.
+- [ ] Verify every accepted and rejected specimen with every applicable Djot compatibility tool.
 - [ ] Review the grammar against all fifteen fixtures before naming the language or writing a guide.
 
 ## Classic Marp baseline

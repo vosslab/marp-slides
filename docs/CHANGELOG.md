@@ -120,11 +120,20 @@
   without authorizing a migration, duplicate content authority, or premature repository split.
 - Surveyed the six `genetics/lect02*` legacy decks against the proposed language. Found no gap for
   worked-problem sequences, multiple-choice answers, or Marp images. `<= blue overlay` needs no
-  extra syntax in a standard layout popup; figure annotations are conditional only for image-specific
-  placement, never a general styling language.
-- Confirmed settled Djot content forms from the Lecture 02 survey: Djot tables, MathJax-compatible
-  `$inline$` and `$$display$$` mathematics, and monospace blocks for aligned sequence text. These
-  require native implementation, not custom table, math, or DNA syntax.
+  extra figure-anchor syntax: in a slot with exactly one Marp image, overlay blocks bind to that
+  image. The linter rejects an unanchored or ambiguous overlay, never adding a general styling
+  language.
+- Confirmed settled Djot content forms from the Lecture 02 survey: tables, inline verbatim, and
+  fenced code blocks inherited from Djot, plus MathJax-compatible `$inline$` and `$$display$$`
+  mathematics. These cover sequence text without a custom DNA delimiter.
+- Defined an unquoted literal target for inline `blue overlay` highlights. The target must match one
+  preceding logical item; this preserves hard-wrapping and avoids quoting or escaping DNA primes.
+- Made extended Djot the settled successor-language foundation. Elevated strict Djot compatibility
+  to the top language requirement: source must pass every parser, formatter, editor rule, and linter
+  in a future pinned compatibility suite before the extension linter evaluates slide semantics.
+- Defined an ASCII-to-Unicode native projection after strict Djot validation. The initial documented
+  mapping is ordinary Djot text `&prime;` to U+2032 PRIME (`′`); this is a narrow project vocabulary,
+  not a general HTML-entity parser, and does not rewrite verbatim or raw content.
 
 ### Fixes and Maintenance
 

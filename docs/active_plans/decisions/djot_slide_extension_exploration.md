@@ -1,15 +1,44 @@
 # Djot slide-extension syntax inventory
 
-Status: exploratory grammar note. This page records Djot syntax and parse-valid surface space for a
+Status: Djot is the settled source-language foundation; the slide grammar remains exploratory. This
+page records the compatibility requirement, Djot syntax, and parse-valid surface space for the
 future slide language. The instructor has designated provisional roles for `===`, `@`, `<=`, and
 `=>`; they are not parser adoption. Component images and dollar-delimited mathematics are reserved
 separately, while `%%` and the other forms below remain unassigned.
 
+## Governing requirement: strict Djot compatibility
+
+The future language is an extended Djot language. It inherits every construct supported by the
+pinned Djot syntax revision, rather than defining a smaller Djot subset. This is its top-level
+requirement: every accepted source document must first be valid Djot and pass every Djot parser,
+formatter, editor rule, and linter in the project's pinned compatibility suite. The extension linter
+adds slide semantics after that gate; it can never waive a Djot failure or accept syntax that strict
+Djot rejects.
+
+No Djot implementation is yet pinned, and Djot does not advertise an official standalone linter.
+Before implementation, the project must record the exact Djot syntax revision, parser, formatter,
+editor rules, and linter tools that make up the suite. "Passes all Djot linters" then means a clean
+result from every applicable tool in that recorded suite, rather than an untestable claim about an
+unnamed future tool. Any newly discovered applicable Djot lint tool joins the suite or receives a
+documented compatibility decision before the language accepts source through it.
+
+## ASCII source and Unicode projection
+
+The language supports ASCII authoring with Unicode in the final native presentation. A documented,
+small character-reference projection runs only after the unmodified source has passed the strict
+Djot compatibility gate. For example, ordinary text written as ``5&prime;-`ACGT`-3&prime;`` projects
+as `5′-ACGT-3′`, with only `ACGT` in an inline-verbatim run.
+
+`&prime;` is ordinary, valid Djot text, not native Djot entity syntax; the native pipeline owns its
+projection to U+2032 PRIME. This is a controlled project vocabulary, not adoption of a general HTML
+entity parser. Verbatim and raw content remain opaque, so their literal source is never rewritten.
+Each additional character reference needs an explicit documented mapping and compatibility case.
+
 ## Context
 
-The instructor is leaning toward extending Djot because its source is readable when hard-wrapped and
-does not have indented code blocks. Djot itself has no slide or spatial-layout semantics. The
-prior-art evidence remains in [LAYOUT_LANGUAGE_SURVEY.md](../../LAYOUT_LANGUAGE_SURVEY.md) and
+The instructor selected Djot because its source is readable when hard-wrapped and does not have
+indented code blocks. Djot itself has no slide or spatial-layout semantics. The prior-art evidence
+remains in [LAYOUT_LANGUAGE_SURVEY.md](../../LAYOUT_LANGUAGE_SURVEY.md) and
 [MARP_ADJACENT_PROJECT_COMPARISON.md](../../MARP_ADJACENT_PROJECT_COMPARISON.md).
 
 The future layout catalog will include every default LibreOffice layout plus the custom
@@ -24,9 +53,8 @@ a new current source of truth. This page records language exploration where it i
 
 ## Provisional slide surface
 
-These roles are the current working grammar direction. They require representative source cases, a
-pinned Djot implementation, and an explicit language-adoption decision before parser or exporter
-work.
+These roles are the current working grammar direction. They require representative source cases and
+a pinned Djot compatibility suite before parser or exporter work.
 
 | Surface form | Provisional role | Constraint |
 | --- | --- | --- |
@@ -40,8 +68,19 @@ work.
 
 The instructor wants to explore `<= blue overlay` as a terminal action for an authored annotation
 or popup highlight. It would be a predefined visual treatment, not a generic `color` or geometry
-attribute. A selected layout may give the preceding block a standard overlay position. A future
-figure-annotation unit is needed only when an overlay must attach to a particular image region.
+attribute. In a selected slot with exactly one Marp image, overlay blocks bind to that image. The
+linter rejects an overlay in a slot without exactly one image; no figure-anchor syntax is needed.
+
+`blue overlay` without a target applies to its preceding block. To highlight text inside that block,
+the unquoted remainder of the directive is a literal target:
+
+```djot
+- This is a line of text <= blue overlay line
+```
+
+The target must occur exactly once in the preceding logical paragraph or list item. Matching treats
+a Djot soft line break as a space, so hard-wrapping does not change the result. The linter reports a
+missing or ambiguous target. Quoting is unnecessary and would make DNA prime marks require escapes.
 
 ## Titles and subtitles
 
@@ -58,18 +97,20 @@ drawing them somewhere else.
 
 ## Marp content baseline
 
-Preserve familiar Marp content where it is compatible with Djot: headings, ordinary lists, links,
-quotes, monospace blocks, and component images. Djot tables are the official tabular surface. The
+The future language extends Djot and supports its normal content syntax: headings, ordinary lists,
+links, quotes, inline verbatim, fenced code blocks, tables, and component images. Use inline
+verbatim for short fixed-width content and fenced code blocks for aligned multiline content. The
 documented differences stay explicit: `=== layout:` replaces Marp's `---` slide separator, Djot
 supplies the underlying markup rules, and Marp-specific image modifiers are not adopted.
 
 ## Linter boundary
 
-The future language needs a fast, deterministic, source-only linter at roughly the enforcement
-level of `pyflakes`. It reports source-located structural errors without opening LibreOffice or
-rendering a slide. It checks slide declarations, known layouts, title/subtitle permission, slot
-names and required/duplicate slots, action attachment, and special layout contracts such as
-`multiple-choice`. Geometry, overflow, animation export, and visual quality remain separate checks.
+After the strict Djot gate, the future language needs a fast, deterministic, source-only extension
+linter at roughly the enforcement level of `pyflakes`. It reports source-located slide-structural
+errors without opening LibreOffice or rendering a slide. It checks slide declarations, known
+layouts, title/subtitle permission, slot names and required/duplicate slots, action attachment, and
+special layout contracts such as `multiple-choice`. Geometry, overflow, animation export, and visual
+quality remain separate checks.
 
 ## Official layout: multiple-choice
 
@@ -166,10 +207,10 @@ that is a documented capability, not a recommendation for a future slide surface
   support.
 - Code fences and raw blocks remain opaque: a marker-looking line inside them is code, not a future
   language construct.
-- Djot's syntax reference is not completely stable. A later experiment needs a pinned reference
-  revision and parser implementation before it relies on any edge behavior.
-- The Djot project does not advertise an official standalone linter. Compatibility claims therefore
-  require naming and testing a particular parser, formatter, or editor rule.
+- Djot's syntax reference is not completely stable. Before implementation, pin its reference
+  revision and the complete strict-compatibility suite; run every applicable tool in that suite.
+- Djot does not advertise an official standalone linter. This is not an exemption: the project must
+  name and test its parser, formatter, editor-rule, and linter suite before claiming compatibility.
 
 ## Deliberately unassigned questions
 
@@ -180,12 +221,13 @@ that is a documented capability, not a recommendation for a future slide surface
   language.
 - Whether the language uses Djot attributes only as native metadata or extends their scope.
 
-## Evidence needed before adoption
+## Evidence needed before implementation
 
-1. Pin a Djot syntax-reference revision and implementation.
-2. Parse specimens using every surface form above, including code, lists, quotes, footnotes, and divs.
-3. Record the AST and ordinary rendered output.
-4. Compare the provisional spellings against the teaching source examples before adopting a grammar.
+1. Pin the Djot syntax-reference revision and complete parser/formatter/editor-rule/linter suite.
+2. Verify that every accepted extension specimen passes every applicable compatibility tool.
+3. Parse specimens using every surface form above, including code, lists, quotes, footnotes, and divs.
+4. Record the AST, ordinary rendered output, and project Unicode projection output.
+5. Compare the provisional spellings against the teaching source examples before approving the grammar.
 
 ## Primary sources
 

@@ -107,15 +107,16 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 - Regardless of the chosen source language, the repository will own the parser, native editable
   PPTX/ODP builders, LibreOffice bridge, and validation. "Adopt a language" means adopt or adapt
   its source grammar and semantics, never its runtime or presentation pipeline.
-- After reviewing the language survey, I see no viable presentation format to adopt directly. Keep
-  the source-language choice open: assess GFM, Djot, and a Marp-derived surface before selecting
-  the foundation and spatial syntax of a separately named language.
-- I am leaning toward extending Djot as the source foundation. I value its removal of indented code
-  blocks and its simpler list-item indentation rule; ordinary nested lists and explicit slide-layout
-  semantics still need to be specified.
-- Hands-on Djot specimens reinforce that preference: its visible, line-by-line parsing behavior
-  makes the authored source easy to read and reason about.
-- I want a Djot-based slide language to retain its design goals: linear and local parsing, simple
+- No surveyed presentation format is a direct-adoption target. The successor language is an extended
+  Djot language; its spatial slide grammar remains to be specified.
+- This is the top requirement: inherit every construct supported by the pinned Djot revision, and
+  require every accepted source to remain strict Djot and pass every Djot parser, formatter, editor
+  rule, and linter in the project's pinned compatibility suite before the extension linter applies
+  slide semantics. No slide feature may waive a Djot failure.
+- Hands-on Djot specimens confirm this choice: its visible, line-by-line parsing behavior, removal
+  of indented code blocks, and simpler list-item indentation rule make authored source easy to read
+  and reason about.
+- I want the extended Djot language to retain Djot's design goals: linear and local parsing, simple
   list and inline behavior, hard-wrap-friendly source, uniform composition, preserved attributes and
   containers, and the simplest syntax consistent with those constraints.
 - I particularly value source that remains readable when hard-wrapped. Keep every slide directive
@@ -146,8 +147,13 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
   structure. Make `$inline$` and `$$display$$` the official mathematics forms and reserve them as
   well. The repository-owned math adapter may configure MathJax or a similar plugin to accept that
   surface; this does not adopt Marp image modifiers.
-- Use Djot tables as the tabular source surface. Use a monospace block for aligned DNA and other
-  fixed-width sequence text; do not introduce special biological-sequence syntax.
+- The future language supports normal Djot syntax. Use Djot tables for tabular source, inline
+  verbatim for short fixed-width sequences, and fenced code blocks for aligned multiline sequence
+  text; do not introduce special biological-sequence syntax.
+- Support ASCII source that projects to Unicode in the native final product. After strict Djot
+  validation, the pipeline maps a small documented character-reference vocabulary; for example,
+  `&prime;` becomes `′`. This is a project projection rather than native Djot entity parsing, and it
+  must not rewrite verbatim or raw content.
 - Do not add a successor-language presenter-note syntax. Djot footnotes are audience-facing
   citations or clarifications, not hidden speaker notes; the existing importer still preserves
   notes from historical decks.
@@ -156,13 +162,16 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 - Keep teaching reveals within a small predefined action set rather than a general animation
   language. The provisional `<=` and `=>` spellings do not settle floating-answer geometry.
 - Explore `<= blue overlay` as a bounded action for an authored annotation or popup highlight. It
-  may become a predefined treatment, never a general color or coordinate attribute bag. A standard
-  layout popup needs no target syntax; image-specific placement needs a figure-annotation contract.
+  may become a predefined treatment, never a general color or coordinate attribute bag. In a slot
+  with exactly one Marp image, it anchors to that image; otherwise the linter reports an error.
+- For an inline blue highlight, write the target as the unquoted remainder of `<= blue overlay`.
+  It must occur exactly once in the preceding logical item; the linter rejects missing or ambiguous
+  targets. This preserves hard-wrapping and avoids escaping DNA prime marks inside quoted strings.
 - Write a simple, fast, source-only linter with pyflakes-level enforcement. It must report
   source-located structural mistakes without rendering or opening LibreOffice; geometry, overflow,
   native animation export, and visual quality remain separate validation lanes.
-- Use Djot's emphasis on an explicit, unambiguous grammar as a design lesson, not as the current
-  base language. Do not require raw HTML tags or `<!-- ... -->` comments for normal slide structure.
+- Treat Djot's explicit, unambiguous grammar as the compatibility basis for the extension. Do not
+  require raw HTML tags or `<!-- ... -->` comments for normal slide structure.
 - Do not call the successor language Marp+ by default. It may diverge substantially from Marp and
   should receive its own name after its grammar is selected.
 - Keep one canonical authored source. Do not characterize the language discussion as a proposal for

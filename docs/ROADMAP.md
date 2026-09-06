@@ -1,26 +1,27 @@
 # Roadmap: language design before implementation
 
-Status: open design work. Classic Marp Core v5 remains the migration and conformance baseline;
-[MARP_SYNTAX_GUIDE.md](MARP_SYNTAX_GUIDE.md) remains its classic Marp / Marp CLI guide. The
-successor language, its source foundation, and its name all remain open.
+Status: open grammar design work. Classic Marp Core v5 remains the migration and conformance
+baseline; [MARP_SYNTAX_GUIDE.md](MARP_SYNTAX_GUIDE.md) remains its classic Marp / Marp CLI guide.
+The successor is an extended Djot language; its spatial grammar and name remain open.
 
 ## Purpose
 
 Classic Marp cannot express the required spatial teaching layouts. The language survey found no
-presentation format suitable for direct adoption. The next work is to choose whether GFM, Djot, or
-a Marp-derived surface is the best foundation, then specify a small spatial layer that is explicit,
-visible, and unambiguous.
+presentation format suitable for direct adoption. Djot is the selected source foundation. The next
+work is to specify a small spatial layer that is explicit, visible, unambiguous, and valid strict
+Djot source.
 
-The active choice record is
-[presentation_language_choices.md](active_plans/decisions/presentation_language_choices.md). It
-defines the questions that must be answered before parser, exporter, importer, deck, or guide work
-begins.
+The active grammar record is
+[djot_slide_extension_exploration.md](active_plans/decisions/djot_slide_extension_exploration.md).
+The historical choice rationale remains in
+[presentation_language_choices.md](active_plans/decisions/presentation_language_choices.md). These
+records define the remaining questions before parser, exporter, importer, deck, or guide work begins.
 
 ## Milestone plan
 
 | M | Title | Outcome | Gate |
 | --- | --- | --- | --- |
-| M1 | Source and grammar | One foundation plus concise candidate grammar covers every fixture | Instructor approval |
+| M1 | Source and grammar | Strict Djot suite plus concise candidate grammar covers every fixture | Instructor approval |
 | M2 | Parse contract | Accepted and rejected source maps to a typed slide model | Grammar approval |
 | M3 | Native layouts | Named slots become editable native layout objects | Parse-contract review |
 | M4 | Teaching content | Images, math, and simple reveals have native mappings | Layout evidence |
@@ -28,14 +29,14 @@ begins.
 
 ## M1: source and grammar
 
-- Compare GFM, Djot, and a Marp-derived surface against GitHub readability and the full fixture set.
-- Select the source foundation before treating its extension syntax as public.
+- Pin Djot's syntax revision and the complete parser/formatter/editor-rule/linter compatibility suite.
+- Verify every candidate extension form against strict Djot before treating it as public syntax.
 - Specify slide boundaries without a horizontal-rule ambiguity.
 - Specify the exact layout and slot directives, including legal positions and literal escapes.
 - Define title, subtitle, required slot, optional slot, repeated slot, image, and caption behavior.
 - Select exact inline and display math delimiters.
 - Select one short, bounded syntax for item-by-item and arbitrary-item reveals.
-- State the GFM/CommonMark version and extensions accepted inside a slot.
+- State the Djot revision and normal Djot forms accepted inside a slot.
 - Express all fifteen language-survey fixtures and their invalid near-matches.
 
 The candidate `@layout NAME` and `:: SLOT` surface is an illustration only. It can be evaluated
@@ -43,7 +44,7 @@ against each possible foundation and has no special status until M1 approval.
 
 ## M2: parse contract
 
-- Give every accepted directive and GFM block a typed native-model representation.
+- Give every accepted directive and Djot block a typed native-model representation.
 - Reject unknown layouts, slots, directives, illegal placement, and unsupported combinations at the
   source line.
 - Keep ordinary nested Markdown blocks unchanged inside slots.
