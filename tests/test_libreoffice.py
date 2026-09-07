@@ -9,7 +9,7 @@ from unittest import mock
 import pytest
 
 # Local Modules
-from marp_lib import libreoffice
+from slide_lib import libreoffice
 
 
 #============================================

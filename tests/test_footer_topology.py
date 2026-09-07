@@ -4,8 +4,8 @@
 import pytest
 
 # local repo modules
-import marp_lib.importers.legacy_djot_emitter as legacy_djot_emitter
-import marp_lib.importers.legacy_geometry as legacy_geometry
+import slide_lib.importers.legacy_djot_emitter as legacy_djot_emitter
+import slide_lib.importers.legacy_geometry as legacy_geometry
 
 
 #============================================

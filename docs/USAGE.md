@@ -8,29 +8,32 @@ ODP-derived PDF output. Legacy presentation import is a one-time source migratio
 Write editable PPTX for one source deck:
 
 ```bash
-source source_me.sh && python3 tools/marp_to_pptx.py genetics/lect01b-genetic_disorders.md
+source source_me.sh && python3 deck_tools.py build \
+  genetics/lect01b-genetic_disorders.md -f pptx
 ```
 
 Write editable PPTX and ODP for one source deck:
 
 ```bash
-source source_me.sh && python3 tools/marp_to_odp.py genetics/lect01b-genetic_disorders.md
+source source_me.sh && python3 deck_tools.py build \
+  genetics/lect01b-genetic_disorders.md -f odp
 ```
 
 Select one output format for a deck or a folder of direct-child source files:
 
 ```bash
-source source_me.sh && python3 tools/marp_export.py genetics/djot --format pdf
-source source_me.sh && python3 tools/marp_export.py genetics/lect01b-genetic_disorders.md --format pptx
+source source_me.sh && python3 deck_tools.py build genetics/djot --format pdf
+source source_me.sh && python3 deck_tools.py build \
+  genetics/lect01b-genetic_disorders.md --format pptx
 ```
 
-Build every eligible Marp Markdown deck directly in a folder as PPTX, ODP, and PDF:
+Build every eligible source deck directly in a folder as PPTX, ODP, and PDF:
 
 ```bash
 ./build_slides.sh genetics
 ```
 
-`tools/marp_export.py` accepts `--format all`, `odp`, `pdf`, or `pptx`; `all` is the default. It
+`deck_tools.py build` accepts `--format all`, `odp`, `pdf`, or `pptx`; `all` is the default. It
 recognizes `.md` and `.djot` source by suffix. Folder discovery considers only direct-child source
 files and skips Markdown that lacks opening `marp: true` front matter. Outputs are written below
 `output/pptx/`, `output/odp/`, and `output/pdf/`.
@@ -40,16 +43,21 @@ files and skips Markdown that lacks opening `marp: true` front matter. Outputs a
 Import a trusted ODP into a new extended-Djot deck and adjacent asset directory:
 
 ```bash
-source source_me.sh && python3 tools/odp_to_djot.py genetics/lecture.odp --output genetics/lecture.djot
+source source_me.sh && python3 deck_tools.py import genetics/lecture.odp \
+  --output genetics/lecture.djot
 ```
 
 Import a trusted PPTX directly when it is the source evidence:
 
 ```bash
-source source_me.sh && python3 tools/pptx_to_djot.py genetics/lecture.pptx --output genetics/lecture.djot
+source source_me.sh && python3 deck_tools.py import genetics/lecture.pptx \
+  --output genetics/lecture.djot
 ```
 
-The importer refuses an existing `.djot` output or its asset directory. It keeps text, tables when
+Djot is the default import target. Add `--to marp` to import either source format as Marp Markdown.
+Use `deck_tools.py visibility INPUT.odp` to inspect resolved source-slide visibility before import.
+
+The importer refuses an existing output target or its asset directory. It keeps text, tables when
 their native source metadata is available, ordinary images, and geometry-supported layouts
 editable. Where a coupled visual component cannot be reconstructed faithfully, it writes a bounded
 title-excluded source-region PNG in `assets/<deck>/`; it never requests a full-slide raster.
@@ -63,14 +71,14 @@ or PPTX does not become a second authoring source. See [PIPELINE.md](PIPELINE.md
 Run the fast, source-only structural check while authoring:
 
 ```bash
-source source_me.sh && python3 tools/djot_slide_lint.py genetics/djot
+source source_me.sh && python3 deck_tools.py lint genetics/djot
 ```
 
 Before a Djot source-acceptance decision, run the separate strict native-parser gate followed by
 the same semantic lint:
 
 ```bash
-source source_me.sh && python3 tools/djot_slide_lint.py \
+source source_me.sh && python3 deck_tools.py lint \
   --require-native --native-executable "$(command -v jotdown)" genetics/djot
 ```
 

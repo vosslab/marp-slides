@@ -12,14 +12,14 @@ from pptx.dml.color import RGBColor
 from pptx.util import Inches
 
 # Local modules
-import marp_lib.importers.legacy_djot_emitter as legacy_djot_emitter
-import marp_lib.importers.legacy_geometry as legacy_geometry
-import marp_lib.importers.legacy_heading_relation as legacy_heading_relation
-import marp_lib.importers.legacy_new_visual_relations as visual_relations
-import marp_lib.importers.legacy_slide_plan as legacy_slide_plan
-import marp_lib.importers.legacy_topology as legacy_topology
-import marp_lib.importers.pptx_to_djot as pptx_to_djot
-import marp_lib.importers.pptx_to_marp as pptx_to_marp
+import slide_lib.importers.legacy_djot_emitter as legacy_djot_emitter
+import slide_lib.importers.legacy_geometry as legacy_geometry
+import slide_lib.importers.legacy_heading_relation as legacy_heading_relation
+import slide_lib.importers.legacy_new_visual_relations as visual_relations
+import slide_lib.importers.legacy_slide_plan as legacy_slide_plan
+import slide_lib.importers.legacy_topology as legacy_topology
+import slide_lib.importers.pptx_to_djot as pptx_to_djot
+import slide_lib.importers.pptx_to_marp as pptx_to_marp
 
 
 def bounds(left: float, top: float, right: float, bottom: float) -> legacy_geometry.NormalizedBounds:

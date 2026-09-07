@@ -26,7 +26,7 @@ unset CARGO_BIN
 export PYTHONUNBUFFERED=1
 export PYTHONDONTWRITEBYTECODE=1
 
-# Make repository packages available to executable scripts in tools/.
+# Make repository packages available to Python commands after sourcing this environment.
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 export PYTHONPATH="$REPO_ROOT${PYTHONPATH:+:$PYTHONPATH}"
 unset REPO_ROOT

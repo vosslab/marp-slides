@@ -66,7 +66,7 @@ existing Marp source. Its dedicated ODP/PPTX importers preserve source order, co
 source-hidden-slide state while deliberately omitting presenter notes and arbitrary styling or
 animation inference.
 
-`tools/djot_slide_lint.py` supplies the pyflakes-scale, source-only structural check.
+`deck_tools.py lint` supplies the pyflakes-scale, source-only structural check.
 It reports slide declarations, documented slot contracts, action placement, and local image paths;
 it invokes the pinned Jotdown 0.10.0 parser before its own checks. The eight imported decks passed
 that native-first parser check. This remains only one lane of the required suite: its local

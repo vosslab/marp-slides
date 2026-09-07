@@ -11,7 +11,7 @@ from pptx import Presentation
 from pptx.util import Inches
 
 # local repo modules
-import marp_lib.importers.pptx_to_marp as pptx_to_marp
+import slide_lib.importers.pptx_to_marp as pptx_to_marp
 
 
 #============================================

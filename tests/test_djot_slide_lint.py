@@ -4,7 +4,7 @@
 import pathlib
 
 # Local modules
-import marp_lib.djot_lint
+import slide_lib.djot_lint
 
 
 #============================================
@@ -38,10 +38,10 @@ def test_valid_two_panel_source_has_no_structural_problems(tmp_path: pathlib.Pat
 """,
 	)
 
-	problems, summary = marp_lib.djot_lint.lint_paths([path])
+	problems, summary = slide_lib.djot_lint.lint_paths([path])
 
 	assert problems == []
-	assert summary == marp_lib.djot_lint.LintSummary(1, 1, 1)
+	assert summary == slide_lib.djot_lint.LintSummary(1, 1, 1)
 
 
 #============================================
@@ -57,7 +57,7 @@ def test_linter_reports_source_located_parser_failures(tmp_path: pathlib.Path) -
 """,
 	)
 
-	problems, _summary = marp_lib.djot_lint.lint_paths([path])
+	problems, _summary = slide_lib.djot_lint.lint_paths([path])
 	problem = problems[0]
 
 	assert problem.line == 5
@@ -79,7 +79,7 @@ def test_linter_keeps_component_image_safety_after_semantic_parse(tmp_path: path
 """,
 	)
 
-	problems, _summary = marp_lib.djot_lint.lint_paths([path])
+	problems, _summary = slide_lib.djot_lint.lint_paths([path])
 
 	assert problems[0].line == 7
 	assert problems[0].message == "component image is missing: assets/missing.png"
@@ -103,7 +103,7 @@ def test_linter_rejects_component_image_symlink_outside_deck_root(tmp_path: path
 	outside.write_bytes(b"outside asset")
 	(path.parent / "assets" / "escape.png").symlink_to(outside)
 
-	problems, _summary = marp_lib.djot_lint.lint_paths([path])
+	problems, _summary = slide_lib.djot_lint.lint_paths([path])
 
 	assert problems[0].line == 7
 	assert problems[0].message == "component image must be inside the repository: assets/escape.png"

@@ -272,7 +272,7 @@ def run() -> None:
 	try:
 		write_component_images(workspace)
 		write_deck(deck_path)
-		command = [sys.executable, "tools/marp_export.py", str(deck_path), "--format", "pdf"]
+		command = [sys.executable, "deck_tools.py", "build", str(deck_path), "--format", "pdf"]
 		subprocess.run(command, cwd=root, check=True)
 		require(pptx_path.is_file() and odp_path.is_file() and pdf_path.is_file(),
 			"Public PDF export creates PPTX, then ODP, then ODP-derived PDF artifacts")

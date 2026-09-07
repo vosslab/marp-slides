@@ -57,7 +57,7 @@ supported. Optional v5 Shiki, Mermaid, KaTeX, and MathJax features require expli
 capability decisions rather than implicit `/full` compatibility. The current local evidence snapshot
 is Marp Core 5.0.1 at commit `06c5a54`.
 
-**Owner.** `marp_lib/marp_parser.py`, [MARP_SYNTAX_GUIDE.md](MARP_SYNTAX_GUIDE.md),
+**Owner.** `slide_lib/marp_parser.py`, [MARP_SYNTAX_GUIDE.md](MARP_SYNTAX_GUIDE.md),
 [ROADMAP.md](ROADMAP.md), and [PIPELINE.md](PIPELINE.md).
 
 ### Djot requirements inform the implemented grammar
@@ -84,7 +84,7 @@ requirement. Equation support must not require a scientific-publishing workflow.
 exploration status is superseded by the 2026-09-06 implemented Djot parser, grammar, linter, and
 native export path; native math and M5 timing still require their own acceptance evidence.
 
-**Owner.** `marp_lib/djot_grammar.py`, `marp_lib/djot_parser.py`,
+**Owner.** `slide_lib/djot_grammar.py`, `slide_lib/djot_parser.py`,
 [PIPELINE.md](PIPELINE.md), and [LECTURE_LAYOUT_SURVEY.md](LECTURE_LAYOUT_SURVEY.md).
 
 ### Component images and dollar-delimited mathematics have fixed surfaces
@@ -138,7 +138,7 @@ and special-layout rules. It does not establish geometry, overflow, native anima
 visual quality; those remain renderer and acceptance checks. Permanent parser and linter tests keep
 short inputs inline, as required by the pytest policy.
 
-**Owner.** `marp_lib/djot_lint.py`, `marp_lib/djot_parser.py`, and their deterministic tests.
+**Owner.** `slide_lib/djot_lint.py`, `slide_lib/djot_parser.py`, and their deterministic tests.
 
 ### Standard Djot content covers tables and sequences
 
@@ -177,7 +177,7 @@ and a future approved language guide.
 ### Native layout registry owns geometry
 
 **Decision.** Implement all sixteen LibreOffice layout-grid patterns and `gallery` as distinct
-native builders in `marp_lib/layouts.py`.
+native builders in `slide_lib/layouts.py`.
 
 **Why.** Editable output needs predictable native text, list, image, and shape regions. The
 LibreOffice grid provides a useful visual catalog, but applying it after conversion would not create
@@ -187,7 +187,7 @@ the required objects.
 content in reading order. `native_export` imports the registry one way; CSS remains preview styling
 and does not determine output geometry.
 
-**Owner.** `marp_lib/layouts.py` and `docs/USAGE.md`.
+**Owner.** `slide_lib/layouts.py` and `docs/USAGE.md`.
 
 ### Bounded H1 display-size classes
 
@@ -202,7 +202,7 @@ numeric directive or a browser-rendered exception.
 the CSS-pixel value only to the top-level H1 and rejects a title that cannot fit its title region.
 Subtitles, body text, cells, links, notes, and pagination remain layout-defined.
 
-**Owner.** `marp_lib/native_model.py`, `marp_lib/marp_parser.py`, `marp_lib/layouts.py`, and
+**Owner.** `slide_lib/native_model.py`, `slide_lib/marp_parser.py`, `slide_lib/layouts.py`, and
 `themes/genetics.css`.
 
 ### Comment-based cell markers are set aside
@@ -231,7 +231,7 @@ represent the editable classroom artifact.
 **Consequence.** `build_slides.sh` retains the PPTX, ODP, and ODP-derived PDF artifacts. PDF review
 rendering remains evidence only and never becomes slide content.
 
-**Owner.** `marp_lib/native_export.py`, `build_slides.sh`, and
+**Owner.** `slide_lib/native_export.py`, `build_slides.sh`, and
 `tests/e2e/e2e_all_native_layouts.py`.
 
 ### LibreOffice conversion uses its established profile
@@ -249,7 +249,21 @@ non-visual batch mode. ODP-to-PDF conversion uses `impress_pdf_Export`, 70 perce
 150 DPI image reduction, and `SelectPdfVersion=3` for PDF/A-3b. The 150 DPI limit replaces the
 unsupported 100 DPI value with the next documented resolution.
 
-**Owner.** `marp_lib/libreoffice.py` and all LibreOffice conversion callers.
+**Owner.** `slide_lib/libreoffice.py` and all LibreOffice conversion callers.
+
+### One application CLI owns user workflows
+
+**Decision.** `deck_tools.py` is the sole user-facing application CLI. `slide_lib/` owns reusable
+behavior, and `slide_lib/cli.py` dispatches build, import, lint, and visibility operations directly.
+
+**Why.** The repository supports two source languages and several shared workflows. One
+format-neutral entry point makes those capabilities visible without wrapper names that imply Marp
+owns presentation-neutral behavior.
+
+**Consequence.** The former `tools/*.py` package-import wrappers have no compatibility layer.
+`build_slides.sh` remains only as the folder-build convenience around `deck_tools.py build`.
+
+**Owner.** `deck_tools.py` and `slide_lib/cli.py`.
 
 ### One terminal owner presents every build
 
@@ -260,11 +274,11 @@ of permanent per-stage logging.
 **Why.** One presentation owner can show transient current work while leaving a concise,
 consistent, redirect-safe result for every command.
 
-**Consequence.** `marp_export.py` accepts a file or folder in one Python process. Folder discovery
+**Consequence.** `deck_tools.py build` accepts a file or folder in one Python process. Folder discovery
 selects sorted direct-child Marp Markdown, successful LibreOffice output stays captured, and
 expected failures receive a concise stderr panel. Unexpected defects retain their traceback.
 
-**Owner.** `marp_lib/terminal_output.py`, `marp_lib/native_export.py`, and `build_slides.sh`.
+**Owner.** `slide_lib/terminal_output.py`, `slide_lib/native_export.py`, and `build_slides.sh`.
 
 ### Native objects replace slide rasterization
 
@@ -277,7 +291,7 @@ ownership.
 **Consequence.** Source features without an explicit native mapping fail with an actionable source
 diagnostic. Temporary visual renders may support QA but never enter canonical Markdown or output.
 
-**Owner.** `marp_lib/layouts.py`, `marp_lib/native_export.py`, and their tests.
+**Owner.** `slide_lib/layouts.py`, `slide_lib/native_export.py`, and their tests.
 
 ### Vertical root-body layouts use one author-visible block
 
@@ -291,7 +305,7 @@ region without inventing a repository-specific Markdown wrapper language.
 body tracks. `vertical-title-two-panels` uses 94px, 24px, 500px, 42px, and 500px tracks with
 explicit child placement.
 
-**Owner.** `marp_lib/layouts.py`, `themes/genetics.css`, and their contract tests.
+**Owner.** `slide_lib/layouts.py`, `themes/genetics.css`, and their contract tests.
 
 ### Extended-Djot is a parallel native source front end
 
@@ -307,12 +321,12 @@ baseline, while `djot_parser`, `djot_blocks`, and `djot_inline` own the supporte
 One deck has one selected canonical source form; front-end coexistence does not create a second
 authority for existing course content.
 
-**Owner.** `marp_lib/native_export.py`, `marp_lib/marp_parser.py`, `marp_lib/djot_parser.py`, and
+**Owner.** `slide_lib/native_export.py`, `slide_lib/marp_parser.py`, `slide_lib/djot_parser.py`, and
 [PIPELINE.md](PIPELINE.md).
 
 ### The registry defines Djot layout and slot contracts
 
-**Decision.** `marp_lib.layouts.LAYOUTS` is the authoritative catalog for canonical short layout
+**Decision.** `slide_lib.layouts.LAYOUTS` is the authoritative catalog for canonical short layout
 names and named Djot slots. The grammar derives its legal vocabulary from that registry and provides
 no aliases.
 
@@ -325,7 +339,7 @@ keeps a later layout change local to the layout owner rather than creating paral
 `two-panels-vertical-clipart`; `blank`, `title-only`, `title-slide`, `centered-text`, and `gallery`
 remain. The asymmetric layouts use named slots rather than source position.
 
-**Owner.** `marp_lib/layouts.py` and `marp_lib/djot_grammar.py`.
+**Owner.** `slide_lib/layouts.py` and `slide_lib/djot_grammar.py`.
 
 ### Djot normalizes headings and cells before geometry
 
@@ -340,7 +354,7 @@ title-slide subtitles and allowing authors to order named regions for readabilit
 duplicate, unknown, and unnamed cells fail source-located. Multiple H2 lines are preserved rather
 than collapsed into a single source line.
 
-**Owner.** `marp_lib/native_model.py`, `marp_lib/djot_parser.py`, and `marp_lib/layouts.py`.
+**Owner.** `slide_lib/native_model.py`, `slide_lib/djot_parser.py`, and `slide_lib/layouts.py`.
 
 ### Supported Djot constructs fail explicitly at the native boundary
 
@@ -356,8 +370,8 @@ native table destination render as editable objects. Fenced code, `$inline$`, `$
 blocks, attributes, and unsupported inline forms receive source-located native-export rejections
 until their native owners exist.
 
-**Owner.** `marp_lib/djot_blocks.py`, `marp_lib/djot_inline.py`, `marp_lib/djot_parser.py`, and
-`marp_lib/layouts.py`.
+**Owner.** `slide_lib/djot_blocks.py`, `slide_lib/djot_inline.py`, `slide_lib/djot_parser.py`, and
+`slide_lib/layouts.py`.
 
 ### Multiple-choice carries reveal intent, not timing proof
 
@@ -372,13 +386,13 @@ redundant answer action or turning a popup into a general overlay system.
 actions. The intent becomes a bounded OOXML animation request only when M5 builds it; attended
 Impress playback remains the final visual acceptance evidence.
 
-**Owner.** `marp_lib/layouts.py`, `marp_lib/djot_parser.py`, and
+**Owner.** `slide_lib/layouts.py`, `slide_lib/djot_parser.py`, and
 [wp_a1_animation_fidelity.md](active_plans/reports/wp_a1_animation_fidelity.md).
 
 ### Animation uses OOXML and Impress evidence
 
 **Decision.** Build the bounded `appear` and `fade`, `object` and `paragraphs`, `on-click` animation
-surface as OOXML in `marp_lib/pptx_animation.py`. LibreOffice Impress and ODP are the editing and
+surface as OOXML in `slide_lib/pptx_animation.py`. LibreOffice Impress and ODP are the editing and
 playback contract; PPTX is the native-builder and interchange artifact.
 
 **Why.** Python provides stronger practical PPTX construction support, while the instructor uses
@@ -393,7 +407,7 @@ PDF final-state evidence passed. Attended Impress playback remains the only open
 macOS denied Screen Recording and Accessibility before slideshow clicks could be observed. `blue
 overlay` remains deferred.
 
-**Owner.** `marp_lib/pptx_animation.py`, [PIPELINE.md](PIPELINE.md), and
+**Owner.** `slide_lib/pptx_animation.py`, [PIPELINE.md](PIPELINE.md), and
 [wp_a1_animation_fidelity.md](active_plans/reports/wp_a1_animation_fidelity.md).
 
 ## Canonical source design
@@ -418,8 +432,8 @@ fails before publication. Poppler's fixed 144 DPI rendering, decoded-image valid
 provenance, digest-named assets, and staged all-or-nothing publication make the retained component
 reproducible and auditable.
 
-**Owner.** `marp_lib/importers/legacy_slide_plan.py`,
-`marp_lib/importers/source_region_render.py`, `marp_lib/importers/pptx_to_djot.py`, and
+**Owner.** `slide_lib/importers/legacy_slide_plan.py`,
+`slide_lib/importers/source_region_render.py`, `slide_lib/importers/pptx_to_djot.py`, and
 [PIPELINE.md](PIPELINE.md).
 
 ### Source table metadata controls native tables
@@ -435,8 +449,8 @@ native tables editable without misclassifying diagram labels as rows and columns
 fails source-located rather than receiving an invented table projection. Native table rendering
 therefore has a bounded, extensible input contract for future span support.
 
-**Owner.** `marp_lib/importers/legacy_slide_plan.py`,
-`marp_lib/importers/legacy_djot_emitter.py`, and `marp_lib/layouts.py`.
+**Owner.** `slide_lib/importers/legacy_slide_plan.py`,
+`slide_lib/importers/legacy_djot_emitter.py`, and `slide_lib/layouts.py`.
 
 ### Ordinary layouts preflight optional titles and local headings
 
@@ -451,7 +465,7 @@ same source allocation must remain readable whether the title is present or abse
 from 28 down to 14 CSS px before body placement. An unsupported combination or unreadable allocation
 reports the relevant source location and leaves no partial shapes.
 
-**Owner.** `marp_lib/layout_validation.py`, `marp_lib/layouts.py`, and [PIPELINE.md](PIPELINE.md).
+**Owner.** `slide_lib/layout_validation.py`, `slide_lib/layouts.py`, and [PIPELINE.md](PIPELINE.md).
 
 ### Legacy evidence keeps relations adaptable
 
@@ -474,9 +488,9 @@ Geometry, heading relations, topology, and Djot emission symbols are imported fr
 modules. Slide planning and conversion consume those owners directly and do not re-export
 compatibility facades.
 
-**Owner.** `marp_lib/importers/legacy_geometry.py`,
-`marp_lib/importers/legacy_topology.py`, `marp_lib/importers/legacy_new_visual_relations.py`, and
-`marp_lib/importers/legacy_slide_plan.py`.
+**Owner.** `slide_lib/importers/legacy_geometry.py`,
+`slide_lib/importers/legacy_topology.py`, `slide_lib/importers/legacy_new_visual_relations.py`, and
+`slide_lib/importers/legacy_slide_plan.py`.
 
 ### Imported assets follow source reachability
 
@@ -490,8 +504,8 @@ becoming unreviewed source dependencies.
 prunes unreachable files before its atomic publication step; future component owners can replace a
 raster asset without changing this containment rule.
 
-**Owner.** `marp_lib/importers/pptx_to_djot.py` and
-`marp_lib/importers/source_region_render.py`.
+**Owner.** `slide_lib/importers/pptx_to_djot.py` and
+`slide_lib/importers/source_region_render.py`.
 
 ### Markdown is the editable source
 
@@ -503,7 +517,8 @@ editable source.
 **Consequence.** Generated artifacts are reproducible. Legacy ODP and temporary normalization PPTX
 remain migration evidence, not future editing surfaces.
 
-**Owner.** `tools/odp_to_marp.py`, `tools/pptx_to_marp.py`, and `docs/USAGE.md`.
+**Owner.** `deck_tools.py`, `slide_lib/importers/odp_to_marp.py`,
+`slide_lib/importers/pptx_to_marp.py`, and [USAGE.md](USAGE.md).
 
 ### Structured import replaces OCR
 
@@ -515,7 +530,7 @@ available semantics.
 **Consequence.** Whole-slide source images are conversion failures. OCR is reserved only for text
 that genuinely exists within a component image.
 
-**Owner.** `tools/odp_to_marp.py` and `tools/pptx_to_marp.py`.
+**Owner.** `slide_lib/importers/odp_to_marp.py` and `slide_lib/importers/pptx_to_marp.py`.
 
 ### Local reference projects remain outside runtime
 

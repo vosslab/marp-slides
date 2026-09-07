@@ -20,7 +20,7 @@ WP-A1 establishes the smallest useful evidence for the supported animation surfa
 - a top-level list item and its descendants for a paragraph sequence.
 
 Use official OOXML documentation and LibreOffice importer/exporter behavior to guide the builder.
-`marp_lib/pptx_animation.py` is the sole programmatic OOXML owner. It builds the required
+`slide_lib/pptx_animation.py` is the sole programmatic OOXML owner. It builds the required
 timing tree directly; no runtime XML templates or PowerPoint-authored reference decks are needed.
 
 ## Historical evidence retained

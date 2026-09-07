@@ -8,8 +8,8 @@ import zipfile
 import pytest
 
 # local repo modules
-import marp_lib.importers.odp_to_marp as odp_to_marp
-import marp_lib.importers.pptx_to_marp as pptx_to_marp
+import slide_lib.importers.odp_to_marp as odp_to_marp
+import slide_lib.importers.pptx_to_marp as pptx_to_marp
 
 
 MINIMAL_CONTENT_XML = """<?xml version="1.0" encoding="UTF-8"?>

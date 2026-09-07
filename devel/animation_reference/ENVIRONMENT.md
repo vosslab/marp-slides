@@ -16,7 +16,7 @@ Microsoft products, and PPTX is used because Python supports it more effectively
 
 ## Current bridge evidence
 
-`marp_lib/libreoffice.py` provides the supported headless bridge for PPTX-to-ODP and ODP-to-PDF.
+`slide_lib/libreoffice.py` provides the supported headless bridge for PPTX-to-ODP and ODP-to-PDF.
 A direct UNO Python experiment was killed after it did not provide a suitable local route. The
 headless bridge works and remains the programmatic conversion boundary.
 

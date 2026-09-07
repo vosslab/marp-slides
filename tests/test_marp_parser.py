@@ -7,8 +7,8 @@ import pathlib
 import pytest
 
 # Local Modules
-import marp_lib.marp_parser
-import marp_lib.native_model
+import slide_lib.marp_parser
+import slide_lib.native_model
 
 
 HEADER = "---\nmarp: true\ntheme: genetics\nsize: '16:10'\npaginate: true\ntitle: \"Parser deck\"\n---\n"
@@ -23,9 +23,9 @@ def write_deck(tmp_path: pathlib.Path, body: str, name: str = "deck.md") -> path
 
 
 #============================================
-def parse(tmp_path: pathlib.Path, body: str) -> marp_lib.native_model.Deck:
+def parse(tmp_path: pathlib.Path, body: str) -> slide_lib.native_model.Deck:
 	"""Parse one compact valid fixture."""
-	return marp_lib.marp_parser.parse_deck(write_deck(tmp_path, body))
+	return slide_lib.marp_parser.parse_deck(write_deck(tmp_path, body))
 
 
 #============================================
@@ -40,13 +40,13 @@ def test_parses_typed_slide_semantics_and_source_lines(tmp_path: pathlib.Path) -
 	assert slide.layout_class == "two-panels"
 	assert slide.paginate is False
 	assert slide.location.line == 8
-	assert isinstance(slide.blocks[0], marp_lib.native_model.Heading)
+	assert isinstance(slide.blocks[0], slide_lib.native_model.Heading)
 	assert len(slide.cells) == 2
 	assert [cell.name for cell in slide.cells] == ["left", "right"]
-	assert isinstance(slide.cells[0].blocks[1], marp_lib.native_model.ListBlock)
+	assert isinstance(slide.cells[0].blocks[1], slide_lib.native_model.ListBlock)
 	list_block = slide.cells[0].blocks[1]
 	assert list_block.ordered is True and list_block.start == 3
-	assert isinstance(slide.cells[1].blocks[0], marp_lib.native_model.Image)
+	assert isinstance(slide.cells[1].blocks[0], slide_lib.native_model.Image)
 
 
 #============================================
@@ -55,7 +55,7 @@ def test_normalizes_root_body_and_gallery_content_into_named_cells(tmp_path: pat
 	deck = parse(tmp_path, "<!-- _class: one-panel -->\n# Body\n\n- Editable\n\n---\n"
 		"<!-- _class: gallery -->\n# Gallery\n\n![One](one.png) ![Two](two.png)\n")
 	body, gallery = deck.slides
-	assert [block.level for block in body.blocks if isinstance(block, marp_lib.native_model.Heading)] == [1]
+	assert [block.level for block in body.blocks if isinstance(block, slide_lib.native_model.Heading)] == [1]
 	assert body.cells[0].name == "body"
 	assert gallery.cells[0].name == "gallery"
 	assert len(gallery.cells[0].blocks) == 2
@@ -89,7 +89,7 @@ def test_parses_typed_h1_size_modifier_in_either_marp_class_order(tmp_path: path
 def test_rejects_invalid_h1_size_modifier_at_its_source_location(tmp_path: pathlib.Path, body: str,
 		message: str) -> None:
 	"""Class errors cite the directive or the offending authored heading."""
-	with pytest.raises(marp_lib.marp_parser.MarpParseError, match=message) as raised:
+	with pytest.raises(slide_lib.marp_parser.MarpParseError, match=message) as raised:
 		parse(tmp_path, body)
 	assert "deck.md:" in str(raised.value)
 
@@ -102,8 +102,8 @@ def test_parses_standalone_notes_and_autolinks(tmp_path: pathlib.Path) -> None:
 	slide = deck.slides[0]
 	assert slide.notes == ("Explain this live",)
 	paragraph = slide.cells[0].blocks[0]
-	assert isinstance(paragraph, marp_lib.native_model.Paragraph)
-	assert any(isinstance(item, marp_lib.native_model.Link) for item in paragraph.inlines)
+	assert isinstance(paragraph, slide_lib.native_model.Paragraph)
+	assert any(isinstance(item, slide_lib.native_model.Link) for item in paragraph.inlines)
 
 
 #============================================
@@ -115,7 +115,7 @@ def test_parses_multiline_image_only_paragraph_as_component_images(tmp_path: pat
 		"![First component](first.png)" + separator +
 		"![Second component](second.png)" + separator +
 		"![Third component](third.png)\n")
-	images = [block for block in deck.slides[0].cells[0].blocks if isinstance(block, marp_lib.native_model.Image)]
+	images = [block for block in deck.slides[0].cells[0].blocks if isinstance(block, slide_lib.native_model.Image)]
 	assert [image.source for image in images] == ["first.png", "second.png", "third.png"]
 
 
@@ -127,7 +127,7 @@ def test_parses_multiline_image_only_paragraph_as_component_images(tmp_path: pat
 def test_rejects_visible_text_or_formatting_mixed_with_component_images(tmp_path: pathlib.Path,
 		mixed: str) -> None:
 	"""A component-image paragraph has images and separators, never visible inline content."""
-	with pytest.raises(marp_lib.marp_parser.MarpParseError, match="images cannot be mixed with inline text"):
+	with pytest.raises(slide_lib.marp_parser.MarpParseError, match="images cannot be mixed with inline text"):
 		parse(tmp_path, "<!-- _class: gallery -->\n" + mixed + "\n")
 
 
@@ -139,13 +139,13 @@ def test_preserves_inline_formatting_bare_urls_and_yaml_size(tmp_path: pathlib.P
 	assert deck.front_matter["size"] == "16:10"
 	heading = deck.slides[0].blocks[0]
 	paragraph = deck.slides[0].cells[0].blocks[0]
-	assert isinstance(heading, marp_lib.native_model.Heading)
-	assert isinstance(heading.inlines[0], marp_lib.native_model.Link)
-	assert isinstance(paragraph, marp_lib.native_model.Paragraph)
-	assert any(isinstance(item, marp_lib.native_model.Emphasis) for item in paragraph.inlines)
-	assert any(isinstance(item, marp_lib.native_model.InlineCode) for item in paragraph.inlines)
-	assert any(isinstance(item, marp_lib.native_model.Break) for item in paragraph.inlines)
-	links = [item for item in paragraph.inlines if isinstance(item, marp_lib.native_model.Link)]
+	assert isinstance(heading, slide_lib.native_model.Heading)
+	assert isinstance(heading.inlines[0], slide_lib.native_model.Link)
+	assert isinstance(paragraph, slide_lib.native_model.Paragraph)
+	assert any(isinstance(item, slide_lib.native_model.Emphasis) for item in paragraph.inlines)
+	assert any(isinstance(item, slide_lib.native_model.InlineCode) for item in paragraph.inlines)
+	assert any(isinstance(item, slide_lib.native_model.Break) for item in paragraph.inlines)
+	links = [item for item in paragraph.inlines if isinstance(item, slide_lib.native_model.Link)]
 	assert [item.url for item in links] == ["https://example.edu/path"]
 
 
@@ -154,11 +154,11 @@ def test_dividers_inside_fences_and_comments_do_not_split_slides(tmp_path: pathl
 	"""Top-level slide rulers ignore fence and comment interiors before rejection."""
 	path = write_deck(tmp_path, "<!-- _class: one-panel -->\n# First\n\n```text\n---\n```\n"
 		"\n---\n<!-- _class: one-panel -->\n<!-- note\n---\n-->\n# Second\n")
-	with pytest.raises(marp_lib.marp_parser.MarpParseError, match="unsupported Markdown block: fence"):
-		marp_lib.marp_parser.parse_deck(path)
+	with pytest.raises(slide_lib.marp_parser.MarpParseError, match="unsupported Markdown block: fence"):
+		slide_lib.marp_parser.parse_deck(path)
 	path.write_text(HEADER + "<!-- _class: one-panel -->\n<!-- note\n---\n-->\n# First\n"
 		"\n---\n<!-- _class: one-panel -->\n# Second\n", encoding="utf-8")
-	deck = marp_lib.marp_parser.parse_deck(path)
+	deck = slide_lib.marp_parser.parse_deck(path)
 	assert len(deck.slides) == 2
 
 
@@ -176,7 +176,7 @@ def test_dividers_inside_fences_and_comments_do_not_split_slides(tmp_path: pathl
 ])
 def test_rejects_unowned_authoring_features(tmp_path: pathlib.Path, body: str, message: str) -> None:
 	"""Every unsupported source construct fails at its originating source location."""
-	with pytest.raises(marp_lib.marp_parser.MarpParseError, match=message) as raised:
+	with pytest.raises(slide_lib.marp_parser.MarpParseError, match=message) as raised:
 		parse(tmp_path, body)
 	assert ":" in str(raised.value)
 
@@ -191,8 +191,8 @@ def test_rejects_invalid_strict_front_matter(tmp_path: pathlib.Path, front: str,
 	"""The semantic boundary has one strict and diagnosable YAML entry point."""
 	path = tmp_path / "invalid.md"
 	path.write_text(front + "<!-- _class: one-panel -->\n# Title\n", encoding="utf-8")
-	with pytest.raises(marp_lib.marp_parser.MarpParseError, match=message):
-		marp_lib.marp_parser.parse_deck(path)
+	with pytest.raises(slide_lib.marp_parser.MarpParseError, match=message):
+		slide_lib.marp_parser.parse_deck(path)
 
 
 #============================================
@@ -201,7 +201,7 @@ def test_bom_and_hidden_provenance_fragment_preserve_real_slide_count(tmp_path: 
 	path = tmp_path / "bom.md"
 	path.write_text("\ufeff" + HEADER + "<!-- _class: one-panel -->\n# Kept\n\n---\n"
 		"<!-- ODP hidden slide skipped: source 8 -->\n", encoding="utf-8")
-	deck = marp_lib.marp_parser.parse_deck(path)
+	deck = slide_lib.marp_parser.parse_deck(path)
 	assert len(deck.slides) == 1
 	assert deck.slides[0].blocks[0].location.line == 9
 
@@ -212,7 +212,7 @@ def test_crlf_front_matter_preserves_physical_source_locations(tmp_path: pathlib
 	path = tmp_path / "crlf.md"
 	path.write_text((HEADER + "<!-- _class: one-panel -->\n# CRLF title\n\nParagraph\n").replace("\n", "\r\n"),
 		encoding="utf-8", newline="")
-	deck = marp_lib.marp_parser.parse_deck(path)
+	deck = slide_lib.marp_parser.parse_deck(path)
 	assert deck.slides[0].blocks[0].location.line == 9
 	assert deck.slides[0].cells[0].blocks[0].location.line == 11
 
@@ -220,7 +220,7 @@ def test_crlf_front_matter_preserves_physical_source_locations(tmp_path: pathlib
 #============================================
 def test_rejects_retired_source_raster_at_the_component_image_line(tmp_path: pathlib.Path) -> None:
 	"""A former full-slide fallback name fails at the typed source boundary."""
-	with pytest.raises(marp_lib.marp_parser.MarpParseError,
+	with pytest.raises(slide_lib.marp_parser.MarpParseError,
 		match=r"deck\.md:11:.*slide_\*_source raster"):
 		parse(tmp_path, "<!-- _class: one-panel -->\n# Native slide\n\n"
 			"![Retired source](slide_001_source.png)\n")

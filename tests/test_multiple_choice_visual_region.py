@@ -4,8 +4,8 @@
 import pytest
 
 # local repo modules
-import marp_lib.importers.legacy_geometry as legacy_geometry
-import marp_lib.importers.legacy_slide_plan as legacy_slide_plan
+import slide_lib.importers.legacy_geometry as legacy_geometry
+import slide_lib.importers.legacy_slide_plan as legacy_slide_plan
 
 
 #============================================

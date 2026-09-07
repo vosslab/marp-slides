@@ -12,9 +12,9 @@ from pptx import Presentation
 from pptx.oxml.xmlchemy import OxmlElement
 
 # Local Modules
-import marp_lib.native_export
-import marp_lib.native_model
-import marp_lib.pptx_animation
+import slide_lib.native_export
+import slide_lib.native_model
+import slide_lib.pptx_animation
 
 
 PRESENTATION_NAMESPACES = {
@@ -29,8 +29,8 @@ def render_djot(tmp_path: pathlib.Path, source: str) -> xml.etree.ElementTree.El
 	input_path = tmp_path / "animation.djot"
 	output_path = tmp_path / "animation.pptx"
 	input_path.write_text(source, encoding="utf-8")
-	deck = marp_lib.native_export.parse_deck(input_path)
-	marp_lib.native_export.render_native_pptx(deck, output_path)
+	deck = slide_lib.native_export.parse_deck(input_path)
+	slide_lib.native_export.render_native_pptx(deck, output_path)
 	with zipfile.ZipFile(output_path) as archive:
 		root = defusedxml.ElementTree.fromstring(archive.read("ppt/slides/slide1.xml"))
 	return root
@@ -48,19 +48,19 @@ def text_by_shape_id(root: xml.etree.ElementTree.Element) -> dict[str, str]:
 
 
 #============================================
-def direct_reveal_deck(tmp_path: pathlib.Path) -> marp_lib.native_model.Deck:
+def direct_reveal_deck(tmp_path: pathlib.Path) -> slide_lib.native_model.Deck:
 	"""Build direct IR for backend-only fade coverage without expanding Djot grammar."""
-	location = marp_lib.native_model.SourceLocation(tmp_path / "fade.ir", 1)
-	appear = marp_lib.native_model.Reveal(marp_lib.native_model.RevealEffect.APPEAR,
-		marp_lib.native_model.RevealSequence.OBJECT)
-	fade = marp_lib.native_model.Reveal(marp_lib.native_model.RevealEffect.FADE,
-		marp_lib.native_model.RevealSequence.OBJECT)
-	body = marp_lib.native_model.Cell(location, (
-		marp_lib.native_model.Paragraph(location, (marp_lib.native_model.Text("Appear"),), appear),
-		marp_lib.native_model.Paragraph(location, (marp_lib.native_model.Text("Fade"),), fade),
+	location = slide_lib.native_model.SourceLocation(tmp_path / "fade.ir", 1)
+	appear = slide_lib.native_model.Reveal(slide_lib.native_model.RevealEffect.APPEAR,
+		slide_lib.native_model.RevealSequence.OBJECT)
+	fade = slide_lib.native_model.Reveal(slide_lib.native_model.RevealEffect.FADE,
+		slide_lib.native_model.RevealSequence.OBJECT)
+	body = slide_lib.native_model.Cell(location, (
+		slide_lib.native_model.Paragraph(location, (slide_lib.native_model.Text("Appear"),), appear),
+		slide_lib.native_model.Paragraph(location, (slide_lib.native_model.Text("Fade"),), fade),
 	), "body")
-	slide = marp_lib.native_model.Slide(location, "one-panel", None, False, (), (), (body,))
-	return marp_lib.native_model.Deck(location.path, tmp_path, tmp_path, "Effects", False, (slide,), {})
+	slide = slide_lib.native_model.Slide(location, "one-panel", None, False, (), (), (body,))
+	return slide_lib.native_model.Deck(location.path, tmp_path, tmp_path, "Effects", False, (slide,), {})
 
 
 #============================================
@@ -85,7 +85,7 @@ def test_cascade_targets_top_level_list_items_and_descendants_in_one_outline(tmp
 def test_appear_and_backend_fade_write_their_distinct_native_effects(tmp_path: pathlib.Path) -> None:
 	"""Appear uses visibility while direct IR fade retains its native entrance effect."""
 	output_path = tmp_path / "effects.pptx"
-	marp_lib.native_export.render_native_pptx(direct_reveal_deck(tmp_path), output_path)
+	slide_lib.native_export.render_native_pptx(direct_reveal_deck(tmp_path), output_path)
 	with zipfile.ZipFile(output_path) as archive:
 		root = defusedxml.ElementTree.fromstring(archive.read("ppt/slides/slide1.xml"))
 	appear = root.findall(".//p:set/p:to/p:strVal", PRESENTATION_NAMESPACES)
@@ -101,7 +101,7 @@ def test_writer_rejects_preexisting_timing_in_plain_or_compatibility_content() -
 	for compatibility_wrapped in (False, True):
 		presentation = Presentation()
 		slide = presentation.slides.add_slide(presentation.slide_layouts[6])
-		writer = marp_lib.pptx_animation.PptxAnimationWriter(slide)
+		writer = slide_lib.pptx_animation.PptxAnimationWriter(slide)
 		existing = OxmlElement("p:timing")
 		if compatibility_wrapped:
 			compatibility = slide._element.makeelement(
@@ -110,7 +110,7 @@ def test_writer_rejects_preexisting_timing_in_plain_or_compatibility_content() -
 			slide._element.append(compatibility)
 		else:
 			slide._element.append(existing)
-		with pytest.raises(marp_lib.pptx_animation.AnimationError,
+		with pytest.raises(slide_lib.pptx_animation.AnimationError,
 				match="without existing timing"):
 			writer.finalize()
 
@@ -120,8 +120,8 @@ def test_register_reveal_requires_a_writer_for_actual_reveal_intent() -> None:
 	"""Source reveal intent cannot silently disappear from native output."""
 	presentation = Presentation()
 	slide = presentation.slides.add_slide(presentation.slide_layouts[6])
-	reveal = marp_lib.native_model.Reveal(marp_lib.native_model.RevealEffect.APPEAR,
-		marp_lib.native_model.RevealSequence.OBJECT)
-	with pytest.raises(marp_lib.pptx_animation.AnimationError,
+	reveal = slide_lib.native_model.Reveal(slide_lib.native_model.RevealEffect.APPEAR,
+		slide_lib.native_model.RevealSequence.OBJECT)
+	with pytest.raises(slide_lib.pptx_animation.AnimationError,
 			match="requires an animation writer"):
-		marp_lib.pptx_animation.register_reveal(slide, object(), reveal)
+		slide_lib.pptx_animation.register_reveal(slide, object(), reveal)

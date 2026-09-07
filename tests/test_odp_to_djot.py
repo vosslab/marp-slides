@@ -8,9 +8,9 @@ import zipfile
 import pytest
 
 # Local modules
-import marp_lib.importers.odp_to_djot as odp_to_djot
-import marp_lib.importers.odp_to_marp as odp_to_marp
-import marp_lib.importers.pptx_to_djot as pptx_to_djot
+import slide_lib.importers.odp_to_djot as odp_to_djot
+import slide_lib.importers.odp_to_marp as odp_to_marp
+import slide_lib.importers.pptx_to_djot as pptx_to_djot
 
 
 MINIMAL_CONTENT_XML = """<?xml version="1.0" encoding="UTF-8"?>

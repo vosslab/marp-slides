@@ -11,7 +11,7 @@ from pptx import Presentation
 from pptx.util import Inches
 
 # local repo modules
-import marp_lib.importers.source_region_render as source_region_render
+import slide_lib.importers.source_region_render as source_region_render
 
 
 #============================================

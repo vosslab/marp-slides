@@ -21,11 +21,13 @@ native editable source instead of producing an exact full-slide raster.
 REPEATABLE BUILD
 
 canonical Marp Markdown or extended-Djot source
-  -> marp_lib.terminal_output
-  -> marp_lib.native_export suffix dispatch
-  -> marp_lib.marp_parser or marp_lib.djot_parser
+  -> deck_tools.py application CLI
+  -> slide_lib.cli
+  -> slide_lib.terminal_output for builds
+  -> slide_lib.native_export suffix dispatch
+  -> slide_lib.marp_parser or slide_lib.djot_parser
   -> typed native slide-object model
-  -> marp_lib.layouts
+  -> slide_lib.layouts
   -> python-pptx editable PPTX
   -> LibreOffice editable ODP
   -> LibreOffice PDF from that ODP
@@ -38,31 +40,31 @@ visual QA is separate from the production object-conversion chain and never supp
 
 | Owner | Responsibility | Artifact |
 | --- | --- | --- |
-| `tools/odp_to_marp.py` | Trusted legacy ODP import | Canonical Markdown and assets |
-| `tools/pptx_to_marp.py` | Structured PPTX extraction | Import records and Markdown |
-| `tools/odp_to_djot.py` | ODP visibility and temporary PPTX normalization | New Djot source and assets |
-| `tools/pptx_to_djot.py` | Semantic source extraction and staged publication | New Djot source, assets, and provenance |
-| `marp_lib/importers/legacy_slide_plan.py` | Geometry-first semantic plan | `LegacySlidePlan` |
-| `marp_lib/importers/legacy_topology.py` | Shared ordinary-layout topology matching | Registry-derived layout candidate |
-| `marp_lib/importers/source_region_render.py` | Bounded coupled-region rendering | Validated hash-named PNG assets |
-| `marp_lib/importers/legacy_djot_emitter.py` | Atomic component-to-Djot projection | Source-located Djot components |
-| `marp_lib/marp_parser.py` | Marp-subset framing, directives, and block parsing | Typed slide model |
-| `marp_lib/djot_parser.py` | Extended-Djot framing, slots, actions, and block assembly | Typed slide model |
-| `marp_lib/djot_grammar.py` | Exact directive and action spellings derived from the layout registry | Shared Djot contract |
-| `marp_lib/djot_lint.py` | Strict-tool invocation and source-only Djot semantics | Source diagnostics |
-| `marp_lib/layouts.py` | Registry and native geometry for every supported layout | Editable PPTX objects |
-| `marp_lib/libreoffice.py` | Process preflight, conversion, and PDF filter | PPTX, ODP, and PDF conversions |
-| `marp_lib/native_export.py` | Deck discovery, export stages, notes, pagination, and paths | Ordered deck and artifact paths |
-| `marp_lib/terminal_output.py` | Transient progress, summaries, and expected failures | One concise Rich interface |
-| `tools/marp_export.py` | One-deck or direct-child folder command | Selected PPTX, ODP, and PDF outputs |
-| `tools/marp_to_pptx.py` | One-deck editable PPTX command | PPTX |
-| `tools/marp_to_odp.py` | One-deck editable ODP command | PPTX and ODP |
+| `deck_tools.py` | Sole user-facing application entry point | Build, import, lint, and visibility commands |
+| `slide_lib/cli.py` | Argument parsing and direct operation dispatch | Format-neutral command routing |
+| `slide_lib/importers/odp_to_marp.py` | Trusted ODP normalization | Marp Markdown and assets |
+| `slide_lib/importers/pptx_to_marp.py` | Structured PPTX extraction | Import records and Markdown |
+| `slide_lib/importers/odp_to_djot.py` | ODP visibility and normalization | Djot source and assets |
+| `slide_lib/importers/pptx_to_djot.py` | Staged semantic extraction | Djot source, assets, and provenance |
+| `slide_lib/importers/legacy_slide_plan.py` | Geometry-first semantic plan | `LegacySlidePlan` |
+| `slide_lib/importers/legacy_topology.py` | Shared ordinary-layout topology matching | Registry-derived layout candidate |
+| `slide_lib/importers/source_region_render.py` | Bounded coupled-region rendering | Validated hash-named PNG assets |
+| `slide_lib/importers/legacy_djot_emitter.py` | Atomic component-to-Djot projection | Source-located Djot components |
+| `slide_lib/marp_parser.py` | Marp-subset framing, directives, and block parsing | Typed slide model |
+| `slide_lib/djot_parser.py` | Extended-Djot framing, slots, actions, and block assembly | Typed slide model |
+| `slide_lib/djot_grammar.py` | Exact directive and action spellings derived from the layout registry | Shared Djot contract |
+| `slide_lib/djot_lint.py` | Strict-tool invocation and source-only Djot semantics | Source diagnostics |
+| `slide_lib/layouts.py` | Registry and native geometry for every supported layout | Editable PPTX objects |
+| `slide_lib/libreoffice.py` | Process preflight, conversion, and PDF filter | PPTX, ODP, and PDF conversions |
+| `slide_lib/native_export.py` | Deck discovery, export stages, notes, pagination, and paths | Ordered deck and artifact paths |
+| `slide_lib/terminal_output.py` | Transient progress, summaries, and expected failures | One concise Rich interface |
 | `build_slides.sh` | Environment bootstrap for the folder command | One Python batch process |
 
-`terminal_output` invokes `native_export`, which selects a parser by source suffix and imports the
-layout and LibreOffice owners. None of those lower-level owners imports the terminal interface. This
-one-way boundary keeps presentation, parsing, geometry, conversion, and artifact orchestration
-separate.
+`deck_tools.py` delegates command parsing to `slide_lib.cli`, which invokes reusable operations
+directly. Build presentation stays in `terminal_output`, while `native_export` selects a parser by
+source suffix and imports the layout and LibreOffice owners. Lower-level owners do not import the
+CLI or terminal interface. This one-way boundary keeps presentation, parsing, geometry, conversion,
+and artifact orchestration separate.
 
 ## Legacy import contract
 
@@ -103,7 +105,7 @@ content.
 
 ## Native layout contract
 
-`marp_lib.layouts` has one distinct builder for each LibreOffice layout-grid entry:
+`slide_lib.layouts` has one distinct builder for each LibreOffice layout-grid entry:
 
 - `blank`
 - `title-only`

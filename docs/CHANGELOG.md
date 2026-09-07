@@ -2,6 +2,10 @@
 
 ### Additions and New Features
 
+- Added `deck_tools.py` as the sole format-neutral application CLI for build, import, Djot lint,
+  and ODP visibility workflows.
+- Renamed the reusable application package from `marp_lib/` to `slide_lib/` so its ownership covers
+  both Marp and Djot without implying a Marp-only pipeline.
 - Added the geometry-first legacy-import architecture: semantic ODP/PPTX normalization now produces
   `LegacySlidePlan` records for atomic editable components, true source tables, and bounded coupled
   spatial regions.
@@ -11,6 +15,9 @@
 
 ### Behavior or Interface Changes
 
+- Made `deck_tools.py build` dispatch `.md` and `.djot` sources through the same command, and made
+  Djot the concise default target for trusted ODP/PPTX imports.
+- Changed `build_slides.sh` into a thin folder-build convenience around `deck_tools.py build`.
 - An ODP import uses its original ODP and a direct PPTX import uses its trusted input PPTX as the
   source-region raster authority. Poppler renders only title-excluded, bounded regions at fixed 144
   DPI; validated digest-named assets retain source-slide provenance and publish with staged source
@@ -37,6 +44,9 @@
 
 ### Removals and Deprecations
 
+- Removed the nine `tools/*.py` package-import wrappers without compatibility aliases; this
+  pre-production repository has no external callers for the obsolete paths.
+- Removed three tracked Python bytecode caches that still embedded the former `marp_lib` name.
 - Removed dead importer wrappers, enums, and re-exports instead of retaining compatibility facades.
 - Removed duplicate and brittle tests that did not meet the permanent pytest contract.
 
@@ -57,6 +67,12 @@
 
 ### Developer Tests and Notes
 
+- The permanent offline suite passed 1,869 tests, including CLI routing, import boundaries,
+  pyflakes, typing, security, support-directory, root-script-budget, shebang, and link checks.
+- One-time migration evidence passed for public help and eight-deck lint, representative Marp and
+  Djot ODP builds through the same CLI, both native-layout PPTX-to-ODP-to-PDF E2Es, and the retained
+  folder-build wrapper. The first sandboxed ODP attempt lacked `ps` access; the same command passed
+  with the established LibreOffice preflight permission.
 - The one-time eight-deck legacy-corpus acceptance and reproducibility gates passed: 378 source
   slides yielded 336 visible and 42 hidden slides, 167 reachable assets, 72 bounded source regions,
   96 review slides, and 186 image occurrences. References resolved only to files with no missing or
@@ -66,9 +82,9 @@
   occurrences; `build_slides.sh genetics`, both explicit native E2Es, and sequential `--format all`
   exports passed. Every deck retained matching PPTX, ODP, and PDF counts, editable text/direct images,
   and Lecture 02e retained its native table.
-- The permanence-audited suite contains 1,914 tests, including all hygiene checks; it remains fast,
-  deterministic, and offline. The two native PPTX-to-ODP-to-PDF E2Es also passed as one-time
-  evidence. M5 animation acceptance remains unclaimed only pending attended Impress playback.
+- Before the CLI-boundary migration, the permanence-audited suite contained 1,914 tests, including
+  all hygiene checks. The two native PPTX-to-ODP-to-PDF E2Es also passed as one-time evidence. M5
+  animation acceptance remains unclaimed only pending attended Impress playback.
 - The permanence audit removed static CSS, tunable geometry and catalog assertions, redundant broad
   importer and topology proofs, and the duplicate native E2E. Focused behavior and safety tests
   remain, alongside two explicit native-chain runners for one-time acceptance.

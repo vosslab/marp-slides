@@ -46,9 +46,12 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
   as a failed product result. A browser is not a normal build dependency.
 - Use the heavily edited `md2pptx` clone for native-object implementation ideas while retaining
   Marp syntax as this repository's authoring contract.
-- Use a `marp_lib` folder for common reusable functions that other presentation scripts import.
-- Have `build_slides.sh` build every Marp deck in a selected folder; keep `marp_to_odp.py` and
-  `marp_to_pptx.py` as obvious single-deck commands.
+- Make `deck_tools.py` the sole user-facing application CLI and keep reusable application behavior
+  in `slide_lib/`.
+- Delete the old `tools/*.py` wrappers because this pre-production repository has no external
+  compatibility callers. Add `launchers/` only for a concrete independent launcher use case.
+- Keep permanent tests on meaningful application behavior. Treat rename sweeps and representative
+  CLI or end-to-end runs as one-time migration evidence.
 - Keep presentation-build output concise: show the current deck and stage transiently, then leave
   one compact summary with relative paths, file sizes, and one elapsed total. Hide successful
   third-party conversion chatter.

@@ -35,7 +35,7 @@ Expected output: `jotdown 0.10.0`.
 ## Verify install
 
 ```bash
-source source_me.sh && python3 tools/marp_export.py --help
+source source_me.sh && python3 deck_tools.py --help
 ```
 
 ## Conversion boundary

@@ -12,11 +12,11 @@ from pptx.enum.shapes import MSO_SHAPE_TYPE
 from pptx.util import Inches
 
 # Local modules
-import marp_lib.importers.legacy_djot_emitter as legacy_djot_emitter
-import marp_lib.importers.legacy_geometry as legacy_geometry
-import marp_lib.importers.legacy_slide_plan as legacy_slide_plan
-import marp_lib.importers.pptx_to_djot as pptx_to_djot
-import marp_lib.importers.pptx_to_marp as pptx_to_marp
+import slide_lib.importers.legacy_djot_emitter as legacy_djot_emitter
+import slide_lib.importers.legacy_geometry as legacy_geometry
+import slide_lib.importers.legacy_slide_plan as legacy_slide_plan
+import slide_lib.importers.pptx_to_djot as pptx_to_djot
+import slide_lib.importers.pptx_to_marp as pptx_to_marp
 #============================================
 def write_png(output_path: pathlib.Path) -> pathlib.Path:
 	"""Write one bounded source image."""

@@ -1,10 +1,10 @@
 """Focused geometry behavior for immutable emitter component members."""
 
 # local repo modules
-import marp_lib.importers.legacy_djot_emitter as legacy_djot_emitter
-import marp_lib.importers.legacy_geometry as legacy_geometry
-import marp_lib.importers.legacy_slide_plan as legacy_slide_plan
-import marp_lib.importers.pptx_to_marp as pptx_to_marp
+import slide_lib.importers.legacy_djot_emitter as legacy_djot_emitter
+import slide_lib.importers.legacy_geometry as legacy_geometry
+import slide_lib.importers.legacy_slide_plan as legacy_slide_plan
+import slide_lib.importers.pptx_to_marp as pptx_to_marp
 
 
 #============================================

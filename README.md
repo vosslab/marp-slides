@@ -11,14 +11,14 @@ The repeatable production chain is:
 canonical Marp Markdown or extended-Djot
   -> repository-owned Python source parser
   -> typed native slide-object model
-  -> marp_lib.layouts native layout builders
+  -> slide_lib.layouts native layout builders
   -> python-pptx editable PPTX
   -> LibreOffice editable ODP
   -> LibreOffice PDF from that ODP
 ```
 
 Every generated slide uses editable text, lists, shapes, component images, links, and presenter
-notes. `marp_lib.layouts` implements all sixteen LibreOffice layout-grid patterns plus the
+notes. `slide_lib.layouts` implements all sixteen LibreOffice layout-grid patterns plus the
 repository `gallery` layout. The LibreOffice grid is a catalog and visual target; Python builds the
 objects.
 
@@ -33,7 +33,8 @@ Install the system and Python dependencies, then build one editable deck:
 ```bash
 brew bundle
 source source_me.sh && python3 -m pip install -r pip_requirements.txt
-source source_me.sh && python3 tools/marp_to_odp.py genetics/lect01b-genetic_disorders.md
+source source_me.sh && python3 deck_tools.py build \
+  genetics/lect01b-genetic_disorders.md -f odp
 ```
 
 This writes native PPTX and editable ODP artifacts. Build all three artifacts, including the
@@ -54,8 +55,9 @@ extended-Djot authoring/import route documented in [docs/USAGE.md](docs/USAGE.md
 route:
 
 ```bash
-source source_me.sh && python3 tools/odp_to_marp.py genetics/lecture.odp
-source source_me.sh && python3 tools/marp_to_odp.py genetics/lecture.md
+source source_me.sh && python3 deck_tools.py import genetics/lecture.odp \
+  -t marp -o genetics/lecture.md
+source source_me.sh && python3 deck_tools.py build genetics/lecture.md -f odp
 ```
 
 Each importer preserves structured content for human cleanup. It does not make legacy ODP a second

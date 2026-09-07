@@ -102,7 +102,7 @@ section::after {
 	right: 28px;
 }
 
-/* The layout vocabulary mirrors marp_lib.layouts. Blockquotes are ordered cells. */
+/* The layout vocabulary mirrors slide_lib.layouts. Blockquotes are ordered cells. */
 section.blank {
 	padding: 0;
 }

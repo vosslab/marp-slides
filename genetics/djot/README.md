@@ -2,13 +2,13 @@
 
 This folder is regenerable extended-Djot presentation source for the shared native pipeline. It
 does not replace the current Marp source for existing decks or create a second canonical source for
-one deck. Each file was imported from the authoritative ODP with `tools/odp_to_djot.py`, which
+one deck. Each file was imported from the authoritative ODP with `deck_tools.py import`, which
 normalizes through a temporary PPTX only to recover text, images, reading order, and source-hidden
 slide state.
 
 The generated source uses exact `=== layout: <name>` and `@<slot>` lines, standard Djot headings and
 lists, and complete-paragraph `![alt](path)` component images. Legal layout and slot names derive
-from `marp_lib.layouts`; current corpus examples include the canonical short names. It deliberately
+from `slide_lib.layouts`; current corpus examples include the canonical short names. It deliberately
 omits presenter notes and does not infer animation or visual styling from a legacy file. Short DNA
 sequences use inline verbatim; ordinary `&prime;` text projects to U+2032 PRIME in the native model.
 
@@ -57,7 +57,7 @@ in Lecture 02e. This does not establish attended animation acceptance.
 Run the fast local structural check with:
 
 ```bash
-source source_me.sh && python3 tools/djot_slide_lint.py genetics/djot
+source source_me.sh && python3 deck_tools.py lint genetics/djot
 ```
 
 It validates the full local slide contract and image references without rendering a slide. It is
@@ -65,7 +65,7 @@ source-only: it does not establish native geometry, animation timing, or visual 
 0.10.0 is the pinned native parser and runs before semantic lint:
 
 ```bash
-source source_me.sh && python3 tools/djot_slide_lint.py \
+source source_me.sh && python3 deck_tools.py lint \
   --require-native --native-executable "$(command -v jotdown)" genetics/djot
 ```
 

@@ -22,7 +22,7 @@ from pptx import Presentation
 from pptx.enum.shapes import MSO_SHAPE_TYPE
 
 # Local Modules
-import marp_lib.layouts
+import slide_lib.layouts
 
 
 NAMESPACES = {
@@ -54,7 +54,7 @@ def write_image(image_path: pathlib.Path) -> None:
 
 
 #============================================
-def title_source(spec: marp_lib.layouts.LayoutSpec) -> list[str]:
+def title_source(spec: slide_lib.layouts.LayoutSpec) -> list[str]:
 	"""Return the permitted global title region for one layout specification."""
 	lines: list[str] = []
 	if spec.allows_title:
@@ -65,7 +65,7 @@ def title_source(spec: marp_lib.layouts.LayoutSpec) -> list[str]:
 
 
 #============================================
-def cell_source(spec: marp_lib.layouts.LayoutSpec, slot_name: str) -> list[str]:
+def cell_source(spec: slide_lib.layouts.LayoutSpec, slot_name: str) -> list[str]:
 	"""Return minimal valid source for one declared named cell."""
 	if spec.name == "multiple-choice" and slot_name == "question":
 		return ["Which editable object remains visible?", "", "- Choice A", "- Choice B"]
@@ -78,7 +78,7 @@ def cell_source(spec: marp_lib.layouts.LayoutSpec, slot_name: str) -> list[str]:
 
 
 #============================================
-def slide_source(spec: marp_lib.layouts.LayoutSpec) -> str:
+def slide_source(spec: slide_lib.layouts.LayoutSpec) -> str:
 	"""Build one minimal valid Djot slide from the live layout specification."""
 	lines = [f"=== layout: {spec.name}"]
 	lines.extend(title_source(spec))
@@ -92,8 +92,8 @@ def slide_source(spec: marp_lib.layouts.LayoutSpec) -> str:
 #============================================
 def write_deck(deck_path: pathlib.Path) -> tuple[str, ...]:
 	"""Write one Djot slide per live layout and return their rendering order."""
-	layout_names = tuple(marp_lib.layouts.LAYOUTS)
-	source = "\n\n".join(slide_source(spec) for spec in marp_lib.layouts.LAYOUTS.values()) + "\n"
+	layout_names = tuple(slide_lib.layouts.LAYOUTS)
+	source = "\n\n".join(slide_source(spec) for spec in slide_lib.layouts.LAYOUTS.values()) + "\n"
 	deck_path.write_text(source, encoding="utf-8")
 	return layout_names
 
@@ -202,7 +202,7 @@ def run() -> None:
 	try:
 		write_image(workspace / "component.png")
 		layout_names = write_deck(deck_path)
-		command = [sys.executable, "tools/marp_export.py", str(deck_path), "--format", "pdf"]
+		command = [sys.executable, "deck_tools.py", "build", str(deck_path), "--format", "pdf"]
 		subprocess.run(command, cwd=root, check=True)
 		inspect_pptx(pptx_path, layout_names)
 		inspect_odp(odp_path, layout_names)
