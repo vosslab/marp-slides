@@ -22,6 +22,7 @@ site/
 # -------------------- LOCAL REPOSITORY RULES --------------------
 # ADD YOUR CUSTOM IGNORES BELOW
 # Propagation preserves this section.
+# ------------------ END LOCAL REPOSITORY RULES ------------------
 *.png
 *.jpg
 *.jpeg
@@ -30,4 +31,3 @@ slide_*source.png
 *.od?
 *.pdf
 *.pptx
-# ------------------ END LOCAL REPOSITORY RULES ------------------

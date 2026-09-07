@@ -33,6 +33,7 @@
   strict Jotdown acceptance, bounded Poppler source-region imports, and native export workflows.
 - Made missing animation-writer reveal intent fail loudly and corrected source/native-renderability
   documentation.
+- Synchronized shared style guides, tests, and repository support files from the starter template.
 
 ### Removals and Deprecations
 
