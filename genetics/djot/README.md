@@ -1,31 +1,56 @@
-# Experimental extended-Djot genetics decks
+# Extended-Djot genetics decks
 
-This folder is a source-level exploration of the future extended-Djot slide language. It does not
-replace the current Marp source or create a second production pipeline. Each deck was imported from
-the authoritative ODP with `tools/odp_to_djot.py`, which normalizes through a temporary PPTX only
-to recover text, images, reading order, and source-hidden slide state.
+This folder is regenerable extended-Djot presentation source for the shared native pipeline. It
+does not replace the current Marp source for existing decks or create a second canonical source for
+one deck. Each file was imported from the authoritative ODP with `tools/odp_to_djot.py`, which
+normalizes through a temporary PPTX only to recover text, images, reading order, and source-hidden
+slide state.
 
-The generated source assumes the proposed layout catalog and uses the current authoring forms:
-`=== layout: <name>`, `@body`, `@left`, `@right`, `@gallery`, standard Djot headings and lists, and
-the reserved `![alt](path)` image form. It deliberately omits presenter notes; it does not infer
-semantic animations or visual styling from a legacy file. Short DNA sequences use inline verbatim;
-the documented `&prime;` source reference projects to U+2032 PRIME in the future native pipeline.
+The generated source uses exact `=== layout: <name>` and `@<slot>` lines, standard Djot headings and
+lists, and complete-paragraph `![alt](path)` component images. Legal layout and slot names derive
+from `marp_lib.layouts`; current corpus examples include the canonical short names. It deliberately
+omits presenter notes and does not infer animation or visual styling from a legacy file. Short DNA
+sequences use inline verbatim; ordinary `&prime;` text projects to U+2032 PRIME in the native model.
 
-| Deck | Visible slides | Hidden source slides excluded | Distinct extracted images |
-| --- | ---: | ---: | ---: |
-| `lect01a-course_intro.djot` | 31 | 9 | 18 |
-| `lect01b-genetic_disorders.djot` | 23 | 0 | 6 |
-| `lect02a-2025_announcements.djot` | 43 | 32 | 15 |
-| `lect02b-genes_dogma.djot` | 49 | 0 | 22 |
-| `lect02c-genome_sizes.djot` | 59 | 0 | 32 |
-| `lect02d-dna_structure_overview.djot` | 43 | 0 | 19 |
-| `lect02e-restriction_enzymes.djot` | 62 | 0 | 18 |
-| `lect02f-dna_electrophoresis.djot` | 26 | 1 | 20 |
-| **Total** | **336** | **42** | **150** |
+Use `#` and `##` only where the chosen layout permits global title/subtitle content. A title slide
+may contain several H2 lines, which become one subtitle region. One-line Djot attributes precede the
+element they describe. `$inline$` and `$$display$$` are local math extensions, but editable native
+math is not implemented yet. `<= blue overlay` is recognized and reports "not yet supported".
+
+`multiple-choice` requires exactly `@question` and `@answer`. The question contains a visible choice
+list; the answer is one or two short flat paragraphs. The parser records implicit answer reveal
+intent, but PowerPoint timing, first advance, and ODP animation survival are not implemented or
+verified.
+
+| Deck | Source | Visible | Hidden | Assets | Regions | Reviews |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `lect01a-course_intro.djot` | 40 | 31 | 9 | 18 | 6 | 11 |
+| `lect01b-genetic_disorders.djot` | 23 | 23 | 0 | 6 | 0 | 8 |
+| `lect02a-2025_announcements.djot` | 75 | 43 | 32 | 14 | 4 | 10 |
+| `lect02b-genes_dogma.djot` | 49 | 49 | 0 | 31 | 16 | 18 |
+| `lect02c-genome_sizes.djot` | 59 | 59 | 0 | 31 | 2 | 8 |
+| `lect02d-dna_structure_overview.djot` | 43 | 43 | 0 | 20 | 4 | 4 |
+| `lect02e-restriction_enzymes.djot` | 62 | 62 | 0 | 27 | 25 | 26 |
+| `lect02f-dna_electrophoresis.djot` | 27 | 26 | 1 | 20 | 15 | 11 |
+| **Total** | **378** | **336** | **42** | **167** | **72** | **96** |
 
 `assets/<deck>/import_report.json` retains the import inventory, including each visible source-slide
 number, selected layout, omitted-note count, and extraction-review reason. Image placement count can
 exceed the distinct-asset count because a figure may recur across teaching steps.
+
+## Corpus acceptance evidence
+
+The 2026-09-07 one-time acceptance sweep converted and validated all eight authoritative legacy
+decks: 378 source slides, 336 visible slides, 42 hidden slides, 167 reachable assets, 72 bounded
+source regions, 96 review slides, and 186 image occurrences. Every Djot image reference resolved to
+a file; there were no missing or extra assets, symlinks, or exact-full source regions.
+
+A second private regeneration was byte-identical across all 183 generated Djot, import-report, and
+asset files. The one-time native acceptance also passed: strict lint covered 8 decks, 336 visible
+slides, and 186 image occurrences; `build_slides.sh genetics` passed; and all three native E2Es
+passed. Sequential `--format all` exports for every deck retained matching PPTX, ODP, and PDF page
+counts (31, 23, 43, 49, 59, 43, 62, and 26), editable text and direct images, and the native table
+in Lecture 02e. This does not establish attended animation acceptance.
 
 ## Validation boundary
 
@@ -35,17 +60,22 @@ Run the fast local structural check with:
 source source_me.sh && python3 tools/djot_slide_lint.py genetics/djot
 ```
 
-It verifies slide declarations, documented required slots, animation-directive shape, and local
-image references without rendering a slide. Jotdown 0.10.0 is the pinned native parser and has
-passed all eight sources through the native-first check:
+It validates the full local slide contract and image references without rendering a slide. It is
+source-only: it does not establish native geometry, animation timing, or visual quality. Jotdown
+0.10.0 is the pinned native parser and runs before semantic lint:
 
 ```bash
 source source_me.sh && python3 tools/djot_slide_lint.py \
   --require-native --native-executable "$(command -v jotdown)" genetics/djot
 ```
 
-Jotdown is a parser, not a substitute for a formatter, editor rule, or standalone linter. The
-remaining compatibility-suite lanes still need explicit decisions before this corpus can claim to
-pass every applicable Djot tool. See the
+Jotdown is the raw-Djot parser-validation lane; it complements rather than replaces a formatter,
+editor rule, or standalone linter. The remaining compatibility-suite lanes still need explicit
+decisions before this corpus can claim to pass every applicable Djot tool. See the
 [language exploration record](../../docs/active_plans/decisions/djot_slide_extension_exploration.md)
 for that governing requirement and the upstream Djot and Jotdown sources.
+
+Native acceptance is one-time evidence, not a permanent test. The permanent suite remains separately
+offline, fast, and deterministic. The attended PowerPoint and Impress animation checks remain
+separate in
+[wp_a1_animation_fidelity.md](../../docs/active_plans/reports/wp_a1_animation_fidelity.md).

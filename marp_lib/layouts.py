@@ -15,6 +15,7 @@ from pptx.util import Emu, Pt
 
 # Local Modules
 import marp_lib.native_model
+import marp_lib.layout_validation
 
 
 PX = 9525
@@ -36,10 +37,14 @@ ACCENT = RGBColor(0x24, 0x57, 0x8F)
 FOREGROUND = RGBColor(0x17, 0x20, 0x33)
 MUTED = RGBColor(0x52, 0x61, 0x76)
 WHITE = RGBColor(0xFF, 0xFF, 0xFF)
+MULTIPLE_CHOICE_ANSWER_RECTANGLE = (820.0, 618.0, 360.0, 108.0)
+MULTIPLE_CHOICE_POPUP_GUTTER = 24.0
+# The full-width question stops above the popup's reserved bottom-right footprint.
+MULTIPLE_CHOICE_QUESTION_RECTANGLE = (LEFT, 82.0, RIGHT - LEFT,
+	MULTIPLE_CHOICE_ANSWER_RECTANGLE[1] - MULTIPLE_CHOICE_POPUP_GUTTER - 82.0)
 
 
-class LayoutError(ValueError):
-	"""Report an expected source or native-layout validation failure."""
+LayoutError = marp_lib.layout_validation.LayoutError
 
 
 @dataclass(frozen=True)
@@ -51,6 +56,40 @@ class LayoutSpec:
 	vertical_title: bool
 	vertical_cells: frozenset[int]
 	builder: Callable[[object, object, object, "LayoutSpec"], None]
+	slot_names: tuple[str, ...] = ()
+	allows_title: bool = False
+	allows_subtitle: bool = False
+	topology_matchable: bool = False
+
+
+@dataclass(frozen=True)
+class TitleBodyPlan:
+	"""One validated title and content allocation before native shapes exist."""
+	title_rectangle: tuple[float, float, float, float] | None
+	title_size: float
+	content_rectangle: tuple[float, float, float, float]
+	vertical_title: bool
+
+
+@dataclass(frozen=True)
+class CellBodyPlan:
+	"""One shared local-H2 size and remaining body rectangle for a cell."""
+	body_rectangle: tuple[float, float, float, float]
+	heading_size: float | None
+
+
+@dataclass(frozen=True)
+class FlowStep:
+	"""One source-ordered native text or image placement within a mixed cell."""
+	block: marp_lib.native_model.Paragraph | marp_lib.native_model.ListBlock | marp_lib.native_model.Image
+	rectangle: tuple[float, float, float, float]
+
+
+@dataclass(frozen=True)
+class CellFlowPlan:
+	"""One preflight-approved ordered text/image flow and shared text size."""
+	steps: tuple[FlowStep, ...]
+	text_size: float
 
 
 #============================================
@@ -72,6 +111,8 @@ def inline_text(inlines: tuple[marp_lib.native_model.Inline, ...]) -> str:
 	for inline in inlines:
 		if isinstance(inline, (marp_lib.native_model.Text, marp_lib.native_model.InlineCode)):
 			parts.append(inline.value)
+		elif isinstance(inline, marp_lib.native_model.InlineMath):
+			raise LayoutError("InlineMath requires source validation before native rendering")
 		elif isinstance(inline, marp_lib.native_model.Break):
 			parts.append(" ")
 		else:
@@ -128,6 +169,8 @@ def add_inline_runs(paragraph: object, inlines: tuple[marp_lib.native_model.Inli
 			write_run(paragraph.add_run(), inline.value, size, color, bold, italic, url, displayed_url)
 		elif isinstance(inline, marp_lib.native_model.InlineCode):
 			write_run(paragraph.add_run(), inline.value, size, color, bold, italic, url, displayed_url)
+		elif isinstance(inline, marp_lib.native_model.InlineMath):
+			raise LayoutError("InlineMath requires source validation before native rendering")
 		elif isinstance(inline, marp_lib.native_model.Break):
 			paragraph.add_line_break()
 		elif isinstance(inline, marp_lib.native_model.Strong):
@@ -153,11 +196,12 @@ def flatten_list(block: marp_lib.native_model.ListBlock, level: int = 0) -> list
 
 
 #============================================
-def body_parts(blocks: tuple[marp_lib.native_model.Block, ...]) -> tuple[list[marp_lib.native_model.Heading], list[tuple[tuple[marp_lib.native_model.Inline, ...], int, bool, bool, int]], list[marp_lib.native_model.Image]]:
+def body_parts(blocks: tuple[marp_lib.native_model.Block, ...]) -> tuple[list[marp_lib.native_model.Heading], list[tuple[tuple[marp_lib.native_model.Inline, ...], int, bool, bool, int]], list[marp_lib.native_model.Image], list[marp_lib.native_model.Table]]:
 	"""Classify already typed blocks without reparsing canonical Markdown."""
 	headings: list[marp_lib.native_model.Heading] = []
 	items: list[tuple[tuple[marp_lib.native_model.Inline, ...], int, bool, bool, int]] = []
 	images: list[marp_lib.native_model.Image] = []
+	tables: list[marp_lib.native_model.Table] = []
 	for block in blocks:
 		if isinstance(block, marp_lib.native_model.Heading):
 			headings.append(block)
@@ -165,9 +209,11 @@ def body_parts(blocks: tuple[marp_lib.native_model.Block, ...]) -> tuple[list[ma
 			items.append((block.inlines, 0, False, True, 1))
 		elif isinstance(block, marp_lib.native_model.ListBlock):
 			items.extend(flatten_list(block))
-		else:
+		elif isinstance(block, marp_lib.native_model.Image):
 			images.append(block)
-	return headings, items, images
+		elif isinstance(block, marp_lib.native_model.Table):
+			tables.append(block)
+	return headings, items, images, tables
 
 
 #============================================
@@ -207,6 +253,63 @@ def fit_body_size(item_sets: list[list[tuple[tuple[marp_lib.native_model.Inline,
 			return size
 	raise LayoutError(f"{source.path}:{source.line}: {context} content cannot fit within the supported readable minimum of "
 		f"{MIN_READABLE_BODY_SIZE:g} CSS px")
+
+
+#============================================
+def table_dimensions(table: marp_lib.native_model.Table) -> tuple[int, int]:
+	"""Return already validated native table row and column counts."""
+	column_count = len(table.headers) if table.headers else len(table.rows[0])
+	return len(table.rows) + (1 if table.headers else 0), column_count
+
+
+#============================================
+def estimate_table_height(table: marp_lib.native_model.Table, size: float, width: float) -> float:
+	"""Estimate equal-column wrapped cell rows within one native table rectangle."""
+	_, column_count = table_dimensions(table)
+	cell_width = width / column_count
+	rows = ((table.headers,) if table.headers else ()) + table.rows
+	return sum(max(wrapped_line_count(cell, size, cell_width) for cell in row) * size * BODY_LINE_HEIGHT +
+		8 for row in rows)
+
+
+#============================================
+def fit_table_size(table: marp_lib.native_model.Table, width: float, height: float,
+		context: str) -> float:
+	"""Choose readable shared native table type before any table shape allocation."""
+	for quarter_points in range(22 * 4, int(MIN_READABLE_BODY_SIZE * 4) - 1, -1):
+		size = quarter_points / 4
+		if estimate_table_height(table, size, width) <= height:
+			return size
+	raise layout_error(table.location,
+		f"{context} table cannot fit within the supported readable minimum of {MIN_READABLE_BODY_SIZE:g} CSS px")
+
+
+#============================================
+def render_table(slide: object, table: marp_lib.native_model.Table,
+		rectangle: tuple[float, float, float, float], context: str) -> None:
+	"""Render one selectable native table with its typed editable cell runs."""
+	left, top, width, height = rectangle
+	row_count, column_count = table_dimensions(table)
+	size = fit_table_size(table, width, height, context)
+	shape = slide.shapes.add_table(row_count, column_count, px(left), px(top), px(width), px(height))
+	native_table = shape.table
+	rows = ((table.headers, True),) if table.headers else ()
+	rows += tuple((row, False) for row in table.rows)
+	for row_index, (row, is_header) in enumerate(rows):
+		for column_index, inlines in enumerate(row):
+			cell = native_table.cell(row_index, column_index)
+			cell.margin_left = cell.margin_right = px(6)
+			cell.margin_top = cell.margin_bottom = px(4)
+			cell.vertical_anchor = MSO_ANCHOR.MIDDLE
+			if is_header:
+				cell.fill.solid()
+				cell.fill.fore_color.rgb = ACCENT
+			paragraph = cell.text_frame.paragraphs[0]
+			paragraph.alignment = PP_ALIGN.LEFT
+			add_inline_runs(paragraph, inlines, size, WHITE if is_header else FOREGROUND)
+			if is_header:
+				for run in paragraph.runs:
+					run.font.bold = True
 
 
 #============================================
@@ -268,6 +371,72 @@ def add_picture(slide: object, image_path: pathlib.Path, image: marp_lib.native_
 
 
 #============================================
+def flow_items(block: marp_lib.native_model.Paragraph | marp_lib.native_model.ListBlock) -> list[tuple[tuple[marp_lib.native_model.Inline, ...], int, bool, bool, int]]:
+	"""Project one source-ordered editable flow block into native paragraphs."""
+	if isinstance(block, marp_lib.native_model.Paragraph):
+		return [(block.inlines, 0, False, True, 1)]
+	return flatten_list(block)
+
+
+#============================================
+def image_flow_height(deck: marp_lib.native_model.Deck, image: marp_lib.native_model.Image,
+		width: float) -> float:
+	"""Reserve a full-width contained component image at its source aspect ratio."""
+	image_path = resolve_image_path(deck, image)
+	with PIL.Image.open(image_path) as opened_image:
+		image_width, image_height = opened_image.size
+	return width * image_height / image_width
+
+
+#============================================
+def plan_cell_flow(deck: marp_lib.native_model.Deck, cell: marp_lib.native_model.Cell,
+		rectangle: tuple[float, float, float, float], preferred_size: float,
+		context: str) -> CellFlowPlan | None:
+	"""Allocate source-ordered mixed flow while preserving readable text first."""
+	_, items, images, tables = body_parts(cell.blocks)
+	if not items or not images or tables:
+		return None
+	left, top, width, height = rectangle
+	blocks = tuple(block for block in cell.blocks if isinstance(block,
+		(marp_lib.native_model.Paragraph, marp_lib.native_model.ListBlock, marp_lib.native_model.Image)))
+	image_heights = {id(block): image_flow_height(deck, block, width) for block in blocks
+		if isinstance(block, marp_lib.native_model.Image)}
+	gap_height = 12 * (len(blocks) - 1)
+	for quarter_points in range(int(preferred_size * 4), int(MIN_READABLE_BODY_SIZE * 4) - 1, -1):
+		size = quarter_points / 4
+		text_heights = {id(block): estimate_items_height(flow_items(block), size, width) for block in blocks
+			if not isinstance(block, marp_lib.native_model.Image)}
+		remaining_image_height = height - gap_height - sum(text_heights.values())
+		if remaining_image_height > 0:
+			full_image_height = sum(image_heights.values())
+			image_scale = min(1.0, remaining_image_height / full_image_height)
+			y = top
+			steps: list[FlowStep] = []
+			for block in blocks:
+				block_height = (image_heights[id(block)] * image_scale if
+					isinstance(block, marp_lib.native_model.Image) else text_heights[id(block)])
+				steps.append(FlowStep(block, (left, y, width, block_height)))
+				y += block_height + 12
+			return CellFlowPlan(tuple(steps), size)
+	offending = next(block for block in blocks if isinstance(block, marp_lib.native_model.Image))
+	raise layout_error(offending.location,
+		f"{context} ordered text and component-image flow cannot fit within the supported readable minimum of "
+		f"{MIN_READABLE_BODY_SIZE:g} CSS px")
+
+
+#============================================
+def render_cell_flow(slide: object, deck: marp_lib.native_model.Deck, plan: CellFlowPlan) -> None:
+	"""Write the exact preflight-approved source order as native shapes."""
+	for step in plan.steps:
+		left, top, width, height = step.rectangle
+		if isinstance(step.block, marp_lib.native_model.Image):
+			add_picture(slide, resolve_image_path(deck, step.block), step.block, left, top, width, height)
+		else:
+			frame = add_textbox(slide, left, top, width, height)
+			write_items(frame, flow_items(step.block), plan.text_size)
+
+
+#============================================
 def title_size(source: marp_lib.native_model.Slide, default_size: float) -> float:
 	"""Return the typed H1 override or the layout's established default size."""
 	return float(source.title_size_override.preset.value) if source.title_size_override else default_size
@@ -313,6 +482,171 @@ def title_and_content_top(slide: object, source: marp_lib.native_model.Slide,
 
 
 #============================================
+def cell_rectangles(spec: LayoutSpec, content: tuple[float, float, float, float]) -> list[tuple[float, float, float, float]]:
+	"""Return the named-cell geometry derived from one common content rectangle."""
+	left, top, width, height = content
+	if spec.name in ("one-panel", "vertical-panel", "vertical-text-panel"):
+		return [content]
+	if spec.name in ("two-panels", "vertical-title-two-panels"):
+		return grid_rectangles(left, top, width, height, 2, 1)
+	if spec.name == "one-plus-two-panels":
+		cell_width = (width - CELL_GUTTER) / 2
+		half_height = (height - GRID_GUTTER) / 2
+		return [(left, top, cell_width, height),
+			(left + cell_width + CELL_GUTTER, top, cell_width, half_height),
+			(left + cell_width + CELL_GUTTER, top + half_height + GRID_GUTTER, cell_width, half_height)]
+	if spec.name == "two-plus-one-panels":
+		cell_width = (width - CELL_GUTTER) / 2
+		half_height = (height - GRID_GUTTER) / 2
+		return [(left, top, cell_width, half_height),
+			(left, top + half_height + GRID_GUTTER, cell_width, half_height),
+			(left + cell_width + CELL_GUTTER, top, cell_width, height)]
+	if spec.name == "stacked-panels":
+		return grid_rectangles(left, top, width, height, 1, 2)
+	if spec.name == "two-over-one-panels":
+		half_height = (height - GRID_GUTTER) / 2
+		rectangles = grid_rectangles(left, top, width, half_height, 2, 1)
+		rectangles.append((left, top + half_height + GRID_GUTTER, width, half_height))
+		return rectangles
+	if spec.name == "four-panels":
+		return grid_rectangles(left, top, width, height, 2, 2)
+	if spec.name == "six-panels":
+		return grid_rectangles(left, top, width, height, 3, 2)
+	if spec.name == "two-panels-vertical-clipart":
+		right_width = (width - CELL_GUTTER) * .34
+		left_width = width - CELL_GUTTER - right_width
+		half_height = (height - GRID_GUTTER) / 2
+		return [(left, top, left_width, half_height),
+			(left, top + half_height + GRID_GUTTER, left_width, half_height),
+			(left + left_width + CELL_GUTTER, top, right_width, height)]
+	raise LayoutError(f"{spec.name} does not define native cell geometry")
+
+
+#============================================
+def normalized_topology_slots(spec: LayoutSpec) -> tuple[tuple[float, float, float, float, float, float], ...]:
+	"""Return normalized slot spans and centers from canonical content geometry."""
+	content = (LEFT, 160.0, RIGHT - LEFT, CONTENT_BOTTOM - 160.0)
+	left, top, width, height = content
+	return tuple(((x - left) / width, (y - top) / height, w / width, h / height,
+		(x - left + w / 2) / width, (y - top + h / 2) / height)
+		for x, y, w, h in cell_rectangles(spec, content))
+
+
+#============================================
+def plan_cell_body(cell: marp_lib.native_model.Cell,
+		rectangle: tuple[float, float, float, float]) -> CellBodyPlan:
+	"""Choose a readable local-H2 size and reserve its matching body rectangle."""
+	left, top, width, height = rectangle
+	headings, _, _, _ = body_parts(cell.blocks)
+	if not headings:
+		return CellBodyPlan(rectangle, None)
+	for quarter_points in range(28 * 4, int(MIN_READABLE_BODY_SIZE * 4) - 1, -1):
+		size = quarter_points / 4
+		heading_height = wrapped_line_count(headings[0].inlines, size, width) * size * 1.2
+		if heading_height + 10 <= height:
+			return CellBodyPlan((left, top + heading_height + 10, width, height - heading_height - 10), size)
+	raise layout_error(headings[0].location,
+		f"local H2 cannot fit within the supported readable minimum of {MIN_READABLE_BODY_SIZE:g} CSS px")
+
+
+#============================================
+def content_cell_rectangles(source: marp_lib.native_model.Slide, spec: LayoutSpec,
+		content: tuple[float, float, float, float]) -> list[tuple[float, float, float, float]]:
+	"""Allocate the existing footer layout from its readable lower-cell need."""
+	if spec.name != "two-over-one-panels":
+		return cell_rectangles(spec, content)
+	left, top, width, height = content
+	bottom = next(cell for cell in source.cells if cell.name == "bottom")
+	_headings, items, _images, tables = body_parts(bottom.blocks)
+	need = estimate_items_height(items, MIN_READABLE_BODY_SIZE, width) if items else 0.0
+	if tables:
+		need = max(need, estimate_table_height(tables[0], MIN_READABLE_BODY_SIZE, width))
+	bottom_height = max((height - GRID_GUTTER) / 2, need)
+	top_height = height - GRID_GUTTER - bottom_height
+	top_rectangles = grid_rectangles(left, top, width, top_height, 2, 1)
+	return [*top_rectangles, (left, top + top_height + GRID_GUTTER, width, bottom_height)]
+def readability_failure(source: marp_lib.native_model.Slide, spec: LayoutSpec,
+		content: tuple[float, float, float, float]) -> tuple[str, marp_lib.native_model.SourceLocation] | None:
+	"""Return the first region that cannot retain the minimum readable body type."""
+	for slot_name, rectangle in zip(spec.slot_names, content_cell_rectangles(source, spec, content)):
+		cell = next(cell for cell in source.cells if cell.name == slot_name)
+		_, items, images, _ = body_parts(cell.blocks)
+		body_plan = plan_cell_body(cell, rectangle)
+		if not items or images:
+			continue
+		_, _, width, _ = rectangle
+		_, _, _, body_height = body_plan.body_rectangle
+		if estimate_items_height(items, MIN_READABLE_BODY_SIZE, width) > body_height:
+			body_block = next(block for block in cell.blocks if not isinstance(block,
+				marp_lib.native_model.Heading))
+			return slot_name, body_block.location
+	return None
+
+
+#============================================
+def plan_title_body(source: marp_lib.native_model.Slide, title: marp_lib.native_model.Heading,
+		spec: LayoutSpec) -> TitleBodyPlan:
+	"""Allocate title and body space before native title or body shapes are written."""
+	if spec.vertical_title:
+		size = title_size(source, 38)
+		require_title_capacity(source, title, size, 94, 666, spec.name, True)
+		content = (178.0, 82.0, RIGHT - 178, CONTENT_BOTTOM - 82)
+		failure = readability_failure(source, spec, content)
+		if failure is not None:
+			slot_name, location = failure
+			raise layout_error(location,
+				f"{spec.name} {slot_name} content cannot fit within the supported readable minimum of "
+				f"{MIN_READABLE_BODY_SIZE:g} CSS px")
+		return TitleBodyPlan((LEFT, 60.0, 94.0, 666.0), size, content, True)
+	size = title_size(source, 48)
+	title_height = require_title_capacity(source, title, size, RIGHT - LEFT, 170, spec.name)
+	content_top = TITLE_TOP + title_height + 24
+	content = (LEFT, content_top, RIGHT - LEFT, CONTENT_BOTTOM - content_top)
+	failure = readability_failure(source, spec, content)
+	if failure is None:
+		return TitleBodyPlan((LEFT, TITLE_TOP, RIGHT - LEFT, title_height), size, content, False)
+	maximum_content = (LEFT, TITLE_TOP + 24, RIGHT - LEFT, CONTENT_BOTTOM - TITLE_TOP - 24)
+	if title_height <= 170 or readability_failure(source, spec, maximum_content) is not None:
+		slot_name, location = failure
+		raise layout_error(location,
+			f"{spec.name} {slot_name} content cannot fit within the supported readable minimum of "
+			f"{MIN_READABLE_BODY_SIZE:g} CSS px")
+	slot_name, _ = failure
+	raise layout_error(title.location,
+		f"{spec.name} H1 allocation leaves {slot_name} without its readable body region")
+
+
+#============================================
+def plan_content(source: marp_lib.native_model.Slide, spec: LayoutSpec) -> TitleBodyPlan:
+	"""Allocate an optional H1 or the titleless full-width body region without shapes."""
+	headings, _, _, _ = body_parts(source.blocks)
+	if headings:
+		return plan_title_body(source, headings[0], spec)
+	content = (LEFT, 82.0, RIGHT - LEFT, CONTENT_BOTTOM - 82.0)
+	failure = readability_failure(source, spec, content)
+	if failure is not None:
+		slot_name, location = failure
+		raise layout_error(location,
+			f"{spec.name} {slot_name} content cannot fit within the supported readable minimum of "
+			f"{MIN_READABLE_BODY_SIZE:g} CSS px")
+	return TitleBodyPlan(None, 0.0, content, False)
+
+
+#============================================
+def write_planned_title(slide: object, title: marp_lib.native_model.Heading,
+		plan: TitleBodyPlan) -> None:
+	"""Write one preflight-approved editable title frame."""
+	if plan.title_rectangle is None:
+		return
+	left, top, width, height = plan.title_rectangle
+	frame = add_textbox(slide, left, top, width, height, vertical_text=plan.vertical_title)
+	paragraph = frame.paragraphs[0]
+	add_inline_runs(paragraph, title.inlines, plan.title_size)
+	for run in paragraph.runs:
+		run.font.bold = True
+
+
+#============================================
 def layout_error(source: marp_lib.native_model.SourceLocation | marp_lib.native_model.Slide,
 		message: str) -> ValueError:
 	"""Attach a layout-capacity failure to its canonical source location."""
@@ -322,105 +656,47 @@ def layout_error(source: marp_lib.native_model.SourceLocation | marp_lib.native_
 
 #============================================
 def validate_layout_source(source: marp_lib.native_model.Slide) -> LayoutSpec:
-	"""Select one layout and prove every supported source block has a destination."""
+	"""Select the live layout then validate its presentation-source contract."""
 	spec = LAYOUTS[source.layout_class]
-	headings, items, images = body_parts(source.blocks)
-	cells = source.cells
-	if spec.name == "blank":
-		if source.blocks or cells:
-			offending = source.blocks[0].location if source.blocks else cells[0].location
-			raise layout_error(offending, "blank slides must be empty")
-		return spec
-	if spec.cell_count:
-		if len(cells) != spec.cell_count:
-			offending = cells[-1].location if cells else source.location
-			raise layout_error(offending, f"{spec.name} slides require exactly {spec.cell_count} blockquote cells")
-		if items or images or any(heading.level != 1 for heading in headings):
-			offending = next((block.location for block in source.blocks if not isinstance(block,
-				marp_lib.native_model.Heading) or block.level != 1), source.location)
-			raise layout_error(offending, f"{spec.name} slides support a title and blockquote cells only")
-		if len(headings) != 1 or headings[0].level != 1:
-			offending = headings[1].location if len(headings) > 1 else source.location
-			raise layout_error(offending, f"{spec.name} slides require exactly one level-one title")
-		for index, cell in enumerate(cells, start=1):
-			cell_headings, cell_items, cell_images = body_parts(cell.blocks)
-			if len(cell_headings) > 1 or any(heading.level != 2 for heading in cell_headings):
-				offending = next((block.location for block in cell.blocks if isinstance(block,
-					marp_lib.native_model.Heading) and block.level != 2), cell.location)
-				raise layout_error(offending, f"{spec.name} cell {index} supports one optional level-two heading")
-			if cell_items and cell_images:
-				offending = next(block.location for block in cell.blocks if isinstance(block,
-					marp_lib.native_model.Image))
-				raise layout_error(offending, f"{spec.name} cell {index} cannot combine text and component images")
-			if not cell_items and not cell_images:
-				raise layout_error(cell.location, f"{spec.name} cell {index} requires editable text or component images")
-		return spec
-	if cells:
-		raise layout_error(cells[0].location, f"{spec.name} slides do not accept blockquote cells")
-	if spec.name in ("title-slide", "centered-text"):
-		if not headings or headings[0].level != 1 or items or images:
-			raise layout_error(source, f"{spec.name} slides support a title and level-two subtitle lines only")
-		if any(heading.level != 2 for heading in headings[1:]):
-			raise layout_error(source, f"{spec.name} subtitle lines must use level-two Markdown")
-		return spec
-	if spec.name == "title-only":
-		if len(headings) != 1 or headings[0].level != 1 or items or images:
-			raise layout_error(source, "title-only slides require exactly one level-one title")
-		return spec
-	if spec.name == "gallery":
-		if len(headings) > 1 or any(heading.level != 1 for heading in headings) or items or not 2 <= len(images) <= 6:
-			raise layout_error(source, "gallery slides support an optional title and two through six component images")
-		return spec
-	if len(headings) != 1 or headings[0].level != 1:
-		offending = headings[1].location if len(headings) > 1 else source.location
-		raise layout_error(offending, f"{spec.name} slides require exactly one level-one title")
-	if spec.name in ("title-vertical-text", "vertical-title-vertical-text"):
-		body_blocks = source.blocks[1:]
-		if len(body_blocks) != 1:
-			offending = body_blocks[1].location if len(body_blocks) > 1 else headings[0].location
-			raise layout_error(offending, f"{spec.name} slides require exactly one root body block")
-		if not isinstance(body_blocks[0], (marp_lib.native_model.Paragraph,
-				marp_lib.native_model.ListBlock, marp_lib.native_model.Image)):
-			raise layout_error(body_blocks[0].location,
-				f"{spec.name} slides require exactly one root body block")
-	if not spec.allows_root_body or (items and images):
-		offending = next((block.location for block in source.blocks[1:] if isinstance(block,
-			marp_lib.native_model.Image)), headings[0].location)
-		raise layout_error(offending, f"{spec.name} slides require one body mode: editable text or component images")
-	if not items and not images:
-		raise layout_error(headings[0].location, f"{spec.name} slides require editable body text or one component image")
-	if len(images) > 1:
-		raise layout_error(images[1].location, f"{spec.name} slides support one contained component image")
+	marp_lib.layout_validation.validate_layout_source(source, spec)
 	return spec
 
 
 def render_cell(slide: object, deck: marp_lib.native_model.Deck, cell: marp_lib.native_model.Cell, rectangle: tuple[float, float, float, float],
-		vertical: bool = False) -> None:
+		vertical: bool = False, preferred_body_size: float = 22, context: str = "cell") -> None:
 	"""Render one independently editable cell in its assigned rectangle."""
 	left, top, width, height = rectangle
-	headings, items, images = body_parts(cell.blocks)
-	body_top, body_height = top, height
+	headings, items, images, tables = body_parts(cell.blocks)
+	body_plan = plan_cell_body(cell, rectangle)
+	body_left, body_top, body_width, body_height = body_plan.body_rectangle
 	if headings:
 		heading = headings[0]
-		heading_size = 28
+		heading_size = body_plan.heading_size
+		if heading_size is None:
+			raise LayoutError("local H2 requires a readable cell-body plan")
 		heading_height = wrapped_line_count(heading.inlines, heading_size, width) * heading_size * 1.2
 		head_frame = add_textbox(slide, left, top, width, heading_height, vertical_text=vertical)
 		heading_paragraph = head_frame.paragraphs[0]
 		add_inline_runs(heading_paragraph, heading.inlines, heading_size)
 		for run in heading_paragraph.runs:
 			run.font.bold = True
-		body_top, body_height = top + heading_height + 10, height - heading_height - 10
-	if images:
+	flow_plan = plan_cell_flow(deck, cell, body_plan.body_rectangle, preferred_body_size, context)
+	if flow_plan is not None:
+		render_cell_flow(slide, deck, flow_plan)
+		return
+	if tables:
+		render_table(slide, tables[0], (body_left, body_top, body_width, body_height), context)
+	elif images:
 		gap = 12
-		image_width = (width - gap * (len(images) - 1)) / len(images)
+		image_width = (body_width - gap * (len(images) - 1)) / len(images)
 		for index, image in enumerate(images):
 			add_picture(slide, resolve_image_path(deck, image), image,
-				left + index * (image_width + gap), body_top, image_width, body_height)
+				body_left + index * (image_width + gap), body_top, image_width, body_height)
 	elif items:
 		body_block = next(block for block in cell.blocks if not isinstance(block,
 			marp_lib.native_model.Heading))
-		size = fit_body_size([items], width, body_height, 22, body_block.location, "cell")
-		frame = add_textbox(slide, left, body_top, width, body_height, vertical_text=vertical)
+		size = fit_body_size([items], body_width, body_height, preferred_body_size, body_block.location, context)
+		frame = add_textbox(slide, body_left, body_top, body_width, body_height, vertical_text=vertical)
 		write_items(frame, items, size)
 
 
@@ -442,7 +718,7 @@ def build_blank(slide: object, source: object, deck: object, spec: LayoutSpec) -
 #============================================
 def build_title_slide(slide: object, source: marp_lib.native_model.Slide, deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
 	"""Render centered title and optional subtitle."""
-	headings, _, _ = body_parts(source.blocks)
+	headings, _, _, _ = body_parts(source.blocks)
 	frame = add_textbox(slide, 110, 180, 1060, 390, MSO_ANCHOR.MIDDLE)
 	title_size_value = title_size(source, 60)
 	subtitle_height = max(len(headings) - 1, 0) * 31 * 1.2
@@ -484,19 +760,13 @@ def build_centered_text(slide: object, source: marp_lib.native_model.Slide, deck
 #============================================
 def render_root_body(slide: object, source: marp_lib.native_model.Slide, deck: marp_lib.native_model.Deck,
 		spec: LayoutSpec) -> None:
-	"""Render title and one native editable body or component image region."""
-	headings, items, images = body_parts(source.blocks)
-	left, top, width = title_and_content_top(slide, source, headings[0], spec.vertical_title)
-	height = CONTENT_BOTTOM - top
-	if images:
-		for image in images:
-			add_picture(slide, resolve_image_path(deck, image), image, left, top, width, height)
-	elif items:
-		body_block = next(block for block in source.blocks if not isinstance(block,
-			marp_lib.native_model.Heading))
-		size = fit_body_size([items], width, height, 26, body_block.location, spec.name)
-		frame = add_textbox(slide, left, top, width, height, vertical_text=bool(spec.vertical_cells))
-		write_items(frame, items, size)
+	"""Render an optional title and delegate its root body to the cell renderer."""
+	headings, _, _, _ = body_parts(source.blocks)
+	body = next(cell for cell in source.cells if cell.name == "body")
+	plan = plan_content(source, spec)
+	if headings:
+		write_planned_title(slide, headings[0], plan)
+	render_cell(slide, deck, body, plan.content_rectangle, bool(spec.vertical_cells), 26, spec.name)
 
 
 #============================================
@@ -524,112 +794,112 @@ def build_title_vertical_text(slide: object, source: marp_lib.native_model.Slide
 def render_cells(slide: object, source: marp_lib.native_model.Slide,
 		deck: marp_lib.native_model.Deck, spec: LayoutSpec,
 		rectangles: list[tuple[float, float, float, float]]) -> None:
-	"""Render already selected native cell rectangles in source reading order."""
-	for index, (cell, rectangle) in enumerate(zip(source.cells, rectangles)):
+	"""Render native cell rectangles by their declared layout slot."""
+	for index, (slot_name, rectangle) in enumerate(zip(spec.slot_names, rectangles)):
+		cell = next(cell for cell in source.cells if cell.name == slot_name)
 		render_cell(slide, deck, cell, rectangle, index in spec.vertical_cells)
 
 
 #============================================
 def content_rectangle(slide: object, source: marp_lib.native_model.Slide,
 		spec: LayoutSpec) -> tuple[float, float, float, float]:
-	"""Return the common native body region after emitting its title."""
-	title = body_parts(source.blocks)[0][0]
-	left, top, width = title_and_content_top(slide, source, title, spec.vertical_title)
-	return left, top, width, CONTENT_BOTTOM - top
+	"""Write an optional title then return the preflight-approved body region."""
+	headings, _, _, _ = body_parts(source.blocks)
+	plan = plan_content(source, spec)
+	if headings:
+		write_planned_title(slide, headings[0], plan)
+	return plan.content_rectangle
 
 
 #============================================
-def build_title_two_content(slide: object, source: marp_lib.native_model.Slide,
+def build_standard_cells(slide: object, source: marp_lib.native_model.Slide,
 		deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
-	"""Render the two-peer content layout."""
-	left, top, width, height = content_rectangle(slide, source, spec)
-	render_cells(slide, source, deck, spec, grid_rectangles(left, top, width, height, 2, 1))
+	"""Render ordinary named cells from their layout-owned content allocation."""
+	content = content_rectangle(slide, source, spec)
+	render_cells(slide, source, deck, spec, content_cell_rectangles(source, spec, content))
 
 
-#============================================
-def build_title_content_and_two_content(slide: object, source: marp_lib.native_model.Slide,
-		deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
-	"""Render one left cell beside two vertically stacked right cells."""
-	left, top, width, height = content_rectangle(slide, source, spec)
-	cell_width = (width - CELL_GUTTER) / 2
-	half_height = (height - GRID_GUTTER) / 2
-	rectangles = [(left, top, cell_width, height), (left + cell_width + CELL_GUTTER, top, cell_width, half_height),
-		(left + cell_width + CELL_GUTTER, top + half_height + GRID_GUTTER, cell_width, half_height)]
-	render_cells(slide, source, deck, spec, rectangles)
-
-
-#============================================
-def build_title_two_content_and_content(slide: object, source: marp_lib.native_model.Slide,
-		deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
-	"""Render two vertically stacked left cells beside one right cell."""
-	left, top, width, height = content_rectangle(slide, source, spec)
-	cell_width = (width - CELL_GUTTER) / 2
-	half_height = (height - GRID_GUTTER) / 2
-	rectangles = [(left, top, cell_width, half_height), (left, top + half_height + GRID_GUTTER, cell_width, half_height),
-		(left + cell_width + CELL_GUTTER, top, cell_width, height)]
-	render_cells(slide, source, deck, spec, rectangles)
-
-
-#============================================
-def build_title_content_over_content(slide: object, source: marp_lib.native_model.Slide,
-		deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
-	"""Render two vertically stacked full-width content cells."""
-	left, top, width, height = content_rectangle(slide, source, spec)
-	render_cells(slide, source, deck, spec, grid_rectangles(left, top, width, height, 1, 2))
-
-
-#============================================
-def build_title_two_content_over_content(slide: object, source: marp_lib.native_model.Slide,
-		deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
-	"""Render two upper peers above one full-width lower cell."""
-	left, top, width, height = content_rectangle(slide, source, spec)
-	half_height = (height - GRID_GUTTER) / 2
-	rectangles = grid_rectangles(left, top, width, half_height, 2, 1)
-	rectangles.append((left, top + half_height + GRID_GUTTER, width, half_height))
-	render_cells(slide, source, deck, spec, rectangles)
-
-
-#============================================
-def build_title_four_content(slide: object, source: marp_lib.native_model.Slide,
-		deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
-	"""Render a two-by-two native content grid."""
-	left, top, width, height = content_rectangle(slide, source, spec)
-	render_cells(slide, source, deck, spec, grid_rectangles(left, top, width, height, 2, 2))
-
-
-#============================================
-def build_title_six_content(slide: object, source: marp_lib.native_model.Slide,
-		deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
-	"""Render a three-by-two native content grid."""
-	left, top, width, height = content_rectangle(slide, source, spec)
-	render_cells(slide, source, deck, spec, grid_rectangles(left, top, width, height, 3, 2))
+def build_title_two_content(slide: object, source: marp_lib.native_model.Slide, deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
+	"""Render two peer cells."""
+	build_standard_cells(slide, source, deck, spec)
+def build_title_content_and_two_content(slide: object, source: marp_lib.native_model.Slide, deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
+	"""Render one cell beside two peers."""
+	build_standard_cells(slide, source, deck, spec)
+def build_title_two_content_and_content(slide: object, source: marp_lib.native_model.Slide, deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
+	"""Render two peers beside one cell."""
+	build_standard_cells(slide, source, deck, spec)
+def build_title_content_over_content(slide: object, source: marp_lib.native_model.Slide, deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
+	"""Render stacked full-width cells."""
+	build_standard_cells(slide, source, deck, spec)
+def build_title_two_content_over_content(slide: object, source: marp_lib.native_model.Slide, deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
+	"""Render upper peers and a lower footer."""
+	build_standard_cells(slide, source, deck, spec)
+def build_title_four_content(slide: object, source: marp_lib.native_model.Slide, deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
+	"""Render a two-by-two grid."""
+	build_standard_cells(slide, source, deck, spec)
+def build_title_six_content(slide: object, source: marp_lib.native_model.Slide, deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
+	"""Render a three-by-two grid."""
+	build_standard_cells(slide, source, deck, spec)
 
 
 #============================================
 def build_vertical_title_text_chart(slide: object, source: marp_lib.native_model.Slide,
 		deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
 	"""Render two peer cells beside the fixed-width vertical title strip."""
-	left, top, width, height = content_rectangle(slide, source, spec)
-	render_cells(slide, source, deck, spec, grid_rectangles(left, top, width, height, 2, 1))
+	content = content_rectangle(slide, source, spec)
+	render_cells(slide, source, deck, spec, cell_rectangles(spec, content))
 
 
 #============================================
 def build_title_two_vertical_text_clipart(slide: object, source: marp_lib.native_model.Slide,
 		deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
 	"""Render two stacked cells beside one vertical native pane."""
-	left, top, width, height = content_rectangle(slide, source, spec)
-	right_width = (width - CELL_GUTTER) * .34
-	left_width = width - CELL_GUTTER - right_width
-	half_height = (height - GRID_GUTTER) / 2
-	rectangles = [(left, top, left_width, half_height), (left, top + half_height + GRID_GUTTER, left_width, half_height),
-		(left + left_width + CELL_GUTTER, top, right_width, height)]
-	render_cells(slide, source, deck, spec, rectangles)
+	content = content_rectangle(slide, source, spec)
+	render_cells(slide, source, deck, spec, cell_rectangles(spec, content))
+
+
+#============================================
+def build_multiple_choice(slide: object, source: marp_lib.native_model.Slide,
+		deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
+	"""Render an initially visible question and one independent answer popup."""
+	question = next(cell for cell in source.cells if cell.name == "question")
+	answer = next(cell for cell in source.cells if cell.name == "answer")
+	render_cell(slide, deck, question, MULTIPLE_CHOICE_QUESTION_RECTANGLE)
+	left, top, width, height = MULTIPLE_CHOICE_ANSWER_RECTANGLE
+	popup = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, px(left), px(top), px(width), px(height))
+	popup.fill.solid()
+	popup.fill.fore_color.rgb = ACCENT
+	popup.line.fill.background()
+	frame = popup.text_frame
+	frame.clear()
+	frame.margin_left = frame.margin_right = 18
+	frame.margin_top = frame.margin_bottom = 10
+	frame.vertical_anchor = MSO_ANCHOR.MIDDLE
+	frame.word_wrap = True
+	body_properties = frame._txBody.bodyPr
+	for child in list(body_properties):
+		if child.tag.endswith(("noAutofit", "normAutofit", "spAutoFit")):
+			body_properties.remove(child)
+	autofit = OxmlElement("a:normAutofit")
+	autofit.set("fontScale", "100000")
+	autofit.set("lnSpcReduction", "0")
+	body_properties.append(autofit)
+	answer_items = [(block.inlines, 0, False, True, 1) for block in answer.blocks]
+	size = fit_body_size([answer_items], width - 36, height - 20,
+		26, answer.blocks[0].location, "multiple-choice answer")
+	write_items(frame, answer_items, size)
+	for paragraph in frame.paragraphs:
+		for run in paragraph.runs:
+			run.font.color.rgb = WHITE
+			run.font.bold = True
 
 
 #============================================
 def build_gallery(slide: object, source: marp_lib.native_model.Slide, deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
 	"""Render a row of independently contained component images."""
-	headings, _, images = body_parts(source.blocks)
+	headings, _, _, _ = body_parts(source.blocks)
+	gallery = next(cell for cell in source.cells if cell.name == "gallery")
+	_, _, images, _ = body_parts(gallery.blocks)
 	if headings:
 		_, top, _ = title_and_content_top(slide, source, headings[0])
 	else:
@@ -640,24 +910,75 @@ def build_gallery(slide: object, source: marp_lib.native_model.Slide, deck: marp
 			top, width, CONTENT_BOTTOM - top)
 
 
+#============================================
+def preflight_layout_capacity(source: marp_lib.native_model.Slide, spec: LayoutSpec,
+		deck: marp_lib.native_model.Deck) -> None:
+	"""Prove title/body capacity before the slide receives any native shapes."""
+	if spec.name == "multiple-choice":
+		question = next(cell for cell in source.cells if cell.name == "question")
+		answer = next(cell for cell in source.cells if cell.name == "answer")
+		flow = plan_cell_flow(deck, question, MULTIPLE_CHOICE_QUESTION_RECTANGLE, 22,
+			"multiple-choice question")
+		if flow is None:
+			_, items, _, _ = body_parts(question.blocks)
+			if items:
+				fit_body_size([items], MULTIPLE_CHOICE_QUESTION_RECTANGLE[2],
+					MULTIPLE_CHOICE_QUESTION_RECTANGLE[3], 22, question.blocks[0].location,
+					"multiple-choice question")
+		answer_items = [(block.inlines, 0, False, True, 1) for block in answer.blocks]
+		fit_body_size([answer_items], MULTIPLE_CHOICE_ANSWER_RECTANGLE[2] - 36,
+			MULTIPLE_CHOICE_ANSWER_RECTANGLE[3] - 20, 26, answer.blocks[0].location,
+			"multiple-choice answer")
+		return
+	if spec.slot_names and spec.name not in ("gallery", "multiple-choice"):
+		plan = plan_content(source, spec)
+		for slot_name, rectangle in zip(spec.slot_names, content_cell_rectangles(source, spec, plan.content_rectangle)):
+			cell = next(cell for cell in source.cells if cell.name == slot_name)
+			_, _, _, tables = body_parts(cell.blocks)
+			body_rectangle = plan_cell_body(cell, rectangle).body_rectangle
+			plan_cell_flow(deck, cell, body_rectangle,
+				26 if slot_name == "body" else 22, f"{spec.name} {slot_name}")
+			if tables:
+				_, _, width, height = body_rectangle
+				fit_table_size(tables[0], width, height, f"{spec.name} {slot_name}")
+
+
 LAYOUTS: dict[str, LayoutSpec] = {
 	"blank": LayoutSpec("blank", 0, False, False, frozenset(), build_blank),
-	"title-only": LayoutSpec("title-only", 0, False, False, frozenset(), build_title_only),
-	"title-slide": LayoutSpec("title-slide", 0, False, False, frozenset(), build_title_slide),
-	"title-content": LayoutSpec("title-content", 0, True, False, frozenset(), build_title_content),
-	"centered-text": LayoutSpec("centered-text", 0, False, False, frozenset(), build_centered_text),
-	"title-two-content": LayoutSpec("title-two-content", 2, False, False, frozenset(), build_title_two_content),
-	"title-content-and-two-content": LayoutSpec("title-content-and-two-content", 3, False, False, frozenset(), build_title_content_and_two_content),
-	"title-two-content-and-content": LayoutSpec("title-two-content-and-content", 3, False, False, frozenset(), build_title_two_content_and_content),
-	"title-content-over-content": LayoutSpec("title-content-over-content", 2, False, False, frozenset(), build_title_content_over_content),
-	"title-two-content-over-content": LayoutSpec("title-two-content-over-content", 3, False, False, frozenset(), build_title_two_content_over_content),
-	"title-four-content": LayoutSpec("title-four-content", 4, False, False, frozenset(), build_title_four_content),
-	"title-six-content": LayoutSpec("title-six-content", 6, False, False, frozenset(), build_title_six_content),
-	"vertical-title-vertical-text": LayoutSpec("vertical-title-vertical-text", 0, True, True, frozenset({0}), build_vertical_title_vertical_text),
-	"vertical-title-text-chart": LayoutSpec("vertical-title-text-chart", 2, False, True, frozenset(), build_vertical_title_text_chart),
-	"title-vertical-text": LayoutSpec("title-vertical-text", 0, True, False, frozenset({0}), build_title_vertical_text),
-	"title-two-vertical-text-clipart": LayoutSpec("title-two-vertical-text-clipart", 3, False, False, frozenset({2}), build_title_two_vertical_text_clipart),
-	"gallery": LayoutSpec("gallery", 0, False, False, frozenset(), build_gallery),
+	"title-only": LayoutSpec("title-only", 0, False, False, frozenset(), build_title_only,
+		allows_title=True),
+	"title-slide": LayoutSpec("title-slide", 0, False, False, frozenset(), build_title_slide,
+		allows_title=True, allows_subtitle=True),
+	"one-panel": LayoutSpec("one-panel", 1, True, False, frozenset(), build_title_content,
+		slot_names=("body",), allows_title=True, topology_matchable=True),
+	"centered-text": LayoutSpec("centered-text", 0, False, False, frozenset(), build_centered_text,
+		allows_title=True, allows_subtitle=True),
+	"two-panels": LayoutSpec("two-panels", 2, False, False, frozenset(), build_title_two_content,
+		slot_names=("left", "right"), allows_title=True, topology_matchable=True),
+	"one-plus-two-panels": LayoutSpec("one-plus-two-panels", 3, False, False, frozenset(), build_title_content_and_two_content,
+		slot_names=("left", "top-right", "bottom-right"), allows_title=True, topology_matchable=True),
+	"two-plus-one-panels": LayoutSpec("two-plus-one-panels", 3, False, False, frozenset(), build_title_two_content_and_content,
+		slot_names=("top-left", "bottom-left", "right"), allows_title=True, topology_matchable=True),
+	"stacked-panels": LayoutSpec("stacked-panels", 2, False, False, frozenset(), build_title_content_over_content,
+		slot_names=("top", "bottom"), allows_title=True, topology_matchable=True),
+	"two-over-one-panels": LayoutSpec("two-over-one-panels", 3, False, False, frozenset(), build_title_two_content_over_content,
+		slot_names=("top-left", "top-right", "bottom"), allows_title=True, topology_matchable=True),
+	"four-panels": LayoutSpec("four-panels", 4, False, False, frozenset(), build_title_four_content,
+		slot_names=("top-left", "top-right", "bottom-left", "bottom-right"), allows_title=True, topology_matchable=True),
+	"six-panels": LayoutSpec("six-panels", 6, False, False, frozenset(), build_title_six_content,
+		slot_names=("top-left", "top-center", "top-right", "bottom-left", "bottom-center", "bottom-right"), allows_title=True, topology_matchable=True),
+	"vertical-panel": LayoutSpec("vertical-panel", 1, True, True, frozenset({0}), build_vertical_title_vertical_text,
+		slot_names=("body",), allows_title=True),
+	"vertical-title-two-panels": LayoutSpec("vertical-title-two-panels", 2, False, True, frozenset(), build_vertical_title_text_chart,
+		slot_names=("text", "chart"), allows_title=True),
+	"vertical-text-panel": LayoutSpec("vertical-text-panel", 1, True, False, frozenset({0}), build_title_vertical_text,
+		slot_names=("body",), allows_title=True),
+	"two-panels-vertical-clipart": LayoutSpec("two-panels-vertical-clipart", 3, False, False, frozenset({2}), build_title_two_vertical_text_clipart,
+		slot_names=("top-left", "bottom-left", "right-clipart"), allows_title=True),
+	"multiple-choice": LayoutSpec("multiple-choice", 2, False, False, frozenset(), build_multiple_choice,
+		slot_names=("question", "answer")),
+	"gallery": LayoutSpec("gallery", 1, False, False, frozenset(), build_gallery,
+		slot_names=("gallery",), allows_title=True),
 }
 
 
@@ -665,5 +986,6 @@ LAYOUTS: dict[str, LayoutSpec] = {
 def render_layout(slide: object, source: marp_lib.native_model.Slide, deck: marp_lib.native_model.Deck) -> None:
 	"""Validate and render exactly one native layout on a blank slide."""
 	spec = validate_layout_source(source)
+	preflight_layout_capacity(source, spec, deck)
 	add_background(slide)
 	spec.builder(slide, source, deck, spec)

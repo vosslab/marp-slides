@@ -1,21 +1,29 @@
 # Pipeline architecture
 
-This repository owns a native-object presentation pipeline. Marp Markdown is the canonical
-authoring language; the local implementation interprets its supported subset and never calls Marp
-code, Marp CLI, a browser, or a rendered-slide converter.
+This repository owns a native-object presentation pipeline. Marp Markdown and extended-Djot are
+parallel source front ends; each produces the same presentation-neutral model and never calls Marp
+code, Marp CLI, a browser, or a rendered-slide converter. Existing Marp decks remain the migration
+baseline; `.djot` decks are a second, explicit presentation source form.
 
 ## Component map
 
 ```text
-ONE-TIME IMPORT
+ONE-TIME LEGACY IMPORT
 
-trusted legacy ODP -> LibreOffice temporary PPTX -> semantic importer -> Marp Markdown + assets
+trusted legacy ODP -> LibreOffice temporary PPTX -> semantic normalization
+  -> LegacySlidePlan -> extended-Djot + validated local assets
+
+The original ODP supplies raster evidence for an ODP import, and the trusted input PPTX supplies it
+for a direct PPTX import. The importer renders only a bounded, title-excluded source region through
+Poppler's fixed `pdftoppm` 144 DPI path. It keeps ordinary text, pictures, and supported tables as
+native editable source instead of producing an exact full-slide raster.
 
 REPEATABLE BUILD
 
-canonical Marp Markdown
+canonical Marp Markdown or extended-Djot source
   -> marp_lib.terminal_output
-  -> marp_lib.marp_parser
+  -> marp_lib.native_export suffix dispatch
+  -> marp_lib.marp_parser or marp_lib.djot_parser
   -> typed native slide-object model
   -> marp_lib.layouts
   -> python-pptx editable PPTX
@@ -32,7 +40,16 @@ visual QA is separate from the production object-conversion chain and never supp
 | --- | --- | --- |
 | `tools/odp_to_marp.py` | Trusted legacy ODP import | Canonical Markdown and assets |
 | `tools/pptx_to_marp.py` | Structured PPTX extraction | Import records and Markdown |
+| `tools/odp_to_djot.py` | ODP visibility and temporary PPTX normalization | New Djot source and assets |
+| `tools/pptx_to_djot.py` | Semantic source extraction and staged publication | New Djot source, assets, and provenance |
+| `marp_lib/importers/legacy_slide_plan.py` | Geometry-first semantic plan | `LegacySlidePlan` |
+| `marp_lib/importers/legacy_topology.py` | Shared ordinary-layout topology matching | Registry-derived layout candidate |
+| `marp_lib/importers/source_region_render.py` | Bounded coupled-region rendering | Validated hash-named PNG assets |
+| `marp_lib/importers/legacy_djot_emitter.py` | Atomic component-to-Djot projection | Source-located Djot components |
 | `marp_lib/marp_parser.py` | Marp-subset framing, directives, and block parsing | Typed slide model |
+| `marp_lib/djot_parser.py` | Extended-Djot framing, slots, actions, and block assembly | Typed slide model |
+| `marp_lib/djot_grammar.py` | Exact directive and action spellings derived from the layout registry | Shared Djot contract |
+| `marp_lib/djot_lint.py` | Strict-tool invocation and source-only Djot semantics | Source diagnostics |
 | `marp_lib/layouts.py` | Registry and native geometry for every supported layout | Editable PPTX objects |
 | `marp_lib/libreoffice.py` | Process preflight, conversion, and PDF filter | PPTX, ODP, and PDF conversions |
 | `marp_lib/native_export.py` | Deck discovery, export stages, notes, pagination, and paths | Ordered deck and artifact paths |
@@ -42,9 +59,47 @@ visual QA is separate from the production object-conversion chain and never supp
 | `tools/marp_to_odp.py` | One-deck editable ODP command | PPTX and ODP |
 | `build_slides.sh` | Environment bootstrap for the folder command | One Python batch process |
 
-`terminal_output` invokes `native_export`, which imports the layout and LibreOffice owners. None of
-those lower-level owners imports the terminal interface. This one-way boundary keeps presentation,
-parsing, geometry, conversion, and artifact orchestration separate.
+`terminal_output` invokes `native_export`, which selects a parser by source suffix and imports the
+layout and LibreOffice owners. None of those lower-level owners imports the terminal interface. This
+one-way boundary keeps presentation, parsing, geometry, conversion, and artifact orchestration
+separate.
+
+## Legacy import contract
+
+Legacy normalization retains text, lists, images, tables, and geometry before selecting a target
+layout. `LegacySlidePlan` is the source-neutral handoff: it carries a geometry-selected title,
+editable slot candidates, true source-table metadata, and at most one coupled spatial content
+region. The importer assigns a component as a complete unit; it does not reconstruct diagrams from
+their labels or use deck-, slide-, or text-specific exceptions.
+
+Ordinary source prose and pictures project to editable Djot blocks. Direct source style, placeholder
+role, actual top/group z-path, signed rotation, and normalized geometry provide the evidence for
+bounded coupled relations. A visible degenerate connector retains a narrow normalized footprint
+rather than being silently lost. Ordinary layout selection runs through the shared registry-topology
+matcher first; special relations are positive, bounded classifications rather than exceptions.
+
+A narrow coarse-body and picture-inset pair remains two direct editable objects in `two-panels`,
+using exact source provenance and one explicit permission. Caption pairing is a single shared
+positive relation grouped before topology and reuses the existing `two-plus-one` and footer
+permission. Adaptive vertical image flow reserves text at 28 through 14 CSS px, then uniformly
+scales every image. These routes do not use global or crop exceptions.
+
+A tightly coupled diagram and its distributed labels may project to one bounded component image. Its
+private crop protects the selected title, includes only its coupled source members, and must remain
+smaller than the original slide after pixel rounding. The original ODP supplies that evidence for an
+ODP import, while a direct PPTX import uses its trusted input PPTX. Poppler renders source pages at
+fixed 144 DPI; the importer validates decoded PNGs, records source-slide provenance, and publishes
+digest-named assets only after the staged Djot source and assets validate together.
+
+Publication also retains only assets reachable from the parsed Djot deck below that deck's local
+`assets/` directory. Missing, unsafe, or symlinked references fail staging, and unreachable generated
+files are pruned before the atomic publication step.
+
+Only actual PPTX table metadata may become an editable native table. Header status and intentional
+blank cells remain source-derived. Merged or spanned table cells require review before publication;
+a diagram that merely resembles a grid stays a bounded component or review case. Ambiguous component
+geometry likewise stops with a source-located review failure rather than silently changing teaching
+content.
 
 ## Native layout contract
 
@@ -53,30 +108,40 @@ parsing, geometry, conversion, and artifact orchestration separate.
 - `blank`
 - `title-only`
 - `title-slide`
-- `title-content`
+- `one-panel`
 - `centered-text`
-- `title-two-content`
-- `title-content-and-two-content`
-- `title-two-content-and-content`
-- `title-content-over-content`
-- `title-two-content-over-content`
-- `title-four-content`
-- `title-six-content`
-- `vertical-title-vertical-text`
-- `vertical-title-text-chart`
-- `title-vertical-text`
-- `title-two-vertical-text-clipart`
+- `two-panels`
+- `one-plus-two-panels`
+- `two-plus-one-panels`
+- `stacked-panels`
+- `two-over-one-panels`
+- `four-panels`
+- `six-panels`
+- `vertical-panel`
+- `vertical-title-two-panels`
+- `vertical-text-panel`
+- `two-panels-vertical-clipart`
 - `gallery`
+- `multiple-choice`
 
 The first sixteen names are the LibreOffice grid catalog. `gallery` is a repository layout for a
 contained image row. LibreOffice is not asked to apply the grid: Python creates the text boxes,
 lists, images, shapes, and vertical text direction directly through `python-pptx`.
 
-Each slide declares exactly one `_class`. For layouts with content cells, top-level blockquotes
-supply cells in reading order. A cell may have an optional H2 heading and native Markdown body/list
-content or contained component images. `gallery` accepts a slide title and two through six
-component images; use `title-content` for one image. Layout validation reports unsupported or
-overflowing source rather than emitting a raster fallback.
+Each Marp slide declares exactly one `_class`; its legacy blockquotes are normalized to named cells.
+Each Djot slide begins with exact `=== layout: <name>` and uses exact `@<slot>` directives. The
+layout registry is the authority for legal layout and slot names, including asymmetric slots:
+`one-plus-two-panels` uses `left`, `top-right`, and `bottom-right`; `two-plus-one-panels` uses
+`top-left`, `bottom-left`, and `right`; `two-panels-vertical-clipart` uses `top-left`,
+`bottom-left`, and `right-clipart`. `gallery` accepts a slide title and two through six component
+images; use `one-panel` for one image. Layout validation reports unsupported or overflowing source
+rather than emitting a raster fallback.
+
+Ordinary panel layouts accept zero or one global H1. Each ordinary cell may also carry one local H2
+followed by native text, images, or one source-derived table. Before any shape is created, the
+layout preflight gives a local heading its required height and fits body text from 28 down to 14 CSS
+px. A title, heading, table, or body that cannot fit reports its source location before a partial
+slide can exist.
 
 An `_class` directive may also contain one bounded title-size modifier: `font-size-64`,
 `font-size-80`, `font-size-96`, `font-size-120`, `font-size-160`, or `font-size-200`. The parser
@@ -99,6 +164,22 @@ The Marp Core snapshot is v5.0.1; v4 and earlier behavior is not a compatibility
 clones are outside the runtime graph. Their HTML/browser and raster export paths are neither
 invoked nor bundled.
 
+## Extended-Djot language boundary
+
+The Djot front end accepts exact whole-line layout and slot directives, global `#` titles and `##`
+subtitles where their layout permits them, `<= appear`, `=> appear`, and `=> cascade appear`.
+Several H2 lines on a title slide remain one subtitle region; they are not separate title objects.
+Pre-element one-line Djot attributes attach to the next element. `![alt](path)` is a component image
+only when it is a complete paragraph; mixed text-and-image paragraphs receive a source-located
+unsupported-subset diagnostic. `$inline$` and `$$display$$` are intentional repository math
+extensions after strict-Djot validation, but native math rendering is not implemented yet.
+
+`multiple-choice` requires exactly `@question` and `@answer`. The question includes a visible choice
+list; the answer is one or two short editable flat paragraphs with implicit object-appear intent.
+The intent does not yet establish a playable PowerPoint first advance. `<= blue overlay` is
+recognized and rejected as not yet supported. Attributes, quotes, inline math, and other valid Djot
+constructs without an editable native mapping also fail source-located rather than disappearing.
+
 ## Verification lanes
 
 | Lane | Establishes |
@@ -106,15 +187,27 @@ invoked nor bundled.
 | Fast Python tests | Parser, layout validation, native object construction, and source diagnostics |
 | Native semantic E2E | PPTX/ODP text, lists, links, notes, component images, counts, and no full-slide image |
 | ODP-derived PDF review | Final-page containment and visual teaching clarity |
+| Strict Jotdown gate | Raw-Djot syntax before project slide semantics |
+| Legacy importer acceptance | Source conversion, full-corpus build, provenance, and visual comparisons |
+| Native all-format acceptance | Eight sequential editable PPTX, ODP, and PDF exports with matching counts |
+| Attended PowerPoint and Impress checks | Timing playback, repair behavior, and animation survival |
 
 No one lane proves the complete product. Fast tests cannot prove LibreOffice conversion, and a
 rendered page cannot prove editability. The E2E build verifies the ordered PPTX-to-ODP-to-PDF path.
+The strict Jotdown gate is a one-time/source-acceptance check, not a replacement for permanent
+offline parser tests. Importer conversion, a full-corpus build, visual comparisons, and native
+all-format output are likewise one-time acceptance evidence. The native gate passed through strict
+lint for 8 decks/336 visible slides/186 image occurrences, `build_slides.sh genetics`, three native
+E2Es, and eight sequential matching PPTX/ODP/PDF exports with editable text/direct images and the
+Lecture 02e native table retained. Permanent pytest remains offline, fast, and deterministic.
+PowerPoint timing and ODP animation survival require attended evidence; see
+[wp_a1_animation_fidelity.md](active_plans/reports/wp_a1_animation_fidelity.md).
 
 ## Durable source boundary
 
-After one-time import, only canonical Markdown and its local assets are edited. PPTX, ODP, and PDF
-are reproducible products. This prevents competing authoring sources while retaining editable
-LibreOffice files for teaching.
+After one-time import, each deck has one selected canonical source form and local assets. PPTX, ODP,
+and PDF are reproducible products. The Marp and Djot front ends coexist without creating a second
+canonical source for any individual deck.
 
 See [HUMAN_GUIDANCE.md](HUMAN_GUIDANCE.md), [DESIGN_DECISIONS.md](DESIGN_DECISIONS.md), and
 [USAGE.md](USAGE.md) for the corresponding requirement, rationale, and authoring contract.

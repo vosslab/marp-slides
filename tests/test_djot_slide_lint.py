@@ -4,7 +4,7 @@
 import pathlib
 
 # Local modules
-from tools import djot_slide_lint
+import marp_lib.djot_lint
 
 
 #============================================
@@ -37,33 +37,72 @@ def test_valid_two_panel_source_has_no_structural_problems(tmp_path: pathlib.Pat
 """,
 	)
 
-	problems, summary = djot_slide_lint.lint_paths([path])
+	problems, summary = marp_lib.djot_lint.lint_paths([path])
 
 	assert problems == []
-	assert summary == djot_slide_lint.LintSummary(1, 1, 1)
+	assert summary == marp_lib.djot_lint.LintSummary(1, 1, 1)
 
 
 #============================================
-def test_linter_reports_slots_actions_and_traversal(tmp_path: pathlib.Path) -> None:
-	"""Local failures identify slide-language misuse without rendering anything."""
+def test_linter_reports_source_located_parser_failures(tmp_path: pathlib.Path) -> None:
+	"""The semantic linter reports recognized deferred actions at their source line."""
 	path = write_source(
 		tmp_path,
-		"""=== layout: two-panels
+		"""=== layout: one-panel
 
-@left
+@body
 
-- Incomplete action <= appear after this sentence.
-
-@left
-
-![Outside](../outside.png)
+<= blue overlay
 """,
 	)
 
-	problems, _summary = djot_slide_lint.lint_paths([path])
-	messages = [problem.message for problem in problems]
+	problems, _summary = marp_lib.djot_lint.lint_paths([path])
+	problem = problems[0]
 
-	assert "duplicate @left slot" in messages
-	assert "<= action must be an exact terminal suffix" in messages
-	assert "image path must be a local relative path without traversal" in messages
-	assert "layout 'two-panels' requires exactly one @right slot" in messages
+	assert problem.line == 5
+	assert problem.message == "blue overlay is recognized but not yet supported"
+
+
+#============================================
+def test_linter_keeps_component_image_safety_after_semantic_parse(tmp_path: pathlib.Path) -> None:
+	"""A parsed component image must still name an existing local asset."""
+	path = write_source(
+		tmp_path,
+		"""=== layout: one-panel
+
+# Genes
+
+@body
+
+![Chromosome](assets/missing.png)
+""",
+	)
+
+	problems, _summary = marp_lib.djot_lint.lint_paths([path])
+
+	assert problems[0].line == 7
+	assert problems[0].message == "component image is missing: assets/missing.png"
+
+
+#============================================
+def test_linter_rejects_component_image_symlink_outside_deck_root(tmp_path: pathlib.Path) -> None:
+	"""A local path cannot escape the parsed deck root through a symlink."""
+	path = write_source(
+		tmp_path,
+		"""=== layout: one-panel
+
+# Genes
+
+@body
+
+![Chromosome](assets/escape.png)
+""",
+	)
+	outside = tmp_path.parent / "outside.png"
+	outside.write_bytes(b"outside asset")
+	(tmp_path / "assets" / "escape.png").symlink_to(outside)
+
+	problems, _summary = marp_lib.djot_lint.lint_paths([path])
+
+	assert problems[0].line == 7
+	assert problems[0].message == "component image must be inside the repository: assets/escape.png"

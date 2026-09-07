@@ -1,10 +1,9 @@
 # Djot slide-extension syntax inventory
 
-Status: Djot is the settled source-language foundation; the slide grammar remains exploratory. This
-page records the compatibility requirement, Djot syntax, and parse-valid surface space for the
-future slide language. The instructor has designated provisional roles for `===`, `@`, `<=`, and
-`=>`; they are not parser adoption. Component images and dollar-delimited mathematics are reserved
-separately, while `%%` and the other forms below remain unassigned.
+Status: extended-Djot is an implemented second front end to the shared native pipeline. This page
+retains the grammar decisions and strict-Djot boundary. Exact `===`, `@`, `<=`, and `=>` forms are
+implemented; component images and dollar-delimited mathematics remain distinct language contracts.
+Unassigned forms such as `%%` remain ordinary Djot text, not aliases.
 
 ## Governing requirement: strict Djot compatibility
 
@@ -17,9 +16,9 @@ Djot rejects.
 
 Jotdown 0.10.0 is the first pinned native parser in the compatibility suite. It was installed with
 the optional CLI and is invoked once per source before the local extension check; its zero exit
-status is parser evidence, not an assertion that it is a formatter or linter. Djot does not
-advertise an official standalone linter. Before the language accepts source, the project must still
-record the exact Djot syntax revision and every applicable formatter, editor rule, and lint tool.
+status is the suite's raw-Djot parser-validation result. Djot does not advertise an official
+standalone linter. Before the language accepts source, the project must still record the exact Djot
+syntax revision and every applicable formatter, editor rule, and lint tool.
 "Passes all Djot linters" then means a clean result from every applicable tool in that recorded
 suite, rather than an untestable claim about an unnamed future tool. Any newly discovered applicable
 Djot lint tool joins the suite or receives a documented compatibility decision before acceptance.
@@ -29,7 +28,7 @@ Djot lint tool joins the suite or receives a documented compatibility decision b
 The language supports ASCII authoring with Unicode in the final native presentation. A documented,
 small character-reference projection runs only after the unmodified source has passed the strict
 Djot compatibility gate. For example, ordinary text written as ``5&prime;-`ACGT`-3&prime;`` projects
-as `5′-ACGT-3′`, with only `ACGT` in an inline-verbatim run.
+as `5&prime;-ACGT-3&prime;`, with only `ACGT` in an inline-verbatim run.
 
 `&prime;` is ordinary, valid Djot text, not native Djot entity syntax; the native pipeline owns its
 projection to U+2032 PRIME. This is a controlled project vocabulary, not adoption of a general HTML
@@ -50,9 +49,9 @@ indented code blocks. Djot itself has no slide or spatial-layout semantics. The 
 remains in [LAYOUT_LANGUAGE_SURVEY.md](../../LAYOUT_LANGUAGE_SURVEY.md) and
 [MARP_ADJACENT_PROJECT_COMPARISON.md](../../MARP_ADJACENT_PROJECT_COMPARISON.md).
 
-The future layout catalog will include every default LibreOffice layout plus the custom
-`multiple-choice` layout. This does not settle every slot contract or action rule, or make an
-ordinary Djot renderer a slide renderer.
+The implemented layout catalog includes the default LibreOffice patterns plus `gallery` and
+`multiple-choice`. The native registry owns exact slot contracts; an ordinary Djot renderer still
+does not become a slide renderer.
 
 ## Future ownership boundary
 
@@ -62,23 +61,22 @@ a new current source of truth. This page records language exploration where it i
 
 ## Experimental genetics corpus
 
-[`genetics/djot/`](../../../genetics/djot/README.md) holds a source-level import of the eight
-visible `lect0*` genetics presentations. It exists to test whether the current authoring forms make
-real teaching material legible; it is neither a replacement for the existing Marp source nor proof
-that a renderer or grammar has been adopted. Its dedicated ODP/PPTX importers preserve source order,
-component images, and source-hidden-slide state, while deliberately omitting presenter notes and
-declining to infer arbitrary visual styling or animations.
+[`genetics/djot/`](../../../genetics/djot/README.md) holds a regenerable source import of the eight
+visible `lect0*` genetics presentations. It exercises real lecture material without replacing the
+existing Marp source. Its dedicated ODP/PPTX importers preserve source order, component images, and
+source-hidden-slide state while deliberately omitting presenter notes and arbitrary styling or
+animation inference.
 
-`tools/djot_slide_lint.py` now supplies the proposed pyflakes-scale, source-only structural check.
+`tools/djot_slide_lint.py` supplies the pyflakes-scale, source-only structural check.
 It reports slide declarations, documented slot contracts, action placement, and local image paths;
 it invokes the pinned Jotdown 0.10.0 parser before its own checks. The eight imported decks passed
 that native-first parser check. This remains only one lane of the required suite: its local
 structural result is not a claim that no formatter, editor rule, or future applicable linter exists.
 
-## Provisional slide surface
+## Implemented slide surface
 
-These roles are the current working grammar direction. They require representative source cases and
-a pinned Djot compatibility suite before parser or exporter work.
+These exact whole-line roles are parsed into the native model. Strict Jotdown validation runs before
+the source-only semantic lint; remaining formatter/editor-rule suite lanes remain open.
 
 | Surface form | Provisional role | Constraint |
 | --- | --- | --- |
@@ -88,23 +86,11 @@ a pinned Djot compatibility suite before parser or exporter work.
 | `=> <action>` | A prefix animation directive applying to the following block. | It has no closing marker. |
 | `=> cascade appear` | A prefix animation directive for the following outline or list. | It reveals that list's top-level items in source order. |
 
-## Candidate figure action
+## Deferred figure action
 
-The instructor wants to explore `<= blue overlay` as a terminal action for an authored annotation
-or popup highlight. It would be a predefined visual treatment, not a generic `color` or geometry
-attribute. In a selected slot with exactly one Marp image, overlay blocks bind to that image. The
-linter rejects an overlay in a slot without exactly one image; no figure-anchor syntax is needed.
-
-`blue overlay` without a target applies to its preceding block. To highlight text inside that block,
-the unquoted remainder of the directive is a literal target:
-
-```djot
-- This is a line of text <= blue overlay line
-```
-
-The target must occur exactly once in the preceding logical paragraph or list item. Matching treats
-a Djot soft line break as a space, so hard-wrapping does not change the result. The linter reports a
-missing or ambiguous target. Quoting is unnecessary and would make DNA prime marks require escapes.
+`<= blue overlay` is recognized by the parser and linter but deliberately raises a source-located
+"not yet supported" error. It has no native geometry, timing, or rendering owner. The deferral
+keeps the spelling reserved without silently accepting or approximating a visual treatment.
 
 ## Titles and subtitles
 
@@ -116,39 +102,39 @@ The language retains familiar Marp heading spelling inside a slide:
 ```
 
 In a layout with a title region, `#` supplies the title. In a layout with a subtitle region, `##`
-supplies the subtitle. A layout without title placement rejects both headings rather than silently
-drawing them somewhere else.
+supplies subtitle content. Multiple H2 lines on `title-slide` remain one subtitle region. A layout
+without title placement rejects headings rather than silently drawing them somewhere else.
 
-## Marp content baseline
+## Djot content boundary
 
-The future language extends Djot and supports its normal content syntax: headings, ordinary lists,
-links, quotes, inline verbatim, fenced code blocks, tables, and component images. Use inline
-verbatim for short fixed-width content and fenced code blocks for aligned multiline content. The
-documented differences stay explicit: `=== layout:` replaces Marp's `---` slide separator, Djot
-supplies the underlying markup rules, and Marp-specific image modifiers are not adopted.
+The front end recognizes headings, ordinary lists, links, quotes, inline verbatim, fenced code
+blocks, tables, and component-image syntax. It renders only forms with an editable native mapping;
+quotes, attributes, inline math, and other unsupported forms receive source-located diagnostics.
+Use inline verbatim for short fixed-width content and fenced code blocks for aligned multiline
+content. `=== layout:` replaces Marp's `---` slide separator, and Marp-specific image modifiers are
+not adopted.
 
 ## Linter boundary
 
-After the strict Djot gate, the future language needs a fast, deterministic, source-only extension
-linter at roughly the enforcement level of `pyflakes`. It reports source-located slide-structural
-errors without opening LibreOffice or rendering a slide. It checks slide declarations, known
-layouts, title/subtitle permission, slot names and required/duplicate slots, action attachment, and
-special layout contracts such as `multiple-choice`. Geometry, overflow, animation export, and visual
-quality remain separate checks.
+After the strict Djot gate, the deterministic source-only extension linter reports source-located
+slide-structural errors without opening LibreOffice or rendering a slide. It checks slide
+declarations, known layouts, title/subtitle permission, slot names and required/duplicate slots,
+action attachment, and special layout contracts such as `multiple-choice`. Geometry, overflow,
+animation export, and visual quality remain separate checks.
 
 ## Official layout: multiple-choice
 
 `multiple-choice` is the first official future-language layout. It has exactly these predefined
 slots:
 
-- `@question` contains the question prompt and its ordinary choice list. It is visible
+- `@question` contains the question prompt and its visible choice list. It is visible
   when the slide opens.
-- `@answer` contains the short answer. It appears automatically on the first advance in the
-  layout's fixed bottom-right popup region.
+- `@answer` contains the short answer in the layout's fixed bottom-right popup region. Its implicit
+  object-appear intent awaits PowerPoint timing evidence before it can claim first-advance playback.
 
-`@question` and `@answer` are each required once. The answer slot has its own reveal behavior, so
-`<= appear` and `=> appear` are invalid on its content. Open-ended questions use another layout;
-the multiple-choice layout does not pretend their answers are short popup text.
+`@question` and `@answer` are each required once. The answer is one editable paragraph with implicit
+object-appear intent, so `<= appear` and `=> appear` are invalid on its content. This intent is not
+yet verified PowerPoint timing or first-advance behavior. Open-ended questions use another layout.
 
 Examples:
 
@@ -212,9 +198,10 @@ Djot attributes are metadata attached to an element. For example:
 ![Microtubule](assets/microtubule.png)
 ```
 
-The attribute belongs to that image, not to a later sequence of blocks. A generic div can group
-multiple blocks, but requires `:::` opening and closing fences. Djot permits multiline attributes;
-that is a documented capability, not a recommendation for a future slide surface.
+The one-line attribute belongs to the next element, here the image, not to a later sequence of
+blocks. Attributes are represented in the IR but receive a source-located error until a native
+mapping is defined. A generic div can group multiple blocks, but requires `:::` opening and closing
+fences. Djot permits multiline attributes; that capability is outside the current supported subset.
 
 ## Parse-validity boundaries
 
@@ -238,20 +225,18 @@ that is a documented capability, not a recommendation for a future slide surface
 
 ## Deliberately unassigned questions
 
-- How content regions, galleries, captions, and repeated images are represented.
-- Which action words beyond `appear` and `cascade appear` are supported, and how their targets are
-  bounded in nested content.
-- How a floating text box is represented without turning ordinary authoring into a style-attribute
+- Which action words beyond `appear` and `cascade appear` have an observed native timing contract.
+- How a floating text box can evolve without turning ordinary authoring into a style-attribute
   language.
-- Whether the language uses Djot attributes only as native metadata or extends their scope.
+- Which currently unsupported Djot attributes and blocks gain editable native mappings.
 
-## Evidence needed before implementation
+## Evidence still needed
 
-1. Pin the Djot syntax-reference revision and complete parser/formatter/editor-rule/linter suite.
-2. Verify that every accepted extension specimen passes every applicable compatibility tool.
-3. Parse specimens using every surface form above, including code, lists, quotes, footnotes, and divs.
-4. Record the AST, ordinary rendered output, and project Unicode projection output.
-5. Compare the provisional spellings against the teaching source examples before approving the grammar.
+1. Pin the remaining formatter/editor-rule lanes of the strict-Djot suite.
+2. Run the attended PowerPoint and Impress experiment in
+   [wp_a1_animation_fidelity.md](../reports/wp_a1_animation_fidelity.md) before implementing timing.
+3. Add a native mapping only with a focused source diagnostic, editable-object design, and acceptance
+   evidence.
 
 ## Primary sources
 

@@ -7,7 +7,7 @@
 ## Dr. Neil Voss
 ## Sept 2, 2025
 
-=== layout: title-content
+=== layout: one-panel
 
 # Chapter 2 Outline
 
@@ -34,7 +34,7 @@
 
 # Name the three (3) components of a nucleic acid
 
-=== layout: title-content
+=== layout: one-panel
 
 # Nucleotides
 
@@ -46,7 +46,7 @@
 
 # Name the two (2) types of nucleobases
 
-=== layout: title-content
+=== layout: one-panel
 
 # Nitrogenous bases
 
@@ -58,39 +58,36 @@
 
 # Name the two (2) types of purines
 
-=== layout: title-content
+=== layout: one-panel
 
-# “Purines = 2 rings” (try saying it with a funny accent)
 
 @body
 
-![Slide image 3](assets/lect02d-dna_structure_overview/image_003.jpg)
+![Coupled source region](assets/lect02d-dna_structure_overview/source_region_5800f45e4919acd5001540e786a469f8b869bf626199c7a29da590c0852dbe1e.png)
 
 === layout: title-only
 
 # Name the three (3) types of pyrimidines
 
-=== layout: title-content
+=== layout: one-panel
 
-# pYrimidines : cYtosine, thYmine, uracYl (!)
 
 @body
 
-![Slide image 4](assets/lect02d-dna_structure_overview/image_004.jpg)
+![Coupled source region](assets/lect02d-dna_structure_overview/source_region_81cfe39e91f2114ab8f6b1891e5a84db7ce0b4969e63847eee18752adc9b9115.png)
 
 === layout: title-only
 
 # Difference between DNA and RNA sugars
 
-=== layout: title-content
+=== layout: one-panel
 
-# Slide 13
 
 @body
 
 ![Slide image 5](assets/lect02d-dna_structure_overview/image_005.jpg)
 
-=== layout: title-content
+=== layout: one-panel
 
 # Terms
 
@@ -102,7 +99,7 @@
 - Polynucleotide – More than one nucleotides in a chain
 - Nucleic acids – All of the above
 
-=== layout: title-content
+=== layout: one-panel
 
 # Bases, nucleosides, and nucleotides
 
@@ -122,7 +119,7 @@
 
 - Polynucleotide chains have a 5&prime;-phosphate at one end and a 3&prime;-OH on the other end
 
-=== layout: title-content
+=== layout: one-panel
 
 # Sugar-Phosphate Backbone
 
@@ -134,29 +131,27 @@
 
 # Base Pairing
 
-=== layout: two-panels
+=== layout: one-panel
 
 # Base Pairing
 
-@left
+@body
 
-- Standard base pairs
-- 1 base pair M r = ~640
+![Coupled source region](assets/lect02d-dna_structure_overview/source_region_dabaec29ff7dec2e945919315568dcb970c69fcdc78381682f88cecf6ff26d64.png)
 
-@right
-
-![Slide image 9](assets/lect02d-dna_structure_overview/image_009.jpg)
-
-=== layout: gallery
+=== layout: two-panels
 
 # Nucleotide Base Pairing
 
-@gallery
+@left
 
 ![Slide image 10](assets/lect02d-dna_structure_overview/image_010.png)
+
+@right
+
 ![Slide image 11](assets/lect02d-dna_structure_overview/image_011.png)
 
-=== layout: two-panels
+=== layout: one-plus-two-panels
 
 # Structure of A-T and G-C base pairs in DNA
 
@@ -165,13 +160,18 @@
 - A-T base pairs have two H-bonds.
 - G-C base pairs have three
 - H-bonds
-- A-T base pairing.
-- G-C base pairing
 
-@right
+@top-right
 
 ![Slide image 12](assets/lect02d-dna_structure_overview/image_012.jpg)
+
+- A-T base pairing.
+
+@bottom-right
+
 ![Slide image 13](assets/lect02d-dna_structure_overview/image_013.jpg)
+
+- G-C base pairing
 
 === layout: title-only
 
@@ -189,33 +189,29 @@
 
 - Figure 1.6: Molecular structure of the DNA double helix in the standard “B form.”
 
-=== layout: title-content
+=== layout: one-panel
 
-# Slide 24
 
 @body
 
 ![Slide image 15](assets/lect02d-dna_structure_overview/image_015.png)
 
-=== layout: title-content
+=== layout: one-panel
 
-# Slide 25
-
-@body
-
-![Slide image 16](assets/lect02d-dna_structure_overview/image_016.jpg)
-
-=== layout: title-content
-
-# Anti-parallel
 
 @body
 
 ![Slide image 16](assets/lect02d-dna_structure_overview/image_016.jpg)
+
+=== layout: one-panel
+
+
+@body
+
+![Coupled source region](assets/lect02d-dna_structure_overview/source_region_dddf044953e76eeb53045bee0fb13812acd45807b31ffed7dbe981de2c61325d.png)
 
 === layout: two-panels
 
-# DNA strands
 
 @left
 
@@ -223,19 +219,24 @@
 
 @right
 
+- DNA strands
 - are anti-parallel
+
 - A segment of a DNA molecule, showing the antiparallel orientation of the complementary strands.
 
-=== layout: title-content
+=== layout: two-panels
 
 # Strands
 
-@body
+@left
 
 - Template
 - Complimentary
 - Anti-sense
 - Read 3&prime; to 5&prime;
+
+@right
+
 - Non-template
 - Actual Sequence
 - Sense
@@ -245,51 +246,61 @@
 
 # Complementary Sequences
 
-=== layout: title-content
+=== layout: multiple-choice
 
-# 1. Which one of the following sequences is complimentary to the sequence `ATGC`?
+@question
 
-@body
+1. Which one of the following sequences is complimentary to the sequence `ATGC`?
 
-  - A. `CGTA`
-  - B. `CGAT`
-  - C. `GCTA`
-  - D. `TACG`
-  - E. `ATGC`
-- Answer: D
+- A. `CGTA`
+- B. `CGAT`
+- C. `GCTA`
+- D. `TACG`
+- E. `ATGC`
 
-=== layout: title-content
+@answer
 
-# 2. Which one of the following DNA sequences is complimentary to the direction-less DNA sequence `CGC,ATA,GG`?
+Answer: D
 
-@body
+=== layout: multiple-choice
 
-  - A. `GGA,TAC,GC`
-  - B. `GCG,TTA,GG`
-  - C. `CGC,AAT,CC`
-  - D. `GCG,TAT,CC`
-  - E. `GCG,TCC,TA`
-- Answer: D
+@question
 
-=== layout: title-content
+2. Which one of the following DNA sequences is complimentary to the direction-less DNA sequence `CGC,ATA,GG`?
 
-# 3. Which one of the following sequences is complimentary to the sequence 5&prime;-`ATGC`-3&prime;?
+- A. `GGA,TAC,GC`
+- B. `GCG,TTA,GG`
+- C. `CGC,AAT,CC`
+- D. `GCG,TAT,CC`
+- E. `GCG,TCC,TA`
 
-@body
+@answer
 
-  - A. 5&prime;-`CGTA`-3&prime;
-  - B. 5&prime;-`GCAT`-3&prime;
-  - C. 5&prime;-`CGAT`-3&prime;
-  - D. 5&prime;-`TACG`-3&prime;
-  - E. 5&prime;-`ATGC`-3&prime;
-- Answer: B
-- 3&prime;-`TACG`-5&prime;
+Answer: D
 
-=== layout: title-content
+=== layout: multiple-choice
 
-# 4. Which one of the following sequences is complimentary to the sequence
+@question
 
-@body
+3. Which one of the following sequences is complimentary to the sequence 5&prime;-`ATGC`-3&prime;?
+
+- A. 5&prime;-`CGTA`-3&prime;
+- B. 5&prime;-`GCAT`-3&prime;
+- C. 5&prime;-`CGAT`-3&prime;
+- D. 5&prime;-`TACG`-3&prime;
+- E. 5&prime;-`ATGC`-3&prime;
+
+@answer
+
+Answer: B
+
+3&prime;-`TACG`-5&prime;
+
+=== layout: multiple-choice
+
+@question
+
+4. Which one of the following sequences is complimentary to the sequence
 
 - 3&prime;-`CAA,AGG,T`-5&prime;?
   - Hint: pay attention to the 5&prime; and 3&prime; directions!
@@ -298,13 +309,16 @@
   - C. 5&prime;-`ACC,TTT,G`-3&prime;
   - D. 5&prime;-`TGG,AAA,C`-3&prime;
   - E. 5&prime;-`TGG,TCC,A`-3&prime;
-- Answer: A
+
+@answer
+
+Answer: A
 
 === layout: title-only
 
 # Base Composition
 
-=== layout: title-content
+=== layout: one-panel
 
 # Base composition (%G+C) varies among organisms
 
@@ -312,7 +326,7 @@
 
 ![Slide image 18](assets/lect02d-dna_structure_overview/image_018.jpg)
 
-=== layout: title-content
+=== layout: one-panel
 
 # Chargaff's Rules
 
@@ -324,7 +338,7 @@
 - \[A\] + \[C\] = \[T\] + \[G\] = 50%
 - These rules hold true regardless of the % G+C or the source of the DNA
 
-=== layout: title-content
+=== layout: one-panel
 
 # Chargaff's Rules
 
@@ -332,7 +346,7 @@
 
 - A sample of dsDNA contains 14% Adenine, what percentages are the other nucleobases?
 
-=== layout: title-content
+=== layout: one-panel
 
 # Chargaff's Rules
 
@@ -343,7 +357,7 @@
 - \[A\] = \[T\]
 - so \[T\] = 14%
 
-=== layout: title-content
+=== layout: one-panel
 
 # Chargaff's Rules
 
@@ -356,7 +370,7 @@
 - 2 \[G\] = 72%; → \[G\] = 36%
 - \[G\] = \[C\] = 36%
 
-=== layout: title-content
+=== layout: one-panel
 
 # Chargaff's Rules
 
@@ -370,9 +384,8 @@
 
 # More Sample Problems
 
-=== layout: title-content
+=== layout: one-panel
 
-# Slide 42
 
 @body
 

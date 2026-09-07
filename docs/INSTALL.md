@@ -1,51 +1,50 @@
-# Installation
+# Install
 
-This repository uses Python for one-time imports and native presentation output. Its production
-chain creates editable PPTX, then editable ODP, then PDF from that ODP. It requires no browser,
-Node, npm, Marp CLI, or Marp Core runtime.
+This repository runs local Python commands against the checkout to create editable PPTX, ODP, and
+PDF presentations. It also imports trusted legacy ODP or PPTX into extended-Djot source.
 
 ## Requirements
 
-The supported environment is macOS with Homebrew:
-
-- Python 3.12 for import, parsing, and native PPTX writing;
-- declared packages in `pip_requirements.txt`, including `python-pptx` for editable objects and
-  Rich for concise build progress and summaries;
-- LibreOffice Impress for ODP input, PPTX-to-ODP conversion, and ODP-to-PDF conversion; and
-- Poppler for optional local PDF review.
+- macOS with Homebrew.
+- Python 3.12; run repository Python commands through `source source_me.sh && python3`.
+- LibreOffice Impress for ODP input and the editable PPTX -> ODP -> PDF conversion chain.
+- Poppler, including `pdftoppm`, for bounded source-region assets during geometry-first import.
+- The packages in `pip_requirements.txt`.
+- Jotdown 0.10.0 on `PATH` for strict-Djot source acceptance. `source_me.sh` adds the conventional
+  Cargo bin directory when it exists.
 
 ## Install tools
+
+From the repository root, install the declared macOS tools and Python packages:
 
 ```bash
 brew bundle
 source source_me.sh && python3 -m pip install -r pip_requirements.txt
 ```
 
-## Verify installation
+The Brewfile installs Python 3.12, Poppler, and LibreOffice. Jotdown is a separate strict-Djot
+validator. Confirm the required installed version before running the source-acceptance command in
+[USAGE.md](USAGE.md):
 
 ```bash
-source source_me.sh && python3 tools/odp_to_marp.py --help
-source source_me.sh && python3 tools/pptx_to_marp.py --help
-source source_me.sh && python3 tools/odp_visibility.py --help
-source source_me.sh && python3 tools/marp_to_pptx.py --help
-source source_me.sh && python3 tools/marp_to_odp.py --help
-./build_slides.sh --help
+source source_me.sh && jotdown --version
 ```
 
-The build path is repository-owned Python and LibreOffice. `marp_lib/native_export.py` orchestrates
-parsing and output; `marp_lib/layouts.py` owns native layout builders. LibreOffice receives the
-completed native PPTX, writes ODP, and receives that ODP to write PDF.
+Expected output: `jotdown 0.10.0`.
 
-Close the LibreOffice desktop application before importing ODP or building ODP/PDF output. Shared
-batch conversion uses `--headless --norestore` and the established LibreOffice user profile.
+## Verify install
 
-## Trust boundary
+```bash
+source source_me.sh && python3 tools/marp_export.py --help
+```
 
-Build only repository-owned Marp Markdown and local teaching assets. The exporter rejects source
-features that lack a native-object mapping; it never uses a browser or a full-slide image fallback.
+## Conversion boundary
 
-Import only instructor-owned, trusted legacy ODP or PPTX files. Archive validation bounds Python
-processing, but ODP import invokes LibreOffice for temporary PPTX geometry extraction. Validation
-does not sandbox LibreOffice or make an untrusted presentation safe to open.
+Close the LibreOffice desktop application before a command that imports ODP or produces ODP/PDF.
+The repository invokes LibreOffice headlessly through its established user profile.
 
-Continue with [USAGE.md](USAGE.md) for migration and classroom commands.
+Import only trusted instructor-owned ODP or PPTX files. Archive and image validation bounds
+repository processing, but it does not sandbox LibreOffice or make an untrusted presentation safe
+to open.
+
+Continue with [USAGE.md](USAGE.md) for import, source validation, and native export commands.

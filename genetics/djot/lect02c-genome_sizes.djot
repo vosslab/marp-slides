@@ -39,15 +39,25 @@
 
 # Number of Chromosomes
 
-=== layout: title-content
+=== layout: multiple-choice
 
-# How many chromosomes do humans have in diploid cells? A. 22 B. 23 C. 46 D. 48 E. 54 F. 56 G. 92
+@question
 
-@body
+How many chromosomes do humans have in diploid cells?
 
-- Answer: C
+- A. 22
+- B. 23
+- C. 46
+- D. 48
+- E. 54
+- F. 56
+- G. 92
 
-=== layout: title-content
+@answer
+
+Answer: C
+
+=== layout: one-panel
 
 # Which of the following organisms has the LARGEST number of CHROMOSOMES?
 
@@ -61,7 +71,7 @@
 - F. Rice
 - G. Zebrafish
 
-=== layout: title-content
+=== layout: one-panel
 
 # Number of Chromosomes
 
@@ -79,7 +89,7 @@
 - Chicken: 78
 - Carp: 104
 
-=== layout: title-content
+=== layout: one-panel
 
 # Chromosome Number
 
@@ -131,22 +141,15 @@
 
 ![Slide image 3](assets/lect02c-genome_sizes/image_003.png)
 
-=== layout: two-panels
+=== layout: one-panel
 
 # The proposed mechanism for the creation of the long human chromosome 2 by fusion of two shorter chromosomes
 
-@left
+@body
 
-- Chimpanzee
-- Gorilla – have
-- 48 chromosomes
-- Genetically unstable
+![Coupled source region](assets/lect02c-genome_sizes/source_region_ea0f1c9c5dd20221e29e81d7d040d751e1c3a582d5c30315bb099e360d8ea195.png)
 
-@right
-
-![Slide image 4](assets/lect02c-genome_sizes/image_004.jpg)
-
-=== layout: title-content
+=== layout: one-panel
 
 # Neanderthal Karyotype(46 Chromosomes)
 
@@ -154,9 +157,8 @@
 
 ![Slide image 5](assets/lect02c-genome_sizes/image_005.png)
 
-=== layout: title-content
+=== layout: one-panel
 
-# Slide 16
 
 @body
 
@@ -200,33 +202,43 @@
 
 === layout: two-panels
 
-# The first free-living organism to have its genome completely sequenced was the bacterium Haemophilus influenzae, in 1995. A non-moving rod-shaped bacterium that causes meningitis. Genome size of 1.8 million base pairs
+# First Genome in 1995
 
 @left
 
-- First Genome in 1995
+- The first free-living organism to have its genome completely sequenced was the bacterium Haemophilus influenzae, in 1995.
+  - A non-moving rod-shaped bacterium that causes meningitis.
+  - Genome size of 1.8 million base pairs
 
 @right
 
 ![Slide image 9](assets/lect02c-genome_sizes/image_009.png)
 
-=== layout: title-content
+=== layout: one-panel
 
-# Slide 21
 
 @body
 
 ![Slide image 10](assets/lect02c-genome_sizes/image_010.jpg)
 
-=== layout: title-content
+=== layout: multiple-choice
 
-# About how many base pairs does a diploid human genome have? A) 6 million B) 60 million C) 600 million D) 6 billion E) 60 billion F) 600 billion
+@question
 
-@body
+About how many base pairs does a diploid human genome have?
 
-- Answer: D
+- A) 6 million
+- B) 60 million
+- C) 600 million
+- D) 6 billion
+- E) 60 billion
+- F) 600 billion
 
-=== layout: title-content
+@answer
+
+Answer: D
+
+=== layout: one-panel
 
 # Human Genome Project
 
@@ -240,7 +252,7 @@
   - transferring related technologies to the private sector
   - addressing the ethical, legal, and social issues that would arise from this knowledge
 
-=== layout: title-content
+=== layout: one-panel
 
 # Which of the following organisms has the LARGEST number of BASE PAIRS?
 
@@ -254,7 +266,7 @@
 - F. Rice
 - G. Zebrafish
 
-=== layout: title-content
+=== layout: one-panel
 
 # Results
 
@@ -273,17 +285,15 @@
 - Lungfish: 1,300,000Mb!!!
 - Mb = millions of base pairs
 
-=== layout: title-content
+=== layout: one-panel
 
-# Slide 26
 
 @body
 
 ![Slide image 11](assets/lect02c-genome_sizes/image_011.png)
 
-=== layout: title-content
+=== layout: one-panel
 
-# Slide 27
 
 @body
 
@@ -326,21 +336,27 @@
 
 ![Slide image 14](assets/lect02c-genome_sizes/image_014.png)
 
-=== layout: title-content
+=== layout: one-panel
 
-# Slide 30
 
 @body
 
 ![Slide image 15](assets/lect02c-genome_sizes/image_015.jpg)
 
-=== layout: title-content
+=== layout: multiple-choice
 
-# What percentage of DNA do all humans identically share? A) 60% B) 75% C) 90% D) 99.9%
+@question
 
-@body
+What percentage of DNA do all humans identically share?
 
-- Answer: D
+- A) 60%
+- B) 75%
+- C) 90%
+- D) 99.9%
+
+@answer
+
+Answer: D
 
 === layout: two-panels
 
@@ -360,7 +376,7 @@
 
 ![Slide image 16](assets/lect02c-genome_sizes/image_016.png)
 
-=== layout: title-content
+=== layout: one-panel
 
 # Genetic Similarities of Humans
 
@@ -384,24 +400,18 @@
 
 # Dr. Voss Navigenics DNA analysis circa 2009
 
-=== layout: two-panels
+=== layout: one-panel
 
-# Dr. Voss' Genome
 
-@left
+@body
 
-- Atrial fibrillation = abnormal heart rhythm
-
-@right
-
-![Slide image 19](assets/lect02c-genome_sizes/image_019.png)
-![Slide image 20](assets/lect02c-genome_sizes/image_020.png)
+![Coupled source region](assets/lect02c-genome_sizes/source_region_8afae644844c47723661e6e54a75aeb16a5266f51bd36f874e0af0eaf92dc849.png)
 
 === layout: title-only
 
 # 23andMe Health Data
 
-=== layout: title-content
+=== layout: one-panel
 
 # 23andMe
 
@@ -409,23 +419,21 @@
 
 ![Slide image 21](assets/lect02c-genome_sizes/image_021.png)
 
-=== layout: title-content
+=== layout: one-panel
 
-# Slide 39
 
 @body
 
 ![Slide image 22](assets/lect02c-genome_sizes/image_022.png)
 
-=== layout: title-content
+=== layout: one-panel
 
-# Slide 40
 
 @body
 
 ![Slide image 23](assets/lect02c-genome_sizes/image_023.png)
 
-=== layout: title-content
+=== layout: one-panel
 
 # Raw SNP Data Download
 
@@ -433,23 +441,27 @@
 
 ![Slide image 24](assets/lect02c-genome_sizes/image_024.png)
 
-=== layout: two-panels
+=== layout: two-plus-one-panels
 
 # SNP rs2802292
 
-@left
+@top-left
 
 - A study of 5 genes in 3,741 Japanese men
   - some of whom lived significantly longer than average (centarians)
 - concluded that the FOXO3 gene harbors several SNPs linked to longevity, including this SNP, rs2802292
   - as well as rs2764264 and rs13217795.
-- 23andMe for
-- Dr. Voss: G;T
+
+@bottom-left
+
 - [https://www.snpedia.com/index.php/Rs2802292](https://www.snpedia.com/index.php/Rs2802292)
 
 @right
 
 ![Slide image 25](assets/lect02c-genome_sizes/image_025.png)
+
+- 23andMe for
+- Dr. Voss: G;T
 
 === layout: two-panels
 
@@ -468,41 +480,51 @@
 
 # Number of Genes
 
-=== layout: two-panels
+=== layout: two-over-one-panels
 
 # Minimal Organism
 
-@left
+@top-left
 
 - Mycoplasma laboratorium is a designed, partially synthetic species of bacterium
   - It is estimated that the synthetic genome cost US$40 million to make and took 20 people more than a decade of work.
 - Version 3.0 – contains 531,560 base pairs and 473 genes.
   - Of these genes 149 are of unknown biological function.
   - announced March 24, 2016
-- [http://astrobiology.com/2016/03/first-minimal-synthetic-bacterial-cell.html](http://astrobiology.com/2016/03/first-minimal-synthetic-bacterial-cell.html)
-- [https://en.wikipedia.org/wiki/Mycoplasma_laboratorium](https://en.wikipedia.org/wiki/Mycoplasma_laboratorium)
 
-@right
+@top-right
 
 ![Slide image 27](assets/lect02c-genome_sizes/image_027.png)
 
-=== layout: title-content
+@bottom
 
-# Scientists now think humans have how many protein-encoding genes: a) 20,000 - 25,000 b) 30,000 - 40,000 c) 65,000 - 75,000 d) more than 100,000
+- [http://astrobiology.com/2016/03/first-minimal-synthetic-bacterial-cell.html](http://astrobiology.com/2016/03/first-minimal-synthetic-bacterial-cell.html)
 
-@body
+- [https://en.wikipedia.org/wiki/Mycoplasma_laboratorium](https://en.wikipedia.org/wiki/Mycoplasma_laboratorium)
 
-- Answer: A
+=== layout: multiple-choice
 
-=== layout: title-content
+@question
 
-# Slide 47
+Scientists now think humans have how many protein-encoding genes:
+
+- a) 20,000 - 25,000
+- b) 30,000 - 40,000
+- c) 65,000 - 75,000
+- d) more than 100,000
+
+@answer
+
+Answer: A
+
+=== layout: one-panel
+
 
 @body
 
 ![Slide image 28](assets/lect02c-genome_sizes/image_028.png)
 
-=== layout: title-content
+=== layout: one-panel
 
 # Which of the following organisms has the LARGEST number of GENES?
 
@@ -536,9 +558,8 @@
 - Rice: 32,000
 - Corn: 39,656
 
-=== layout: title-content
+=== layout: one-panel
 
-# Slide 50
 
 @body
 
@@ -548,15 +569,22 @@
 
 # Percent of Genome in Use
 
-=== layout: title-content
+=== layout: multiple-choice
 
-# What percent of human DNA are genes, i.e., code for proteins A) 1.5% B) 5.1% C) 15% D) 51%
+@question
 
-@body
+What percent of human DNA are genes, i.e., code for proteins
 
-- Answer: A
+- A) 1.5%
+- B) 5.1%
+- C) 15%
+- D) 51%
 
-=== layout: title-content
+@answer
+
+Answer: A
+
+=== layout: one-panel
 
 # Human genome abundance of non-coding DNA
 
@@ -565,7 +593,7 @@
 - 98.5% “junk” DNA
 - 1.5% protein-coding genes
 
-=== layout: title-content
+=== layout: one-panel
 
 # Human genome abundance of non-coding DNA
 
@@ -582,9 +610,8 @@
 - 2.9% DNA transposons
 - 1.5% protein-coding genes
 
-=== layout: title-content
+=== layout: one-panel
 
-# Slide 55
 
 @body
 
@@ -594,15 +621,18 @@
 
 # Summary
 
-=== layout: title-content
+=== layout: one-panel
 
-# Complexity ≠ # of Genes More complex organisms do not always have larger genomes than simpler ones. Any given genome seems to contain more DNA than would be needed for the predicted gene number Some closely related species exhibit divergent DNA contents.
+# Summary
 
 @body
 
-- Summary
+- Complexity ≠ # of Genes
+- More complex organisms do not always have larger genomes than simpler ones.
+  - Any given genome seems to contain more DNA than would be needed for the predicted gene number
+- Some closely related species exhibit divergent DNA contents.
 
-=== layout: title-content
+=== layout: one-panel
 
 # Genomes and proteomes differ in size and complexity
 

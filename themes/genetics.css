@@ -108,15 +108,15 @@ section.blank {
 }
 
 section.title-only,
-section.title-two-content,
-section.title-content-and-two-content,
-section.title-two-content-and-content,
-section.title-content-over-content,
-section.title-two-content-over-content,
-section.title-four-content,
-section.title-six-content,
-section.title-vertical-text,
-section.title-two-vertical-text-clipart,
+section.two-panels,
+section.one-plus-two-panels,
+section.two-plus-one-panels,
+section.stacked-panels,
+section.two-over-one-panels,
+section.four-panels,
+section.six-panels,
+section.vertical-text-panel,
+section.two-panels-vertical-clipart,
 section.gallery {
 	align-content: stretch;
 	display: grid;
@@ -125,7 +125,7 @@ section.gallery {
 }
 
 /* Root-body layouts use a continuous authoring flow after their title. */
-section.title-content {
+section.one-panel {
 	align-content: stretch;
 	display: flex;
 	flex-direction: column;
@@ -133,16 +133,16 @@ section.title-content {
 }
 
 section.title-only > h1,
-section.title-content > h1,
-section.title-two-content > h1,
-section.title-content-and-two-content > h1,
-section.title-two-content-and-content > h1,
-section.title-content-over-content > h1,
-section.title-two-content-over-content > h1,
-section.title-four-content > h1,
-section.title-six-content > h1,
-section.title-vertical-text > h1,
-section.title-two-vertical-text-clipart > h1,
+section.one-panel > h1,
+section.two-panels > h1,
+section.one-plus-two-panels > h1,
+section.two-plus-one-panels > h1,
+section.stacked-panels > h1,
+section.two-over-one-panels > h1,
+section.four-panels > h1,
+section.six-panels > h1,
+section.vertical-text-panel > h1,
+section.two-panels-vertical-clipart > h1,
 section.gallery > h1 {
 	margin-bottom: 0;
 }
@@ -170,13 +170,13 @@ section.centered-text h1 {
 	margin-bottom: 0;
 }
 
-section.title-content > :not(h1) {
+section.one-panel > :not(h1) {
 	flex: 0 0 auto;
 	min-height: 0;
 	min-width: 0;
 }
 
-section.title-content > h1 + p:last-child:has(> img) {
+section.one-panel > h1 + p:last-child:has(> img) {
 	align-items: center;
 	display: flex;
 	flex: 1 1 auto;
@@ -184,28 +184,28 @@ section.title-content > h1 + p:last-child:has(> img) {
 	margin-bottom: 0;
 }
 
-section.title-content > h1 + p:last-child:has(> img) img {
+section.one-panel > h1 + p:last-child:has(> img) img {
 	height: 100%;
 	width: 100%;
 }
 
-section.title-two-content {
+section.two-panels {
 	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 }
 
-section.title-two-content > h1,
-section.title-content-and-two-content > h1,
-section.title-two-content-and-content > h1,
-section.title-content-over-content > h1,
-section.title-two-content-over-content > h1,
-section.title-four-content > h1,
-section.title-six-content > h1,
-section.title-vertical-text > h1,
-section.title-two-vertical-text-clipart > h1 {
+section.two-panels > h1,
+section.one-plus-two-panels > h1,
+section.two-plus-one-panels > h1,
+section.stacked-panels > h1,
+section.two-over-one-panels > h1,
+section.four-panels > h1,
+section.six-panels > h1,
+section.vertical-text-panel > h1,
+section.two-panels-vertical-clipart > h1 {
 	grid-column: 1 / -1;
 }
 
-section.title-content-and-two-content {
+section.one-plus-two-panels {
 	grid-template-areas:
 		"title title"
 		"content first"
@@ -214,23 +214,23 @@ section.title-content-and-two-content {
 	grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr);
 }
 
-section.title-content-and-two-content > h1 {
+section.one-plus-two-panels > h1 {
 	grid-area: title;
 }
 
-section.title-content-and-two-content > blockquote:nth-of-type(1) {
+section.one-plus-two-panels > blockquote:nth-of-type(1) {
 	grid-area: content;
 }
 
-section.title-content-and-two-content > blockquote:nth-of-type(2) {
+section.one-plus-two-panels > blockquote:nth-of-type(2) {
 	grid-area: first;
 }
 
-section.title-content-and-two-content > blockquote:nth-of-type(3) {
+section.one-plus-two-panels > blockquote:nth-of-type(3) {
 	grid-area: second;
 }
 
-section.title-two-content-and-content {
+section.two-plus-one-panels {
 	grid-template-areas:
 		"title title"
 		"first content"
@@ -239,27 +239,27 @@ section.title-two-content-and-content {
 	grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr);
 }
 
-section.title-two-content-and-content > h1 {
+section.two-plus-one-panels > h1 {
 	grid-area: title;
 }
 
-section.title-two-content-and-content > blockquote:nth-of-type(1) {
+section.two-plus-one-panels > blockquote:nth-of-type(1) {
 	grid-area: first;
 }
 
-section.title-two-content-and-content > blockquote:nth-of-type(2) {
+section.two-plus-one-panels > blockquote:nth-of-type(2) {
 	grid-area: second;
 }
 
-section.title-two-content-and-content > blockquote:nth-of-type(3) {
+section.two-plus-one-panels > blockquote:nth-of-type(3) {
 	grid-area: content;
 }
 
-section.title-content-over-content {
+section.stacked-panels {
 	grid-template-columns: minmax(0, 1fr);
 }
 
-section.title-two-content-over-content {
+section.two-over-one-panels {
 	grid-template-areas:
 		"title title"
 		"first second"
@@ -268,33 +268,33 @@ section.title-two-content-over-content {
 	grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr);
 }
 
-section.title-two-content-over-content > h1 {
+section.two-over-one-panels > h1 {
 	grid-area: title;
 }
 
-section.title-two-content-over-content > blockquote:nth-of-type(1) {
+section.two-over-one-panels > blockquote:nth-of-type(1) {
 	grid-area: first;
 }
 
-section.title-two-content-over-content > blockquote:nth-of-type(2) {
+section.two-over-one-panels > blockquote:nth-of-type(2) {
 	grid-area: second;
 }
 
-section.title-two-content-over-content > blockquote:nth-of-type(3) {
+section.two-over-one-panels > blockquote:nth-of-type(3) {
 	grid-area: content;
 }
 
-section.title-four-content {
+section.four-panels {
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 	grid-template-rows: auto repeat(2, minmax(0, 1fr));
 }
 
-section.title-six-content {
+section.six-panels {
 	grid-template-columns: repeat(3, minmax(0, 1fr));
 	grid-template-rows: auto repeat(2, minmax(0, 1fr));
 }
 
-section.title-vertical-text {
+section.vertical-text-panel {
 	align-content: stretch;
 	column-gap: 0;
 	display: grid;
@@ -303,12 +303,12 @@ section.title-vertical-text {
 	row-gap: 18px;
 }
 
-section.title-vertical-text > h1 {
+section.vertical-text-panel > h1 {
 	grid-column: 1;
 	grid-row: 1;
 }
 
-section.title-vertical-text > :not(h1) {
+section.vertical-text-panel > :not(h1) {
 	grid-column: 1;
 	grid-row: 2;
 	min-height: 0;
@@ -316,16 +316,16 @@ section.title-vertical-text > :not(h1) {
 	overflow: auto;
 }
 
-section.title-vertical-text > :not(h1),
-section.vertical-title-vertical-text > :not(h1),
-section.title-two-vertical-text-clipart > blockquote:nth-of-type(3) {
+section.vertical-text-panel > :not(h1),
+section.vertical-panel > :not(h1),
+section.two-panels-vertical-clipart > blockquote:nth-of-type(3) {
 	align-items: center;
 	display: flex;
 	justify-content: center;
 	writing-mode: vertical-rl;
 }
 
-section.title-two-vertical-text-clipart {
+section.two-panels-vertical-clipart {
 	grid-template-areas:
 		"title title"
 		"first vertical"
@@ -334,24 +334,24 @@ section.title-two-vertical-text-clipart {
 	grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr);
 }
 
-section.title-two-vertical-text-clipart > h1 {
+section.two-panels-vertical-clipart > h1 {
 	grid-area: title;
 }
 
-section.title-two-vertical-text-clipart > blockquote:nth-of-type(1) {
+section.two-panels-vertical-clipart > blockquote:nth-of-type(1) {
 	grid-area: first;
 }
 
-section.title-two-vertical-text-clipart > blockquote:nth-of-type(2) {
+section.two-panels-vertical-clipart > blockquote:nth-of-type(2) {
 	grid-area: second;
 }
 
-section.title-two-vertical-text-clipart > blockquote:nth-of-type(3) {
+section.two-panels-vertical-clipart > blockquote:nth-of-type(3) {
 	grid-area: vertical;
 }
 
-section.vertical-title-vertical-text,
-section.vertical-title-text-chart {
+section.vertical-panel,
+section.vertical-title-two-panels {
 	align-content: stretch;
 	column-gap: 0;
 	display: grid;
@@ -359,13 +359,13 @@ section.vertical-title-text-chart {
 	row-gap: 0;
 }
 
-section.vertical-title-vertical-text {
+section.vertical-panel {
 	column-gap: 0;
 	grid-template-columns: 94px 24px 1042px;
 }
 
-section.vertical-title-vertical-text > h1,
-section.vertical-title-text-chart > h1 {
+section.vertical-panel > h1,
+section.vertical-title-two-panels > h1 {
 	align-items: center;
 	display: flex;
 	justify-content: center;
@@ -373,32 +373,32 @@ section.vertical-title-text-chart > h1 {
 	writing-mode: vertical-rl;
 }
 
-section.vertical-title-vertical-text > h1,
-section.vertical-title-text-chart > h1 {
+section.vertical-panel > h1,
+section.vertical-title-two-panels > h1 {
 	grid-column: 1;
 }
 
 /* Every root body block stays in the semantic body column beside the title. */
-section.vertical-title-vertical-text > :not(h1) {
+section.vertical-panel > :not(h1) {
 	grid-column: 3;
 	min-width: 0;
 }
 
-section.vertical-title-vertical-text > blockquote,
-section.vertical-title-text-chart > blockquote {
+section.vertical-panel > blockquote,
+section.vertical-title-two-panels > blockquote {
 	min-height: 0;
 }
 
-section.vertical-title-text-chart {
+section.vertical-title-two-panels {
 	column-gap: 0;
 	grid-template-columns: 94px 24px 500px 42px 500px;
 }
 
-section.vertical-title-text-chart > blockquote:nth-of-type(1) {
+section.vertical-title-two-panels > blockquote:nth-of-type(1) {
 	grid-column: 3;
 }
 
-section.vertical-title-text-chart > blockquote:nth-of-type(2) {
+section.vertical-title-two-panels > blockquote:nth-of-type(2) {
 	grid-column: 5;
 }
 
@@ -430,17 +430,17 @@ section.gallery > p img {
 	width: 100%;
 }
 
-section.title-two-content > blockquote,
-section.title-content-and-two-content > blockquote,
-section.title-two-content-and-content > blockquote,
-section.title-content-over-content > blockquote,
-section.title-two-content-over-content > blockquote,
-section.title-four-content > blockquote,
-section.title-six-content > blockquote,
-section.title-vertical-text > blockquote,
-section.title-two-vertical-text-clipart > blockquote,
-section.vertical-title-vertical-text > blockquote,
-section.vertical-title-text-chart > blockquote {
+section.two-panels > blockquote,
+section.one-plus-two-panels > blockquote,
+section.two-plus-one-panels > blockquote,
+section.stacked-panels > blockquote,
+section.two-over-one-panels > blockquote,
+section.four-panels > blockquote,
+section.six-panels > blockquote,
+section.vertical-text-panel > blockquote,
+section.two-panels-vertical-clipart > blockquote,
+section.vertical-panel > blockquote,
+section.vertical-title-two-panels > blockquote {
 	border: 0;
 	box-sizing: border-box;
 	margin: 0;
@@ -450,64 +450,64 @@ section.vertical-title-text-chart > blockquote {
 	padding: 0;
 }
 
-section.title-two-content > blockquote h2,
-section.title-content-and-two-content > blockquote h2,
-section.title-two-content-and-content > blockquote h2,
-section.title-content-over-content > blockquote h2,
-section.title-two-content-over-content > blockquote h2,
-section.title-four-content > blockquote h2,
-section.title-six-content > blockquote h2,
-section.title-vertical-text > blockquote h2,
-section.title-two-vertical-text-clipart > blockquote h2,
-section.vertical-title-vertical-text > blockquote h2,
-section.vertical-title-text-chart > blockquote h2 {
+section.two-panels > blockquote h2,
+section.one-plus-two-panels > blockquote h2,
+section.two-plus-one-panels > blockquote h2,
+section.stacked-panels > blockquote h2,
+section.two-over-one-panels > blockquote h2,
+section.four-panels > blockquote h2,
+section.six-panels > blockquote h2,
+section.vertical-text-panel > blockquote h2,
+section.two-panels-vertical-clipart > blockquote h2,
+section.vertical-panel > blockquote h2,
+section.vertical-title-two-panels > blockquote h2 {
 	color: var(--slide-foreground, #172033);
 	font-size: 34px;
 	font-weight: 700;
 	margin-top: 0;
 }
 
-section.title-two-content > blockquote > :last-child,
-section.title-content-and-two-content > blockquote > :last-child,
-section.title-two-content-and-content > blockquote > :last-child,
-section.title-content-over-content > blockquote > :last-child,
-section.title-two-content-over-content > blockquote > :last-child,
-section.title-four-content > blockquote > :last-child,
-section.title-six-content > blockquote > :last-child,
-section.title-vertical-text > blockquote > :last-child,
-section.title-two-vertical-text-clipart > blockquote > :last-child,
-section.vertical-title-vertical-text > blockquote > :last-child,
-section.vertical-title-text-chart > blockquote > :last-child {
+section.two-panels > blockquote > :last-child,
+section.one-plus-two-panels > blockquote > :last-child,
+section.two-plus-one-panels > blockquote > :last-child,
+section.stacked-panels > blockquote > :last-child,
+section.two-over-one-panels > blockquote > :last-child,
+section.four-panels > blockquote > :last-child,
+section.six-panels > blockquote > :last-child,
+section.vertical-text-panel > blockquote > :last-child,
+section.two-panels-vertical-clipart > blockquote > :last-child,
+section.vertical-panel > blockquote > :last-child,
+section.vertical-title-two-panels > blockquote > :last-child {
 	margin-bottom: 0;
 }
 
-section.title-two-content > blockquote img,
-section.title-content-and-two-content > blockquote img,
-section.title-two-content-and-content > blockquote img,
-section.title-content-over-content > blockquote img,
-section.title-two-content-over-content > blockquote img,
-section.title-four-content > blockquote img,
-section.title-six-content > blockquote img,
-section.title-vertical-text > blockquote img,
-section.title-two-vertical-text-clipart > blockquote img,
-section.vertical-title-vertical-text > blockquote img,
-section.vertical-title-text-chart > blockquote img {
+section.two-panels > blockquote img,
+section.one-plus-two-panels > blockquote img,
+section.two-plus-one-panels > blockquote img,
+section.stacked-panels > blockquote img,
+section.two-over-one-panels > blockquote img,
+section.four-panels > blockquote img,
+section.six-panels > blockquote img,
+section.vertical-text-panel > blockquote img,
+section.two-panels-vertical-clipart > blockquote img,
+section.vertical-panel > blockquote img,
+section.vertical-title-two-panels > blockquote img {
 	height: 100%;
 	width: 100%;
 }
 
 /* Image-only cells reserve the complete cell for a contained component image. */
-section.title-two-content > blockquote > p:only-child:has(> img:only-child),
-section.title-content-and-two-content > blockquote > p:only-child:has(> img:only-child),
-section.title-two-content-and-content > blockquote > p:only-child:has(> img:only-child),
-section.title-content-over-content > blockquote > p:only-child:has(> img:only-child),
-section.title-two-content-over-content > blockquote > p:only-child:has(> img:only-child),
-section.title-four-content > blockquote > p:only-child:has(> img:only-child),
-section.title-six-content > blockquote > p:only-child:has(> img:only-child),
-section.title-vertical-text > blockquote > p:only-child:has(> img:only-child),
-section.title-two-vertical-text-clipart > blockquote > p:only-child:has(> img:only-child),
-section.vertical-title-vertical-text > blockquote > p:only-child:has(> img:only-child),
-section.vertical-title-text-chart > blockquote > p:only-child:has(> img:only-child) {
+section.two-panels > blockquote > p:only-child:has(> img:only-child),
+section.one-plus-two-panels > blockquote > p:only-child:has(> img:only-child),
+section.two-plus-one-panels > blockquote > p:only-child:has(> img:only-child),
+section.stacked-panels > blockquote > p:only-child:has(> img:only-child),
+section.two-over-one-panels > blockquote > p:only-child:has(> img:only-child),
+section.four-panels > blockquote > p:only-child:has(> img:only-child),
+section.six-panels > blockquote > p:only-child:has(> img:only-child),
+section.vertical-text-panel > blockquote > p:only-child:has(> img:only-child),
+section.two-panels-vertical-clipart > blockquote > p:only-child:has(> img:only-child),
+section.vertical-panel > blockquote > p:only-child:has(> img:only-child),
+section.vertical-title-two-panels > blockquote > p:only-child:has(> img:only-child) {
 	align-items: center;
 	display: flex;
 	height: 100%;

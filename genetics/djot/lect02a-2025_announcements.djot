@@ -7,7 +7,7 @@
 ## Dr. Neil Voss
 ## Sept 2, 2025
 
-=== layout: title-content
+=== layout: one-panel
 
 # Today's Agenda
 
@@ -23,7 +23,7 @@
   - DNA Analysis
 - Closing Remarks
 
-=== layout: title-content
+=== layout: one-panel
 
 # Breakout Room Chat
 
@@ -33,7 +33,7 @@
 - We had great weather this weekend. What is your favorite outdoor activity?
   - Dr. Voss: riding my bicycle, watching my kids play sports, go on a walk
 
-=== layout: title-content
+=== layout: one-panel
 
 # Make Sure Dr. Voss Is Recording
 
@@ -45,7 +45,7 @@
 
 # Informational Slides
 
-=== layout: title-content
+=== layout: one-panel
 
 # Lecture Format
 
@@ -92,20 +92,18 @@
 
 ![Slide image 3](assets/lect02a-2025_announcements/image_003.png)
 
-=== layout: two-panels
+=== layout: one-panel
 
 # Dr. Voss YouTube Channel
 
-@left
+@body
+
+![Slide image 4](assets/lect02a-2025_announcements/image_004.png)
 
 - [https://www.youtube.com/c/NeilVossLab/videos](https://www.youtube.com/c/NeilVossLab/videos)
 - a few videos for hard problems
 
-@right
-
-![Slide image 4](assets/lect02a-2025_announcements/image_004.png)
-
-=== layout: title-content
+=== layout: one-panel
 
 # Ways to Contact Dr. Voss
 
@@ -123,25 +121,31 @@
   - goes to my email, but I can only read on laptop
   - response time: 2-4 business days
 
-=== layout: two-panels
+=== layout: four-panels
 
 # Office Hours
 
-@left
+@top-left
 
 - Via Zoom Video Conference:
 - [https://zoom.us/j/97638754024](https://roosevelt.zoom.us/j/97638754024?pwd=djdlTlFhNEQ0WFV5TTNUMW1xeldYZz09)
 - Meeting ID:
   - 976 3875 4024
 - Password: voss
+
+@top-right
+
+![Slide image 5](assets/lect02a-2025_announcements/image_005.png)
+
+@bottom-left
+
+![Slide image 6](assets/lect02a-2025_announcements/image_006.png)
+
+@bottom-right
+
 - Wed, 12-1p on Schaumburg-campus
 - To be determined
 - also available by appointment
-
-@right
-
-![Slide image 5](assets/lect02a-2025_announcements/image_005.png)
-![Slide image 6](assets/lect02a-2025_announcements/image_006.png)
 
 === layout: two-panels
 
@@ -149,7 +153,7 @@
 
 @left
 
-![Slide image 7](assets/lect02a-2025_announcements/image_007.png)
+![Coupled source region](assets/lect02a-2025_announcements/source_region_ad5f0b3ca1fd7a3959d2857bfec0b6b9ca2c562dbae61dbf9e270c798f813648.png)
 
 @right
 
@@ -158,7 +162,7 @@
 - Form goes directly to my email.
 - [https://forms.gle/gZ8nx28q9YDwSy8g7](https://forms.gle/gZ8nx28q9YDwSy8g7)
 
-=== layout: two-panels
+=== layout: one-plus-two-panels
 
 # Discord Server
 
@@ -170,42 +174,32 @@
   - It is available as a mobile app, a desktop app, and a website
   - Be sure to connect to my server, you should not create your own server
 
-@right
+@top-right
 
 ![Slide image 9](assets/lect02a-2025_announcements/image_009.png)
+
+@bottom-right
+
 ![Slide image 8](assets/lect02a-2025_announcements/image_008.png)
 
-=== layout: title-content
+=== layout: one-panel
 
 # Discord Signup
 
 @body
 
-![Slide image 10](assets/lect02a-2025_announcements/image_010.png)
+![Coupled source region](assets/lect02a-2025_announcements/source_region_80fcfa5d6dd344ae0837ad57d603228241449a9c45f9bddeda1ad5b87443b75f.png)
 
 === layout: title-only
 
 # Textbooks
 
-=== layout: two-panels
+=== layout: one-panel
 
-# Textbooks for class
 
-@left
+@body
 
-- Hartl and Ruvolo
-- Genetics: Analysis of Genes and Genomes
-- 8 th Edition
-- Hartl and Ruvolo
-- Genetics: Analysis of Genes and Genomes
-- 9 th Edition
-- [https://www.amazon.com/dp/128412293X?tag=volumvoxel-20](https://www.amazon.com/dp/128412293X?tag=volumvoxel-20)
-- [https://www.amazon.com/dp/1449635962?tag=volumvoxel-20](https://www.amazon.com/dp/1449635962?tag=volumvoxel-20)
-
-@right
-
-![Slide image 12](assets/lect02a-2025_announcements/image_012.png)
-![Slide image 11](assets/lect02a-2025_announcements/image_011.png)
+![Coupled source region](assets/lect02a-2025_announcements/source_region_dfbd3604acb5b39eb433e68834e4324e2577e97019d3fe0da0ce5eb029e676b0.png)
 
 === layout: two-panels
 
@@ -238,7 +232,7 @@
 
 # Course Content
 
-=== layout: title-content
+=== layout: one-panel
 
 # Syllabus Links
 
@@ -257,7 +251,7 @@
 - University Important Dates
   - [https://docs.google.com/spreadsheets/d/1YuK02ObBJgxFlQSLx0xtKdaLNBfuOgM466Hh6MRQczE/edit](https://docs.google.com/spreadsheets/d/1YuK02ObBJgxFlQSLx0xtKdaLNBfuOgM466Hh6MRQczE/edit)
 
-=== layout: title-content
+=== layout: one-panel
 
 # PREVIEW Slides
 
@@ -271,7 +265,7 @@
 
 # Grading and Assessment
 
-=== layout: title-content
+=== layout: one-panel
 
 # Assignments, Quizzes, and Exams
 
@@ -290,15 +284,18 @@
   - 100 points total (50 points/75 minutes each part).
   - Completed individually.
 
-=== layout: title-content
+=== layout: two-panels
 
 # Graded vs Total Percentage
 
-@body
+@left
 
 - Graded percentage only includes items that have a grade
 - Ignores all uncompleted assignments
 - More accurate when Dr. Voss has ungraded entries in the grade book
+
+@right
+
 - Total percentage is all gradable items in blackboard.
 - Gives you a zero score on all uncompleted assignments.
   - including assignments waiting for a grade from the professor.
@@ -308,7 +305,7 @@
 
 # Quiz/Exam
 
-=== layout: title-content
+=== layout: one-panel
 
 # Don’t Panic
 
@@ -322,7 +319,7 @@
 - If you haven't looked at all the questions, I can reset the quiz/exam
 - If you have looked at some questions, I can create a new custom quiz/exam with only the portion that you haven't seen yet.
 
-=== layout: title-content
+=== layout: one-panel
 
 # Illness Policy
 
@@ -337,11 +334,11 @@
 
 # Quiz
 
-=== layout: title-content
+=== layout: two-panels
 
 # Quiz System Information
 
-@body
+@left
 
 - 20 points total in 18-24 questions
   - 1 point for each multiple choice
@@ -353,6 +350,9 @@
   - 1½  min per question
 - Final Score
   - Average of Individual and Group Scores: (14 + 20)/2 = 17 points
+
+@right
+
 - Individual Quiz
   - on blackboard
   - Opens &gt; 20 hours before start of class
@@ -363,7 +363,7 @@
     - may take awhile to organize break out groups
   - Group scores are curved for hard quizzes
 
-=== layout: title-content
+=== layout: one-panel
 
 # Missing Group Quizzes
 
@@ -374,7 +374,7 @@
   - the individual score will be averaged with the minimum 18 points (or higher) instead of a group quiz score
   - so you still get the benefit of the group score average, albeit small, even though you missed the in-class quiz.
 
-=== layout: title-content
+=== layout: one-panel
 
 # Please Volunteer Only If Plan to Work in Group
 
@@ -386,7 +386,7 @@
 - Do not join if you do not want to actively participate.
 - Let me know if you want to work with someone in particular.
 
-=== layout: title-content
+=== layout: one-panel
 
 # Group Quiz Setup
 
@@ -410,7 +410,7 @@
   - If your group experience was not good, please reach out to me through email or direct message.
   - Once you are finished, you are free to return to the main room or stay in the breakout room and chat or whatever.
 
-=== layout: title-content
+=== layout: one-panel
 
 # Low Quiz Grades
 
@@ -422,7 +422,7 @@
 - Did you retake the relevant assignments and make sure you understood the questions? Did you retake them until you had a grade you were happy with?
   - The assignments and quizzes mostly have the same questions.
 
-=== layout: title-content
+=== layout: one-panel
 
 # Exam and Quiz Schedule
 
@@ -440,7 +440,7 @@
 
 # Weekly Assignments
 
-=== layout: title-content
+=== layout: one-panel
 
 # Student Profile
 
@@ -454,7 +454,7 @@
   - no points awarded after date.
 - See link on Blackboard
 
-=== layout: title-content
+=== layout: one-panel
 
 # Discord Server
 
@@ -466,7 +466,7 @@
 - Due Within First Few Weeks of Class,
   - Due Sept 21.
 
-=== layout: two-panels
+=== layout: one-plus-two-panels
 
 # Discord Server
 
@@ -478,24 +478,27 @@
   - It is available as a mobile app, a desktop app, and a website
   - Be sure to connect to my server, you should not create your own server
 
-@right
+@top-right
 
 ![Slide image 9](assets/lect02a-2025_announcements/image_009.png)
+
+@bottom-right
+
 ![Slide image 8](assets/lect02a-2025_announcements/image_008.png)
 
-=== layout: title-content
+=== layout: one-panel
 
 # Discord Signup
 
 @body
 
-![Slide image 10](assets/lect02a-2025_announcements/image_010.png)
+![Coupled source region](assets/lect02a-2025_announcements/source_region_80fcfa5d6dd344ae0837ad57d603228241449a9c45f9bddeda1ad5b87443b75f.png)
 
-=== layout: title-content
+=== layout: two-panels
 
 # Blackboard Homework (Part 1)
 
-@body
+@left
 
 - HW1 – Due Sept 10
 - HW2 – Due Sept 10
@@ -503,6 +506,9 @@
 - HW4 – Due
 - HW5 – Due
 - HW6 – Due
+
+@right
+
 - Due Wednesdays at Midnight
 - Homework has unlimited attempts and only keeps your highest score
 - I encourage students to work together on assignments, or post to Discord for help
@@ -511,20 +517,23 @@
 
 # General Announcements
 
-=== layout: two-panels
+=== layout: two-over-one-panels
 
 # Graduating Students
 
-@left
+@top-left
 
 - Last day to apply for graduation is:
   - September 2, 2025
 - Late applications will cost you a $100 late fee
-- [https://www.roosevelt.edu/current-students/academics/grad-prep](https://www.roosevelt.edu/current-students/academics/grad-prep)
 
-@right
+@top-right
 
 ![Slide image 15](assets/lect02a-2025_announcements/image_015.png)
+
+@bottom
+
+- [https://www.roosevelt.edu/current-students/academics/grad-prep](https://www.roosevelt.edu/current-students/academics/grad-prep)
 
 === layout: title-only
 

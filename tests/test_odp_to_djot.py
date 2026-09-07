@@ -8,9 +8,9 @@ import zipfile
 import pytest
 
 # Local modules
-from tools import odp_to_djot
-from tools import odp_to_marp
-from tools import pptx_to_djot
+import marp_lib.importers.odp_to_djot as odp_to_djot
+import marp_lib.importers.odp_to_marp as odp_to_marp
+import marp_lib.importers.pptx_to_djot as pptx_to_djot
 
 
 MINIMAL_CONTENT_XML = """<?xml version="1.0" encoding="UTF-8"?>
@@ -64,3 +64,4 @@ def test_minimal_odp_preserves_visibility_contract_for_djot(
 	assert received["expected_slide_count"] == 1
 	assert received["expected_hidden"] == set()
 	assert received["source_name"] == "lecture.odp"
+	assert received["render_source_path"] == input_path.resolve()

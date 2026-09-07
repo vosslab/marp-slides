@@ -366,6 +366,26 @@ def parse_blocks(path: pathlib.Path, tokens: list[Token], base_line: int,
 
 
 #============================================
+def normalize_layout_cells(source: marp_lib.native_model.Slide,
+		blocks: tuple[marp_lib.native_model.Block, ...],
+		cells: tuple[marp_lib.native_model.Cell, ...]) -> tuple[tuple[marp_lib.native_model.Block, ...],
+		tuple[marp_lib.native_model.Cell, ...]]:
+	"""Bind legacy Marp regions to the layout's named native cell contract."""
+	spec = layouts.LAYOUTS[source.layout_class]
+	global_blocks = tuple(block for block in blocks if isinstance(block, marp_lib.native_model.Heading))
+	root_content = tuple(block for block in blocks if not isinstance(block, marp_lib.native_model.Heading))
+	if cells:
+		named_cells = tuple(marp_lib.native_model.Cell(cell.location, cell.blocks,
+			spec.slot_names[index] if index < len(spec.slot_names) else None)
+			for index, cell in enumerate(cells))
+		return global_blocks + root_content, named_cells
+	if root_content and spec.slot_names and (spec.allows_root_body or spec.name == "gallery"):
+		return global_blocks, (marp_lib.native_model.Cell(root_content[0].location, root_content,
+			spec.slot_names[0]),)
+	return global_blocks + root_content, cells
+
+
+#============================================
 def parse_deck(input_path: pathlib.Path) -> marp_lib.native_model.Deck:
 	"""Parse one authoritative Marp Markdown file without Marp runtime code."""
 	path = input_path.resolve()
@@ -391,6 +411,9 @@ def parse_deck(input_path: pathlib.Path) -> marp_lib.native_model.Deck:
 		if BACKGROUND_IMAGE_PATTERN.search(cleaned):
 			raise error(path, slide_line, "background-image modifiers are not supported")
 		blocks, cells = parse_blocks(path, parser.parse(cleaned), slide_line, True)
+		provisional = marp_lib.native_model.Slide(location(path, slide_line), layout_class,
+			title_size_override, paginate, notes, (), ())
+		blocks, cells = normalize_layout_cells(provisional, blocks, cells)
 		if title_size_override is not None:
 			if layout_class == "blank":
 				raise error(path, title_size_override.location.line, "blank slides do not accept a font-size modifier")

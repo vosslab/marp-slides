@@ -14,7 +14,7 @@
 
 # What is the difference between a disorder and a disease?
 
-=== layout: title-content
+=== layout: one-panel
 
 # Disease vs. Disorder
 
@@ -28,7 +28,7 @@
 
 # What is a genetic disorder?
 
-=== layout: title-content
+=== layout: one-panel
 
 # Genetic Disorder
 
@@ -62,7 +62,7 @@
 
 ![Slide image 1](assets/lect01b-genetic_disorders/image_001.png)
 
-=== layout: title-content
+=== layout: one-panel
 
 # Genetics Disorder Activity
 
@@ -75,7 +75,7 @@
 - As a team make a quick Google Slideshow on your disorder
   - Requires google/gmail account
 
-=== layout: title-content
+=== layout: one-panel
 
 # Genetics Disorder Activity
 
@@ -91,19 +91,18 @@
   - What is the prognosis? How long do the affected patients live?
   - Is there a treatment for the disorder?
 
-=== layout: title-content
+=== layout: one-panel
 
-# Slide 11
 
 @body
 
 ![Slide image 2](assets/lect01b-genetic_disorders/image_002.png)
 
-=== layout: title-content
+=== layout: two-over-one-panels
 
 # Genetic Disorders
 
-@body
+@top-left
 
 - Primarily monogenic disorders
   - Achondroplasia
@@ -125,6 +124,9 @@
   - Sickle-cell anemia
   - Tay–Sachs disease
   - Wilson's Disease
+
+@top-right
+
 - Chromosomal disorders
   - Angelman syndrome
   - Beckwith-Wiedemann Syndrome
@@ -146,10 +148,14 @@
   - WAGR syndrome
   - Williams Syndrome
   - Wolf-Hirschhorn syndrome
+
+@bottom
+
 - [https://en.wikipedia.org/wiki/List_of_genetic_disorders](https://en.wikipedia.org/wiki/List_of_genetic_disorders)
+
 - [https://www.genome.gov/10001204/specific-genetic-disorders/](https://www.genome.gov/10001204/specific-genetic-disorders/)
 
-=== layout: title-content
+=== layout: one-panel
 
 # Fall 2024
 
@@ -169,23 +175,43 @@
   - Group 11: https://docs.google.com/presentation/d/1K1FXiQQT7p-HnoVt_yOz0B-p4By5S5gNl-rbqmnYcpY/edit
   - Group 12: https://docs.google.com/presentation/d/1Lzxu6hUobQngrun2K9x9-HUNUfdE3jfWZbMLhJa1Geo/edit
 
-=== layout: title-content
+=== layout: one-panel
 
-# Group 01: https://docs.google.com/presentation/d/1HRMqmihTdeRE9kXulQamlCaALcuiBC4Bqqx5718a2f0/edit?usp=drivesdk Group 02: https://docs.google.com/presentation/d/1WOgESPpCSSXHdPnM78HVF39DdvPWr8bkM1k8nztiUwk/edit?usp=drivesdk Group 03: https://docs.google.com/presentation/d/1XaRuz2VLm9FpA3q8Hy1OkSuGO-HgYD6hzzJuyHH5e98/edit?usp=drivesdk Group 04: https://docs.google.com/presentation/d/1XFuZPw5832x_b8VOV5b86FKlVCaSYLC8FqxGbaFCSMU/edit?usp=drivesdk Group 05: https://docs.google.com/presentation/d/19bhG0BTrbD5tk4pEhK1pVdGhOBt7bzQVVbRCTVo6-sU/edit?usp=drivesdk Group 06: https://docs.google.com/presentation/d/1FGate-7a75aT8-_bmg-QT8IGWFTuTkZvaqENj-M3BHg/edit?usp=drivesdk Group 07: https://docs.google.com/presentation/d/1BDk4VYrwZHruxZ-YJ0-JNXr2RxIIdIiqE6KvSsmqnM4/edit?usp=drivesdk Group 08: https://docs.google.com/presentation/d/1wfHMIC6sktHrDG8pIAAkRIm12DgFsccqFbfIYmOO0lM/edit?usp=drivesdk Group 09: https://docs.google.com/presentation/d/1F3qNLBL21bBIMjU9Hz6zBeR6J3SMrdzDWSbV8cZLtho/edit?usp=drivesdk Group 10: https://docs.google.com/presentation/d/1Tau6QkqvJk_2DHGIzEuLzMVJAE8pqR1NID-txqZ0Sto/edit?usp=drivesdk Group 11: https://docs.google.com/presentation/d/1pvAiuiTbSfvfLxxG_Bf8W6OlJwAzinO8A_KmzSsOHR0/edit?usp=drivesdk Group 12: https://docs.google.com/presentation/d/1esqMzya94NH3KqglMQAtc2kH0mkrmL9qMe_2EQ6UsWU/edit?usp=drivesdk
-
-@body
-
-- Fall 2023
-
-=== layout: title-content
-
-# Group 01: [https://docs.google.com/presentation/d/1Jm9kKHhxAHelVOOUqvmAvq2FuvpwMN88Y69y1F7mrN0/edit?usp=sharing](https://docs.google.com/presentation/d/1Jm9kKHhxAHelVOOUqvmAvq2FuvpwMN88Y69y1F7mrN0/edit?usp=sharing) Group 02: [https://docs.google.com/presentation/d/1X_rFKultSN4tAhoAzO0CZA4WW2sgXEQGW4V56v8WvYg/edit?usp=sharing](https://docs.google.com/presentation/d/1X_rFKultSN4tAhoAzO0CZA4WW2sgXEQGW4V56v8WvYg/edit?usp=sharing) Group 03: [https://docs.google.com/presentation/d/1wyjM3QWrcerUb_X2iKhobuXGqtc2bYL3u3pZYKXVKzE/edit?usp=sharing](https://docs.google.com/presentation/d/1wyjM3QWrcerUb_X2iKhobuXGqtc2bYL3u3pZYKXVKzE/edit?usp=sharing) Group 04: [https://docs.google.com/presentation/d/18kqd3neB0FlKO87To7jKbI8mer1AK95QOz7KB89Nfgs/edit?usp=sharing](https://docs.google.com/presentation/d/18kqd3neB0FlKO87To7jKbI8mer1AK95QOz7KB89Nfgs/edit?usp=sharing) Group 05: [https://docs.google.com/presentation/d/14rTsJUG5jggOWxYkJMKAF_cSFUoyh69COBLSj3HH404/edit?usp=sharing](https://docs.google.com/presentation/d/14rTsJUG5jggOWxYkJMKAF_cSFUoyh69COBLSj3HH404/edit?usp=sharing) Group 06: [https://docs.google.com/presentation/d/1wz4nTliyrDaFKttFrVWBfXM6wNlhsu-LQOQ1TSbKJSg/edit?usp=sharing](https://docs.google.com/presentation/d/1wz4nTliyrDaFKttFrVWBfXM6wNlhsu-LQOQ1TSbKJSg/edit?usp=sharing) Group 07: [https://docs.google.com/presentation/d/1vBEVqmC3jIY3QoAsdi_PM8dTNeJjUeziQ2nGKlV62KE/edit?usp=sharing](https://docs.google.com/presentation/d/1vBEVqmC3jIY3QoAsdi_PM8dTNeJjUeziQ2nGKlV62KE/edit?usp=sharing) Group 08: [https://docs.google.com/presentation/d/1pKWUnrM86M8XpggCFfgoKRHXhqSpSWxEvk82rMNfiDA/edit?usp=sharing](https://docs.google.com/presentation/d/1pKWUnrM86M8XpggCFfgoKRHXhqSpSWxEvk82rMNfiDA/edit?usp=sharing) Group 09: [https://docs.google.com/presentation/d/1PIjRxGsIfRVNEQvTN0TlkzYnJ5Vvi5hv50zBbGFEyX8/edit?usp=sharing](https://docs.google.com/presentation/d/1PIjRxGsIfRVNEQvTN0TlkzYnJ5Vvi5hv50zBbGFEyX8/edit?usp=sharing) Group 10: [https://docs.google.com/presentation/d/1bJql9OS-TPtl28y3PgiVCVqTOvLncy2HEc-HFqsUutE/edit?usp=sharing](https://docs.google.com/presentation/d/1bJql9OS-TPtl28y3PgiVCVqTOvLncy2HEc-HFqsUutE/edit?usp=sharing)
+# Fall 2023
 
 @body
 
-- Fall 2022
+- Group 01: https://docs.google.com/presentation/d/1HRMqmihTdeRE9kXulQamlCaALcuiBC4Bqqx5718a2f0/edit?usp=drivesdk
+- Group 02: https://docs.google.com/presentation/d/1WOgESPpCSSXHdPnM78HVF39DdvPWr8bkM1k8nztiUwk/edit?usp=drivesdk
+- Group 03: https://docs.google.com/presentation/d/1XaRuz2VLm9FpA3q8Hy1OkSuGO-HgYD6hzzJuyHH5e98/edit?usp=drivesdk
+- Group 04: https://docs.google.com/presentation/d/1XFuZPw5832x_b8VOV5b86FKlVCaSYLC8FqxGbaFCSMU/edit?usp=drivesdk
+- Group 05: https://docs.google.com/presentation/d/19bhG0BTrbD5tk4pEhK1pVdGhOBt7bzQVVbRCTVo6-sU/edit?usp=drivesdk
+- Group 06: https://docs.google.com/presentation/d/1FGate-7a75aT8-_bmg-QT8IGWFTuTkZvaqENj-M3BHg/edit?usp=drivesdk
+- Group 07: https://docs.google.com/presentation/d/1BDk4VYrwZHruxZ-YJ0-JNXr2RxIIdIiqE6KvSsmqnM4/edit?usp=drivesdk
+- Group 08: https://docs.google.com/presentation/d/1wfHMIC6sktHrDG8pIAAkRIm12DgFsccqFbfIYmOO0lM/edit?usp=drivesdk
+- Group 09: https://docs.google.com/presentation/d/1F3qNLBL21bBIMjU9Hz6zBeR6J3SMrdzDWSbV8cZLtho/edit?usp=drivesdk
+- Group 10: https://docs.google.com/presentation/d/1Tau6QkqvJk_2DHGIzEuLzMVJAE8pqR1NID-txqZ0Sto/edit?usp=drivesdk
+- Group 11: https://docs.google.com/presentation/d/1pvAiuiTbSfvfLxxG_Bf8W6OlJwAzinO8A_KmzSsOHR0/edit?usp=drivesdk
+- Group 12: https://docs.google.com/presentation/d/1esqMzya94NH3KqglMQAtc2kH0mkrmL9qMe_2EQ6UsWU/edit?usp=drivesdk
 
-=== layout: title-content
+=== layout: one-panel
+
+# Fall 2022
+
+@body
+
+- Group 01: [https://docs.google.com/presentation/d/1Jm9kKHhxAHelVOOUqvmAvq2FuvpwMN88Y69y1F7mrN0/edit?usp=sharing](https://docs.google.com/presentation/d/1Jm9kKHhxAHelVOOUqvmAvq2FuvpwMN88Y69y1F7mrN0/edit?usp=sharing)
+- Group 02: [https://docs.google.com/presentation/d/1X_rFKultSN4tAhoAzO0CZA4WW2sgXEQGW4V56v8WvYg/edit?usp=sharing](https://docs.google.com/presentation/d/1X_rFKultSN4tAhoAzO0CZA4WW2sgXEQGW4V56v8WvYg/edit?usp=sharing)
+- Group 03: [https://docs.google.com/presentation/d/1wyjM3QWrcerUb_X2iKhobuXGqtc2bYL3u3pZYKXVKzE/edit?usp=sharing](https://docs.google.com/presentation/d/1wyjM3QWrcerUb_X2iKhobuXGqtc2bYL3u3pZYKXVKzE/edit?usp=sharing)
+- Group 04: [https://docs.google.com/presentation/d/18kqd3neB0FlKO87To7jKbI8mer1AK95QOz7KB89Nfgs/edit?usp=sharing](https://docs.google.com/presentation/d/18kqd3neB0FlKO87To7jKbI8mer1AK95QOz7KB89Nfgs/edit?usp=sharing)
+- Group 05: [https://docs.google.com/presentation/d/14rTsJUG5jggOWxYkJMKAF_cSFUoyh69COBLSj3HH404/edit?usp=sharing](https://docs.google.com/presentation/d/14rTsJUG5jggOWxYkJMKAF_cSFUoyh69COBLSj3HH404/edit?usp=sharing)
+- Group 06: [https://docs.google.com/presentation/d/1wz4nTliyrDaFKttFrVWBfXM6wNlhsu-LQOQ1TSbKJSg/edit?usp=sharing](https://docs.google.com/presentation/d/1wz4nTliyrDaFKttFrVWBfXM6wNlhsu-LQOQ1TSbKJSg/edit?usp=sharing)
+- Group 07: [https://docs.google.com/presentation/d/1vBEVqmC3jIY3QoAsdi_PM8dTNeJjUeziQ2nGKlV62KE/edit?usp=sharing](https://docs.google.com/presentation/d/1vBEVqmC3jIY3QoAsdi_PM8dTNeJjUeziQ2nGKlV62KE/edit?usp=sharing)
+- Group 08: [https://docs.google.com/presentation/d/1pKWUnrM86M8XpggCFfgoKRHXhqSpSWxEvk82rMNfiDA/edit?usp=sharing](https://docs.google.com/presentation/d/1pKWUnrM86M8XpggCFfgoKRHXhqSpSWxEvk82rMNfiDA/edit?usp=sharing)
+- Group 09: [https://docs.google.com/presentation/d/1PIjRxGsIfRVNEQvTN0TlkzYnJ5Vvi5hv50zBbGFEyX8/edit?usp=sharing](https://docs.google.com/presentation/d/1PIjRxGsIfRVNEQvTN0TlkzYnJ5Vvi5hv50zBbGFEyX8/edit?usp=sharing)
+- Group 10: [https://docs.google.com/presentation/d/1bJql9OS-TPtl28y3PgiVCVqTOvLncy2HEc-HFqsUutE/edit?usp=sharing](https://docs.google.com/presentation/d/1bJql9OS-TPtl28y3PgiVCVqTOvLncy2HEc-HFqsUutE/edit?usp=sharing)
+
+=== layout: one-panel
 
 # Presented Disorders
 
@@ -201,15 +227,22 @@
 - Group 9: Down syndrome
 - Group 2: Prader-Willi syndrome
 
-=== layout: title-content
+=== layout: one-panel
 
-# Group 1: [https://docs.google.com/presentation/d/1NXOo8S4uIcPcrpy505T7sElBOZaEDpkTwcBfuBXdRsQ/edit?usp=sharing](https://docs.google.com/presentation/d/1NXOo8S4uIcPcrpy505T7sElBOZaEDpkTwcBfuBXdRsQ/edit?usp=sharing) Group 2: [https://docs.google.com/presentation/d/1JyrmAI9nEMX3_hv-ghgJzxjpPjw6sMkvLy16GB724lw/edit?usp=sharing](https://docs.google.com/presentation/d/1JyrmAI9nEMX3_hv-ghgJzxjpPjw6sMkvLy16GB724lw/edit?usp=sharing) Group 3: [https://docs.google.com/presentation/d/1oVTXVTgQizren00okgqS1mcfJ7wYDL7CqfKFrpTf-f4/edit?usp=sharing](https://docs.google.com/presentation/d/1oVTXVTgQizren00okgqS1mcfJ7wYDL7CqfKFrpTf-f4/edit?usp=sharing) Group 4: [https://docs.google.com/presentation/d/1cUTBGG6gtx0wY_P3aBFaU3wJbgkR-DZONMoo12m2BFU/edit?usp=sharing](https://docs.google.com/presentation/d/1cUTBGG6gtx0wY_P3aBFaU3wJbgkR-DZONMoo12m2BFU/edit?usp=sharing) Group 5: [https://docs.google.com/presentation/d/1_fUAyYmjuUNlcA3haskNPkhte27vjUDDtzV0SHvjUGQ/edit?usp=sharing](https://docs.google.com/presentation/d/1_fUAyYmjuUNlcA3haskNPkhte27vjUDDtzV0SHvjUGQ/edit?usp=sharing) Group 6: [https://docs.google.com/presentation/d/1-B0CLnXYw-vKxhaQ020ax1DblTkCn-eqQRdhYchGFxg/edit?usp=sharing](https://docs.google.com/presentation/d/1-B0CLnXYw-vKxhaQ020ax1DblTkCn-eqQRdhYchGFxg/edit?usp=sharing) Group 7: [https://docs.google.com/presentation/d/1RDV0xvO-YO0LUIyEeyPNXpaljKjaReSrpdBCZGLrO08/edit?usp=sharing](https://docs.google.com/presentation/d/1RDV0xvO-YO0LUIyEeyPNXpaljKjaReSrpdBCZGLrO08/edit?usp=sharing) Group 8: [https://docs.google.com/presentation/d/1VNjyE4otMOuiieyyNeSpbVgNYdOvUHq9HPLOLEhalCU/edit?usp=sharing](https://docs.google.com/presentation/d/1VNjyE4otMOuiieyyNeSpbVgNYdOvUHq9HPLOLEhalCU/edit?usp=sharing)
+# Fall 2021
 
 @body
 
-- Fall 2021
+- Group 1: [https://docs.google.com/presentation/d/1NXOo8S4uIcPcrpy505T7sElBOZaEDpkTwcBfuBXdRsQ/edit?usp=sharing](https://docs.google.com/presentation/d/1NXOo8S4uIcPcrpy505T7sElBOZaEDpkTwcBfuBXdRsQ/edit?usp=sharing)
+- Group 2: [https://docs.google.com/presentation/d/1JyrmAI9nEMX3_hv-ghgJzxjpPjw6sMkvLy16GB724lw/edit?usp=sharing](https://docs.google.com/presentation/d/1JyrmAI9nEMX3_hv-ghgJzxjpPjw6sMkvLy16GB724lw/edit?usp=sharing)
+- Group 3: [https://docs.google.com/presentation/d/1oVTXVTgQizren00okgqS1mcfJ7wYDL7CqfKFrpTf-f4/edit?usp=sharing](https://docs.google.com/presentation/d/1oVTXVTgQizren00okgqS1mcfJ7wYDL7CqfKFrpTf-f4/edit?usp=sharing)
+- Group 4: [https://docs.google.com/presentation/d/1cUTBGG6gtx0wY_P3aBFaU3wJbgkR-DZONMoo12m2BFU/edit?usp=sharing](https://docs.google.com/presentation/d/1cUTBGG6gtx0wY_P3aBFaU3wJbgkR-DZONMoo12m2BFU/edit?usp=sharing)
+- Group 5: [https://docs.google.com/presentation/d/1_fUAyYmjuUNlcA3haskNPkhte27vjUDDtzV0SHvjUGQ/edit?usp=sharing](https://docs.google.com/presentation/d/1_fUAyYmjuUNlcA3haskNPkhte27vjUDDtzV0SHvjUGQ/edit?usp=sharing)
+- Group 6: [https://docs.google.com/presentation/d/1-B0CLnXYw-vKxhaQ020ax1DblTkCn-eqQRdhYchGFxg/edit?usp=sharing](https://docs.google.com/presentation/d/1-B0CLnXYw-vKxhaQ020ax1DblTkCn-eqQRdhYchGFxg/edit?usp=sharing)
+- Group 7: [https://docs.google.com/presentation/d/1RDV0xvO-YO0LUIyEeyPNXpaljKjaReSrpdBCZGLrO08/edit?usp=sharing](https://docs.google.com/presentation/d/1RDV0xvO-YO0LUIyEeyPNXpaljKjaReSrpdBCZGLrO08/edit?usp=sharing)
+- Group 8: [https://docs.google.com/presentation/d/1VNjyE4otMOuiieyyNeSpbVgNYdOvUHq9HPLOLEhalCU/edit?usp=sharing](https://docs.google.com/presentation/d/1VNjyE4otMOuiieyyNeSpbVgNYdOvUHq9HPLOLEhalCU/edit?usp=sharing)
 
-=== layout: title-content
+=== layout: one-panel
 
 # List of Diseases (Shared)
 
@@ -217,29 +250,35 @@
 
 - [https://docs.google.com/presentation/d/1csn9cWgYEWm2j8dqmAqa6wmfaKF93ovJqGqsOzuJb1k/edit?usp=sharing](https://docs.google.com/presentation/d/1csn9cWgYEWm2j8dqmAqa6wmfaKF93ovJqGqsOzuJb1k/edit?usp=sharing)
 
-=== layout: gallery
+=== layout: two-panels
 
 # 23andMe Carrier Status Report
 
-@gallery
+@left
 
 ![Slide image 3](assets/lect01b-genetic_disorders/image_003.png)
+
+@right
+
 ![Slide image 4](assets/lect01b-genetic_disorders/image_004.png)
 
-=== layout: gallery
+=== layout: two-panels
 
 # 23andMe Carrier Status Report
 
-@gallery
+@left
 
 ![Slide image 5](assets/lect01b-genetic_disorders/image_005.png)
+
+@right
+
 ![Slide image 6](assets/lect01b-genetic_disorders/image_006.png)
 
-=== layout: title-content
+=== layout: two-panels
 
 # Human Viruses
 
-@body
+@left
 
 - Chickenpox
 - Common cold
@@ -257,6 +296,9 @@
 - Mononucleosis (Epstein-Barr)
 - Newcastle disease
 - Norwalk virus (Noroviruses)
+
+@right
+
 - Papilllomavirus (HPV); warts
 - Parvovirus or Fifth Disease
 - Poliovirus
@@ -274,11 +316,11 @@
 - Yellow fever
 - Zika virus
 
-=== layout: title-content
+=== layout: two-panels
 
 # Bacterial Diseases(not viruses)
 
-@body
+@left
 
 - Anthrax
 - Botulism or BoTox
@@ -295,6 +337,9 @@
 - Encephalitis, bacterial
 - Food poisoning
   - Escherichia coli and Salmonella
+
+@right
+
 - Gonorrhea
 - Impetigo
 - Legionnaire's disease

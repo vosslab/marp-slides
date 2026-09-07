@@ -23,6 +23,38 @@ class FontSizePreset(enum.IntEnum):
 	SIZE_200 = 200
 
 
+class RevealEffect(enum.Enum):
+	"""The small set of supported visual reveal effects."""
+	APPEAR = "appear"
+	FADE = "fade"
+
+
+class RevealSequence(enum.Enum):
+	"""The authored unit that advances during a reveal."""
+	OBJECT = "object"
+	PARAGRAPHS = "paragraphs"
+
+
+class RevealTrigger(enum.Enum):
+	"""The event that advances a reveal."""
+	ON_CLICK = "on-click"
+
+
+@dataclass(frozen=True)
+class Reveal:
+	"""Source-neutral reveal intent for one editable native object."""
+	effect: RevealEffect
+	sequence: RevealSequence
+	trigger: RevealTrigger = RevealTrigger.ON_CLICK
+
+
+@dataclass(frozen=True)
+class Attribute:
+	"""One source-neutral element attribute, retaining an optional bare value."""
+	name: str
+	value: str | None = None
+
+
 @dataclass(frozen=True)
 class TitleSizeOverride:
 	"""One source-located H1 display-size request."""
@@ -66,7 +98,13 @@ class Break:
 	"""An author-requested editable line break."""
 
 
-Inline = Text | Strong | Emphasis | InlineCode | Link | Break
+@dataclass(frozen=True)
+class InlineMath:
+	"""One source-neutral inline mathematics expression."""
+	value: str
+
+
+Inline = Text | Strong | Emphasis | InlineCode | Link | Break | InlineMath
 
 
 @dataclass(frozen=True)
@@ -75,6 +113,8 @@ class Heading:
 	location: SourceLocation
 	level: int
 	inlines: tuple[Inline, ...]
+	reveal: Reveal | None = None
+	attributes: tuple[Attribute, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -82,6 +122,8 @@ class Paragraph:
 	"""A semantic editable paragraph."""
 	location: SourceLocation
 	inlines: tuple[Inline, ...]
+	reveal: Reveal | None = None
+	attributes: tuple[Attribute, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -91,6 +133,8 @@ class Image:
 	alt_text: str
 	source: str
 	title: str | None
+	reveal: Reveal | None = None
+	attributes: tuple[Attribute, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -99,6 +143,8 @@ class ListItem:
 	location: SourceLocation
 	inlines: tuple[Inline, ...]
 	children: tuple["ListBlock", ...] = ()
+	reveal: Reveal | None = None
+	attributes: tuple[Attribute, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -108,9 +154,46 @@ class ListBlock:
 	ordered: bool
 	start: int
 	items: tuple[ListItem, ...]
+	reveal: Reveal | None = None
+	attributes: tuple[Attribute, ...] = ()
 
 
-Block = Heading | Paragraph | Image | ListBlock
+@dataclass(frozen=True)
+class CodeBlock:
+	"""One editable fixed-width block, optionally annotated with its language."""
+	location: SourceLocation
+	value: str
+	language: str | None = None
+	attributes: tuple[Attribute, ...] = ()
+
+
+@dataclass(frozen=True)
+class Table:
+	"""One semantic table with editable inline header and body cells."""
+	location: SourceLocation
+	headers: tuple[tuple[Inline, ...], ...]
+	rows: tuple[tuple[tuple[Inline, ...], ...], ...]
+	attributes: tuple[Attribute, ...] = ()
+
+
+@dataclass(frozen=True)
+class DisplayMath:
+	"""One source-neutral display mathematics expression."""
+	location: SourceLocation
+	value: str
+	attributes: tuple[Attribute, ...] = ()
+
+
+@dataclass(frozen=True)
+class QuoteBlock:
+	"""One source-neutral quotation containing ordinary semantic blocks."""
+	location: SourceLocation
+	blocks: tuple["Block", ...]
+	reveal: Reveal | None = None
+	attributes: tuple[Attribute, ...] = ()
+
+
+Block = Heading | Paragraph | Image | ListBlock | CodeBlock | Table | DisplayMath | QuoteBlock
 
 
 @dataclass(frozen=True)
@@ -118,6 +201,7 @@ class Cell:
 	"""One top-level blockquote component cell in source reading order."""
 	location: SourceLocation
 	blocks: tuple[Block, ...]
+	name: str | None = None
 
 
 @dataclass(frozen=True)

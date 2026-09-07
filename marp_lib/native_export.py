@@ -15,6 +15,7 @@ from pptx.enum.text import PP_ALIGN
 # Local Modules
 from marp_lib import layouts
 from marp_lib import libreoffice
+from marp_lib import djot_parser
 from marp_lib import marp_parser
 import marp_lib.native_model
 
@@ -23,6 +24,13 @@ MARP_TRUE_PATTERN = re.compile(
 	r"^\s*marp\s*:\s*true(?:\s+#.*)?\s*$",
 	re.IGNORECASE | re.MULTILINE,
 )
+
+PARSER_BY_SUFFIX: dict[
+	str, collections.abc.Callable[[pathlib.Path], marp_lib.native_model.Deck]
+] = {
+	".md": marp_parser.parse_deck,
+	".djot": djot_parser.parse_deck,
+}
 
 
 class PresentationInputError(ValueError):
@@ -39,14 +47,14 @@ def find_repo_root() -> pathlib.Path:
 
 #============================================
 def validate_input(input_value: str, repo_root: pathlib.Path) -> pathlib.Path:
-	"""Resolve canonical Markdown and reject failed full-slide conversions."""
+	"""Resolve one supported source deck inside this repository."""
 	input_path = pathlib.Path(input_value).expanduser().resolve()
 	if not input_path.is_file():
 		raise PresentationInputError(f"input is not a file: {input_value}")
 	if not input_path.is_relative_to(repo_root):
 		raise PresentationInputError("input must be inside this repository")
-	if input_path.suffix != ".md":
-		raise PresentationInputError("input must use the .md extension")
+	if input_path.suffix not in PARSER_BY_SUFFIX:
+		raise PresentationInputError("input must use the .md or .djot extension")
 	return input_path
 
 
@@ -66,26 +74,36 @@ def has_marp_front_matter(input_path: pathlib.Path) -> bool:
 #============================================
 def discover_decks(input_value: str, repo_root: pathlib.Path,
 		allow_folder: bool = True) -> list[pathlib.Path]:
-	"""Resolve one deck or sorted direct-child Marp decks from one folder."""
+	"""Resolve one deck or sorted direct-child supported decks from one folder."""
 	input_path = pathlib.Path(input_value).expanduser().resolve()
 	if input_path.is_file():
 		return [validate_input(input_value, repo_root)]
 	if not input_path.is_dir():
 		raise PresentationInputError(f"input is not a file or folder: {input_value}")
 	if not allow_folder:
-		raise PresentationInputError(f"input is not a Markdown file: {input_value}")
+		raise PresentationInputError(f"input is not a presentation source file: {input_value}")
 	if not input_path.is_relative_to(repo_root):
 		raise PresentationInputError("input must be inside this repository")
-	decks = [path for path in sorted(input_path.glob("*.md")) if has_marp_front_matter(path)]
+	decks = []
+	for path in sorted(input_path.iterdir(), key=lambda candidate: candidate.name):
+		if not path.is_file():
+			continue
+		if path.suffix == ".djot":
+			decks.append(path)
+		elif path.suffix == ".md" and has_marp_front_matter(path):
+			decks.append(path)
 	if not decks:
-		raise PresentationInputError(f"no Marp Markdown decks found in: {input_value}")
+		raise PresentationInputError(f"no presentation source decks found in: {input_value}")
 	return decks
 
 
 #============================================
 def parse_deck(input_path: pathlib.Path) -> marp_lib.native_model.Deck:
-	"""Parse canonical Marp Markdown through the one typed semantic parser."""
-	return marp_parser.parse_deck(input_path)
+	"""Parse one supported source deck through its typed semantic parser."""
+	parser = PARSER_BY_SUFFIX.get(input_path.suffix)
+	if parser is None:
+		raise PresentationInputError(f"input must use the .md or .djot extension: {input_path}")
+	return parser(input_path)
 
 
 #============================================

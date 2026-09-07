@@ -22,7 +22,7 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: title-two-content -->
+<!-- _class: two-panels -->
 # Professor Neil R. Voss
 
 > - **Dr. Neil Voss**, Associate Professor
@@ -36,7 +36,7 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: title-content -->
+<!-- _class: one-panel -->
 # Ways to Contact Dr. Voss
 
 1. **Attend office hours**
@@ -51,7 +51,7 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: title-two-content -->
+<!-- _class: two-panels -->
 # Dr. Voss YouTube Channel
 
 > - https://www.youtube.com/c/NeilVossLab/videos
@@ -61,7 +61,7 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: title-two-content -->
+<!-- _class: two-panels -->
 # Discord Server
 
 > - I created a Discord Server called Neil Voss Lab
@@ -74,7 +74,7 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: title-two-content -->
+<!-- _class: two-panels -->
 # Discord Signup
 
 > - In Blackboard, open **Important Links**.
@@ -84,7 +84,7 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: title-two-content -->
+<!-- _class: two-panels -->
 # Anonymous Message Form
 
 > - Send an anonymous message to the instructor.
@@ -97,7 +97,7 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: title-two-content -->
+<!-- _class: two-panels -->
 # Office Hours
 
 > - Via Zoom Video Conference:
@@ -118,7 +118,7 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: title-two-content -->
+<!-- _class: two-panels -->
 # Textbooks for class
 
 > - **Do not buy** the eighth or ninth edition of Hartl and Ruvolo.
@@ -128,7 +128,7 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: title-two-content -->
+<!-- _class: two-panels -->
 # New, Free OER Textbook for 2025
 
 > - Advanced Genetics: Mechanisms of Inheritance and Analysis
@@ -139,7 +139,7 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: title-two-content -->
+<!-- _class: two-panels -->
 # Idiom: "build the plane while flying it"
 
 > - This idiom can also be applied in education when teachers try out new teaching methods or curriculums during actual classes with students. They may experiment with different approaches until they find what works best for their students.
@@ -149,7 +149,7 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: title-content -->
+<!-- _class: one-panel -->
 # Other Resources and Materials
 
 - Khan Academy:
@@ -159,7 +159,7 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: title-content -->
+<!-- _class: one-panel -->
 # How to be successful
 
 - Attend class and arrive on time.
@@ -177,7 +177,7 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: title-content -->
+<!-- _class: one-panel -->
 
 # Website: http://blackboard.roosevelt.edu
 
@@ -197,7 +197,7 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: title-content -->
+<!-- _class: one-panel -->
 # Discord Server
 
 - Discord Server:
@@ -208,7 +208,7 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: title-two-content -->
+<!-- _class: two-panels -->
 # Discord Server
 
 > - I created a Discord Server called Neil Voss Lab
@@ -221,7 +221,7 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: title-two-content -->
+<!-- _class: two-panels -->
 # Discord Signup
 
 > - In Blackboard, open **Important Links**.
@@ -231,7 +231,7 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: title-two-content -->
+<!-- _class: two-panels -->
 # Student Profile
 
 > - Earn **3 points** for uploading your profile to Blackboard.
@@ -243,7 +243,7 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: title-two-content -->
+<!-- _class: two-panels -->
 # Student Profile
 
 > - Include a picture of your face.
@@ -260,7 +260,7 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: title-content -->
+<!-- _class: one-panel -->
 # Dr. Voss Profile
 
 - Got my undergraduate degrees in Physics and Mathematics at Iowa State University. Really got into using physics techniques to solve biological questions.
@@ -278,7 +278,7 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: title-content -->
+<!-- _class: one-panel -->
 # Dr. Voss profile
 
 - My favorite restaurant for a long time was India House at Golf and Higgins, but they closed.
@@ -289,7 +289,7 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: title-two-content -->
+<!-- _class: two-panels -->
 
 # Dr. Voss's Best Movies of the Decade
 
@@ -329,7 +329,7 @@ title: "Lecture 01A"
 
 ---
 
-<!-- _class: title-two-content -->
+<!-- _class: two-panels -->
 # Graduating Students
 
 > - Last day to apply for graduation is:

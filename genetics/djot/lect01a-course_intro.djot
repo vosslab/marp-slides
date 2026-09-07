@@ -32,7 +32,7 @@
   - Password: voss
 - Favorite Biology Subjects: Biophysics, Structural Biology and Electron Microscopy
 
-=== layout: title-content
+=== layout: one-panel
 
 # Ways to Contact Dr. Voss
 
@@ -50,20 +50,18 @@
   - goes to my email, but I can only read on laptop
   - response time: 2-4 business days
 
-=== layout: two-panels
+=== layout: one-panel
 
 # Dr. Voss YouTube Channel
 
-@left
+@body
+
+![Slide image 2](assets/lect01a-course_intro/image_002.png)
 
 - [https://www.youtube.com/c/NeilVossLab/videos](https://www.youtube.com/c/NeilVossLab/videos)
 - a few videos for hard problems
 
-@right
-
-![Slide image 2](assets/lect01a-course_intro/image_002.png)
-
-=== layout: two-panels
+=== layout: one-plus-two-panels
 
 # Discord Server
 
@@ -75,18 +73,21 @@
   - It is available as a mobile app, a desktop app, and a website
   - Be sure to connect to my server, you should not create your own server
 
-@right
+@top-right
 
 ![Slide image 4](assets/lect01a-course_intro/image_004.png)
+
+@bottom-right
+
 ![Slide image 3](assets/lect01a-course_intro/image_003.png)
 
-=== layout: title-content
+=== layout: one-panel
 
 # Discord Signup
 
 @body
 
-![Slide image 5](assets/lect01a-course_intro/image_005.png)
+![Coupled source region](assets/lect01a-course_intro/source_region_80fcfa5d6dd344ae0837ad57d603228241449a9c45f9bddeda1ad5b87443b75f.png)
 
 === layout: two-panels
 
@@ -94,7 +95,7 @@
 
 @left
 
-![Slide image 6](assets/lect01a-course_intro/image_006.png)
+![Coupled source region](assets/lect01a-course_intro/source_region_ad5f0b3ca1fd7a3959d2857bfec0b6b9ca2c562dbae61dbf9e270c798f813648.png)
 
 @right
 
@@ -103,48 +104,41 @@
 - Form goes directly to my email.
 - [https://forms.gle/gZ8nx28q9YDwSy8g7](https://forms.gle/gZ8nx28q9YDwSy8g7)
 
-=== layout: two-panels
+=== layout: four-panels
 
 # Office Hours
 
-@left
+@top-left
 
 - Via Zoom Video Conference:
 - [https://zoom.us/j/97638754024](https://roosevelt.zoom.us/j/97638754024?pwd=djdlTlFhNEQ0WFV5TTNUMW1xeldYZz09)
 - Meeting ID:
   - 976 3875 4024
 - Password: voss
-- To be determined
-- also available by appointment
 
-@right
+@top-right
 
 ![Slide image 7](assets/lect01a-course_intro/image_007.png)
+
+@bottom-left
+
 ![Slide image 8](assets/lect01a-course_intro/image_008.png)
+
+@bottom-right
+
+- To be determined
+- also available by appointment
 
 === layout: title-only
 
 # Course Information
 
-=== layout: two-panels
+=== layout: one-panel
 
-# Textbooks for class
 
-@left
+@body
 
-- Hartl and Ruvolo
-- Genetics: Analysis of Genes and Genomes
-- 8 th Edition
-- Hartl and Ruvolo
-- Genetics: Analysis of Genes and Genomes
-- 9 th Edition
-- [https://www.amazon.com/dp/128412293X?tag=volumvoxel-20](https://www.amazon.com/dp/128412293X?tag=volumvoxel-20)
-- [https://www.amazon.com/dp/1449635962?tag=volumvoxel-20](https://www.amazon.com/dp/1449635962?tag=volumvoxel-20)
-
-@right
-
-![Slide image 10](assets/lect01a-course_intro/image_010.png)
-![Slide image 9](assets/lect01a-course_intro/image_009.png)
+![Coupled source region](assets/lect01a-course_intro/source_region_3535476d6064f01dee7ba6d7186925fb1c478c397ea41b00f239242433eb9ce7.png)
 
 === layout: two-panels
 
@@ -173,7 +167,7 @@
 
 ![Slide image 12](assets/lect01a-course_intro/image_012.png)
 
-=== layout: title-content
+=== layout: one-panel
 
 # Other Resources and Materials
 
@@ -184,7 +178,7 @@
 - Online Mendelian Inheritance: Catalog of Human Genetic Disorders
   - [http://omim.org/](http://omim.org/)
 
-=== layout: title-content
+=== layout: one-panel
 
 # How to be successful
 
@@ -208,13 +202,12 @@
 
 # Blackboard
 
-=== layout: title-content
+=== layout: one-panel
 
-# Website: [http://blackboard.roosevelt.edu](http://blackboard.roosevelt.edu/)
 
 @body
 
-![Slide image 13](assets/lect01a-course_intro/image_013.png)
+![Coupled source region](assets/lect01a-course_intro/source_region_ef26607e2ab4ea53d03c75dbe076949a426e43e1d6206a304af6425be40b4d21.png)
 
 === layout: title-only
 
@@ -224,7 +217,7 @@
 
 # Other Required Credit
 
-=== layout: title-content
+=== layout: one-panel
 
 # Discord Server
 
@@ -236,7 +229,7 @@
 - Due Within First Few Weeks of Class,
   - Due Sept 21.
 
-=== layout: two-panels
+=== layout: one-plus-two-panels
 
 # Discord Server
 
@@ -248,18 +241,21 @@
   - It is available as a mobile app, a desktop app, and a website
   - Be sure to connect to my server, you should not create your own server
 
-@right
+@top-right
 
 ![Slide image 4](assets/lect01a-course_intro/image_004.png)
+
+@bottom-right
+
 ![Slide image 3](assets/lect01a-course_intro/image_003.png)
 
-=== layout: title-content
+=== layout: one-panel
 
 # Discord Signup
 
 @body
 
-![Slide image 5](assets/lect01a-course_intro/image_005.png)
+![Coupled source region](assets/lect01a-course_intro/source_region_c1926b7921d571cafdc0126a68a15a9982abc44d95555f65ab39635d77c90af0.png)
 
 === layout: two-panels
 
@@ -272,15 +268,12 @@
   - Include a picture of your face
     - I will not publish it anywhere, I (along with any tutors or TAs) use your image to help learn your name.
   - Answer the questions on the next page about yourself
-- Dr. Neil Voss
-- Career Goals: Obtain a research grant, grow Schaumburg campus
-- Fav. Biology Subjects: Biophysics, Structural Biology and Electron Microscopy
 
 @right
 
-![Slide image 14](assets/lect01a-course_intro/image_014.jpg)
+![Coupled source region](assets/lect01a-course_intro/source_region_57884ecdb461a810f0af7129e83fac03e44dfd78629e5f45cefd14ce91cbfad8.png)
 
-=== layout: title-content
+=== layout: one-panel
 
 # Student Profile
 
@@ -299,7 +292,7 @@
   - no points awarded after date.
 - See link on Blackboard
 
-=== layout: title-content
+=== layout: one-panel
 
 # Dr. Voss Profile
 
@@ -310,17 +303,23 @@
 - Did a Post-doc in San Diego on Cryo-electron microscopy. Basically take a bunch of pictures to solve a 3D structure of a protein.
 - My favorite biology subject is Protein Structure, but right now my favorite class to teach is Genetics.
 
-=== layout: gallery
+=== layout: two-plus-one-panels
 
 # Cryo-Electron Microscope
 
-@gallery
+@top-left
 
-![Slide image 16](assets/lect01a-course_intro/image_016.png)
 ![Slide image 15](assets/lect01a-course_intro/image_015.png)
+
+@bottom-left
+
 ![Slide image 17](assets/lect01a-course_intro/image_017.png)
 
-=== layout: title-content
+@right
+
+![Slide image 16](assets/lect01a-course_intro/image_016.png)
+
+=== layout: one-panel
 
 # Dr. Voss profile
 
@@ -332,7 +331,7 @@
 - Over the break, I have not done much besides feed and pick up after my kids. It has been exhausting.
   - Normally my hobbies are building Lego and watching movies
 
-=== layout: title-content
+=== layout: one-panel
 
 # Dr. Voss Best Movies of the Decade
 
@@ -354,20 +353,23 @@
 
 # General Announcements
 
-=== layout: two-panels
+=== layout: two-over-one-panels
 
 # Graduating Students
 
-@left
+@top-left
 
 - Last day to apply for graduation is:
   - September 2, 2025
 - Late applications will cost you a $100 late fee
-- [https://www.roosevelt.edu/current-students/academics/grad-prep](https://www.roosevelt.edu/current-students/academics/grad-prep)
 
-@right
+@top-right
 
 ![Slide image 18](assets/lect01a-course_intro/image_018.png)
+
+@bottom
+
+- [https://www.roosevelt.edu/current-students/academics/grad-prep](https://www.roosevelt.edu/current-students/academics/grad-prep)
 
 === layout: title-only
 

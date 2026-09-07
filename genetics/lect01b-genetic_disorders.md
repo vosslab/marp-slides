@@ -30,7 +30,7 @@ title: "Lecture 1B"
 
 ---
 
-<!-- _class: title-content -->
+<!-- _class: one-panel -->
 # Disease vs. Disorder
 
 - A disease is a pathophysiological response to internal or external factors. Have a characteristic set of signs and symptoms. Used as labels for ill health. Such as heart disease.
@@ -46,7 +46,7 @@ title: "Lecture 1B"
 
 ---
 
-<!-- _class: title-content -->
+<!-- _class: one-panel -->
 # Genetic Disorder
 
 - A genetic disorder is a genetic problem caused by one or more abnormalities in the genome
@@ -65,7 +65,7 @@ title: "Lecture 1B"
 
 ---
 
-<!-- _class: title-two-content -->
+<!-- _class: two-panels -->
 # Types of Gene Disorders
 
 > - Point mutation
@@ -79,7 +79,7 @@ title: "Lecture 1B"
 
 ---
 
-<!-- _class: title-content -->
+<!-- _class: one-panel -->
 # Genetics Disorder Activity
 
 - I will create random breakout rooms of 4-5 students
@@ -91,7 +91,7 @@ title: "Lecture 1B"
 
 ---
 
-<!-- _class: title-content -->
+<!-- _class: one-panel -->
 # Genetics Disorder Activity
 
 - Do the following for each item:
@@ -106,14 +106,14 @@ title: "Lecture 1B"
 
 ---
 
-<!-- _class: title-content -->
+<!-- _class: one-panel -->
 # Group presentation template
 
 ![Slide image 2](assets/lect01b_genetic_disorders/image_002.png)
 
 ---
 
-<!-- _class: title-two-content -->
+<!-- _class: two-panels -->
 # Genetic Disorders
 
 > ## [Primarily monogenic](https://www.genome.gov/10001204/specific-genetic-disorders/)
@@ -163,7 +163,7 @@ title: "Lecture 1B"
 
 ---
 
-<!-- _class: title-two-content -->
+<!-- _class: two-panels -->
 # Fall 2024
 
 > - [Locked Group 01](https://docs.google.com/presentation/d/1qx5Qn5MLNHvXJ9lD_VE70a9fnriMF_XgArIAZv_0rs0/edit)
@@ -181,7 +181,7 @@ title: "Lecture 1B"
 
 ---
 
-<!-- _class: title-two-content -->
+<!-- _class: two-panels -->
 # Fall 2023
 
 > - [Group 01](https://docs.google.com/presentation/d/1HRMqmihTdeRE9kXulQamlCaALcuiBC4Bqqx5718a2f0/edit?usp=drivesdk)
@@ -200,7 +200,7 @@ title: "Lecture 1B"
 
 ---
 
-<!-- _class: title-two-content -->
+<!-- _class: two-panels -->
 # Fall 2022
 
 > - [Group 01](https://docs.google.com/presentation/d/1Jm9kKHhxAHelVOOUqvmAvq2FuvpwMN88Y69y1F7mrN0/edit?usp=sharing)
@@ -217,7 +217,7 @@ title: "Lecture 1B"
 
 ---
 
-<!-- _class: title-content -->
+<!-- _class: one-panel -->
 # Presented Disorders
 
 - Group 1: Huntington's Disease
@@ -232,7 +232,7 @@ title: "Lecture 1B"
 
 ---
 
-<!-- _class: title-two-content -->
+<!-- _class: two-panels -->
 # Fall 2021
 
 > - [Group 01](https://docs.google.com/presentation/d/1NXOo8S4uIcPcrpy505T7sElBOZaEDpkTwcBfuBXdRsQ/edit?usp=sharing)
@@ -247,14 +247,14 @@ title: "Lecture 1B"
 
 ---
 
-<!-- _class: title-content -->
+<!-- _class: one-panel -->
 # List of Diseases (Shared)
 
 - [Shared presentation](https://docs.google.com/presentation/d/1csn9cWgYEWm2j8dqmAqa6wmfaKF93ovJqGqsOzuJb1k/edit?usp=sharing)
 
 ---
 
-<!-- _class: title-two-content -->
+<!-- _class: two-panels -->
 # 23andMe Carrier Status Report
 
 > ![Carrier status results, first page](assets/lect01b_genetic_disorders/image_003.png)
@@ -263,7 +263,7 @@ title: "Lecture 1B"
 
 ---
 
-<!-- _class: title-two-content -->
+<!-- _class: two-panels -->
 <!-- Continuation: 23andMe Carrier Status Report -->
 # 23andMe Carrier Status Report
 
@@ -273,7 +273,7 @@ title: "Lecture 1B"
 
 ---
 
-<!-- _class: title-two-content -->
+<!-- _class: two-panels -->
 # Human Viruses
 
 > - Chickenpox
@@ -312,7 +312,7 @@ title: "Lecture 1B"
 
 ---
 
-<!-- _class: title-two-content -->
+<!-- _class: two-panels -->
 # Bacterial Diseases (not viruses)
 
 > - Anthrax

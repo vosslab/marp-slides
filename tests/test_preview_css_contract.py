@@ -49,11 +49,11 @@ def test_titleless_gallery_uses_the_complete_component_region() -> None:
 def test_root_body_layouts_have_stable_preview_body_placement() -> None:
 	"""Each one-block vertical source form has one explicitly placed preview pane."""
 	css = stylesheet()
-	title_content = rule_contents(css, "section.title-content")
-	title_body = rule_contents(css, "section.title-content > :not(h1)")
-	vertical = rule_contents(css, "section.title-vertical-text")
-	vertical_body = rule_contents(css, "section.title-vertical-text > :not(h1)")
-	vertical_title_body = rule_contents(css, "section.vertical-title-vertical-text > :not(h1)")
+	title_content = rule_contents(css, "section.one-panel")
+	title_body = rule_contents(css, "section.one-panel > :not(h1)")
+	vertical = rule_contents(css, "section.vertical-text-panel")
+	vertical_body = rule_contents(css, "section.vertical-text-panel > :not(h1)")
+	vertical_title_body = rule_contents(css, "section.vertical-panel > :not(h1)")
 	assert "display: flex;" in title_content and "flex-direction: column;" in title_content
 	assert "flex: 0 0 auto;" in title_body
 	assert "display: grid;" in vertical and "flex-wrap" not in vertical
@@ -65,14 +65,14 @@ def test_root_body_layouts_have_stable_preview_body_placement() -> None:
 def test_vertical_title_layouts_match_fixed_native_geometry() -> None:
 	"""Preview track widths and child placement match the native 1280px geometry."""
 	css = stylesheet()
-	vertical = rule_contents(css, "section.vertical-title-vertical-text")
-	single_body = rule_contents(css, "section.vertical-title-vertical-text > :not(h1)")
-	chart_first = rule_contents(css, "section.vertical-title-text-chart > blockquote:nth-of-type(1)")
-	chart_second = rule_contents(css, "section.vertical-title-text-chart > blockquote:nth-of-type(2)")
+	vertical = rule_contents(css, "section.vertical-panel")
+	single_body = rule_contents(css, "section.vertical-panel > :not(h1)")
+	chart_first = rule_contents(css, "section.vertical-title-two-panels > blockquote:nth-of-type(1)")
+	chart_second = rule_contents(css, "section.vertical-title-two-panels > blockquote:nth-of-type(2)")
 	assert "grid-template-columns: 94px 24px 1042px;" in vertical
 	assert "column-gap: 0;" in vertical
-	assert "section.vertical-title-text-chart {\n\tcolumn-gap: 0;\n\tgrid-template-columns: 94px 24px 500px 42px 500px;" in css
-	assert "section.vertical-title-vertical-text > h1,\nsection.vertical-title-text-chart > h1 {\n\tgrid-column: 1;" in css
+	assert "section.vertical-title-two-panels {\n\tcolumn-gap: 0;\n\tgrid-template-columns: 94px 24px 500px 42px 500px;" in css
+	assert "section.vertical-panel > h1,\nsection.vertical-title-two-panels > h1 {\n\tgrid-column: 1;" in css
 	assert "grid-column: 3;" in single_body
 	assert "grid-column: 3;" in chart_first
 	assert "grid-column: 5;" in chart_second
@@ -82,7 +82,7 @@ def test_vertical_title_layouts_match_fixed_native_geometry() -> None:
 def test_image_only_cells_have_a_full_height_contained_image_wrapper() -> None:
 	"""Portrait component images have a centered, margin-free cell paragraph."""
 	css = stylesheet()
-	selector = "section.title-two-content > blockquote > p:only-child:has(> img:only-child)"
+	selector = "section.two-panels > blockquote > p:only-child:has(> img:only-child)"
 	image_cell = rule_contents(css, selector)
 	assert "display: flex;" in image_cell
 	assert "align-items: center;" in image_cell

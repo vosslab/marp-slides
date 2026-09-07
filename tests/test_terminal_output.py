@@ -10,6 +10,7 @@ import pytest
 import rich.console
 
 # Local Modules
+import marp_lib.djot_errors
 import marp_lib.terminal_output
 
 
@@ -55,6 +56,26 @@ def test_expected_parse_failure_is_concise_relative_stderr(tmp_path: pathlib.Pat
 	text = stderr_stream.getvalue()
 	required = ("Build failed", "broken.md", "parsing", "front matter", "Completed decks", "0")
 	assert status == 1 and all(value in text for value in required)
+	assert str(tmp_path) not in text and "Done:" not in stdout_stream.getvalue()
+
+
+#============================================
+def test_djot_parse_failure_uses_the_expected_concise_terminal_lane(tmp_path: pathlib.Path) -> None:
+	"""Djot source errors stay source-located without exposing local paths or tracebacks."""
+	deck_path = tmp_path / "broken.djot"
+	deck_path.write_text("=== layout: blank\n", encoding="utf-8")
+	stdout_stream = io.StringIO()
+	stderr_stream = io.StringIO()
+	stdout = rich.console.Console(file=stdout_stream, force_terminal=False, color_system=None, width=120)
+	stderr = rich.console.Console(file=stderr_stream, force_terminal=False, color_system=None, width=120)
+	error = marp_lib.djot_errors.DjotParseError(f"{deck_path}:2: unsupported Djot construct")
+	with mock.patch.object(marp_lib.terminal_output.marp_lib.native_export, "find_repo_root",
+		return_value=tmp_path), mock.patch.object(
+		marp_lib.terminal_output.marp_lib.native_export, "export_deck", side_effect=error):
+		status = marp_lib.terminal_output.run_build(str(deck_path), "pptx", allow_folder=False,
+			output_console=stdout, error_console=stderr)
+	text = stderr_stream.getvalue()
+	assert status == 1 and "broken.djot:2:" in text and "traceback" not in text.lower()
 	assert str(tmp_path) not in text and "Done:" not in stdout_stream.getvalue()
 
 

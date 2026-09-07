@@ -13,7 +13,7 @@ from pptx.util import Inches
 
 # local repo modules
 from marp_lib import native_export
-from tools import pptx_to_marp
+import marp_lib.importers.pptx_to_marp as pptx_to_marp
 
 
 #============================================
@@ -78,7 +78,7 @@ def test_structured_split_conversion_preserves_count_notes_and_visibility(
 	assert summary.extracted_images == 1
 	assert "# Genetics overview" in markdown
 	assert "Chromosomes carry genes" in markdown
-	assert "<!-- _class: title-two-content -->" in markdown
+	assert "<!-- _class: two-panels -->" in markdown
 	assert "> - Chromosomes carry genes" in markdown
 	assert "> ![Slide image 1]" in markdown
 	assert "bg right" not in markdown
@@ -87,7 +87,7 @@ def test_structured_split_conversion_preserves_count_notes_and_visibility(
 	assert "slide_001_source.png" not in markdown
 	assert report["hidden_slides"] == [2]
 	assert len(report["slides"]) == 1
-	assert report["slides"][0]["layout"] == "title-two-content"
+	assert report["slides"][0]["layout"] == "two-panels"
 
 
 #============================================
@@ -153,21 +153,21 @@ def test_layout_classifier_emits_only_canonical_explicit_classes() -> None:
 		),
 		(
 			"text body", make_slide_data(text_lines=((0, "Editable body"),)), False,
-			"title-content", ("<!-- _class: title-content -->", "- Editable body"),
+			"one-panel", ("<!-- _class: one-panel -->", "- Editable body"),
 		),
 		(
 			"one image body", make_slide_data(image_positions=((700, 200),)), False,
-			"title-content", ("<!-- _class: title-content -->", "![Image]"),
+			"one-panel", ("<!-- _class: one-panel -->", "![Image]"),
 		),
 		(
 			"right image cell", make_slide_data(
 				text_lines=((0, "Text first"),), image_positions=((800, 200),),
-			), False, "title-two-content", ("> - Text first", "> ![Image]"),
+			), False, "two-panels", ("> - Text first", "> ![Image]"),
 		),
 		(
 			"left image cell", make_slide_data(
 				text_lines=((0, "Text second"),), image_positions=((20, 200),),
-			), False, "title-two-content", ("> ![Image]", "> - Text second"),
+			), False, "two-panels", ("> ![Image]", "> - Text second"),
 		),
 		(
 			"gallery", make_slide_data(image_positions=((100, 200), (400, 200), (700, 200))),
@@ -176,7 +176,7 @@ def test_layout_classifier_emits_only_canonical_explicit_classes() -> None:
 		(
 			"multi image cell", make_slide_data(
 				text_lines=((0, "Text cell"),), image_positions=((300, 200), (700, 200)),
-			), False, "title-two-content", ("> - Text cell", "> ![Image]"),
+			), False, "two-panels", ("> - Text cell", "> ![Image]"),
 		),
 	)
 	for _name, slide, is_first, expected_layout, expected_fragments in cases:
@@ -189,7 +189,6 @@ def test_layout_classifier_emits_only_canonical_explicit_classes() -> None:
 			assert fragment in markdown
 		assert "lead" not in markdown
 		assert "figure" not in markdown
-		assert "two-pane" not in markdown
 		assert "bg left" not in markdown
 		assert "bg right" not in markdown
 		if _name == "multi image cell":

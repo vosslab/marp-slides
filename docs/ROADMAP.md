@@ -1,72 +1,67 @@
-# Roadmap: language design before implementation
+# Roadmap: extended-Djot native presentations
 
-Status: open grammar design work. Classic Marp Core v5 remains the migration and conformance
-baseline; [MARP_SYNTAX_GUIDE.md](MARP_SYNTAX_GUIDE.md) remains its classic Marp / Marp CLI guide.
-The successor is an extended Djot language; its spatial grammar and name remain open.
+Status: M1-M4 and M6 are implemented, including one-time all-eight corpus acceptance and private
+regeneration reproducibility and one-time native acceptance. M5 animation remains blocked because
+PowerPoint and reference timing XML are absent; final close-out remains open until manual timing
+evidence is recorded. Classic Marp Core v5 remains the migration baseline, while extended-Djot is a
+parallel source front end to the shared native editable-object pipeline.
 
-## Purpose
+## Current milestones
 
-Classic Marp cannot express the required spatial teaching layouts. The language survey found no
-presentation format suitable for direct adoption. Djot is the selected source foundation. The next
-work is to specify a small spatial layer that is explicit, visible, unambiguous, and valid strict
-Djot source.
-
-The active grammar record is
-[djot_slide_extension_exploration.md](active_plans/decisions/djot_slide_extension_exploration.md).
-The historical choice rationale remains in
-[presentation_language_choices.md](active_plans/decisions/presentation_language_choices.md). These
-records define the remaining questions before parser, exporter, importer, deck, or guide work begins.
-
-## Milestone plan
-
-| M | Title | Outcome | Gate |
+| M | Title | Status | Evidence boundary |
 | --- | --- | --- | --- |
-| M1 | Source and grammar | Strict Djot suite plus concise candidate grammar covers every fixture | Instructor approval |
-| M2 | Parse contract | Accepted and rejected source maps to a typed slide model | Grammar approval |
-| M3 | Native layouts | Named slots become editable native layout objects | Parse-contract review |
-| M4 | Teaching content | Images, math, and simple reveals have native mappings | Layout evidence |
-| M5 | Guide and migration | Named language guide and canonical-deck migration | Independent verification |
+| M1 | IR and catalog | Complete | Presentation-neutral nodes and registry-derived grammar |
+| M2 | Djot parser | Complete | `.djot` source parses to named cells with source locations |
+| M3 | Short layouts and multiple choice | Complete | Canonical names and slot contracts, no aliases |
+| M4 | Export dispatch | Complete | `.md` and `.djot` select the shared export path by suffix |
+| M5 | Animation backend | Blocked | PowerPoint and reference timing XML are absent |
+| M6 | Linter and corpus | Complete | Strict lint and one-time eight-deck corpus/reproducibility acceptance |
+| M7 | Verification and close-out | In progress | Native acceptance passed; animation/compatibility close-out remains |
 
-## M1: source and grammar
+## Completed design and implementation
 
-- Pin Djot's syntax revision and the complete parser/formatter/editor-rule/linter compatibility suite.
-- Verify every candidate extension form against strict Djot before treating it as public syntax.
-- Specify slide boundaries without a horizontal-rule ambiguity.
-- Specify the exact layout and slot directives, including legal positions and literal escapes.
-- Define title, subtitle, required slot, optional slot, repeated slot, image, and caption behavior.
-- Select exact inline and display math delimiters.
-- Select one short, bounded syntax for item-by-item and arbitrary-item reveals.
-- State the Djot revision and normal Djot forms accepted inside a slot.
-- Express all fifteen language-survey fixtures and their invalid near-matches.
+- The layout registry owns geometry, canonical short layout names, and legal slot names.
+- Djot grammar is exact and whole-line based: `=== layout: <name>`, `@<slot>`, `<= appear`,
+  `=> appear`, and `=> cascade appear`.
+- Source is normalized into global title/subtitle blocks and named cells. Multiple H2 lines on a
+  title slide form one subtitle region.
+- One-line attributes precede and attach to the next element. A standalone component image is a
+  complete image paragraph; mixed image paragraphs are source-located unsupported input.
+- `$inline$` and `$$display$$` are intentional local math extensions after strict-Djot validation.
+  Their editable native rendering remains future work.
+- `multiple-choice` uses required `question` and `answer` slots. Its answer has implicit reveal
+  intent and permits one or two short flat paragraphs; it does not yet have verified PowerPoint
+  playback.
+- `blue overlay` is a recognized, explicit deferral rather than a silent no-op.
+- The explicit Djot native-layout E2E passed through editable PPTX, LibreOffice ODP, and PDF across
+  the registry, including gallery images and distinct editable multiple-choice shapes/final state.
+- The one-time all-eight legacy-corpus acceptance passed: 378 source slides, 336 visible slides, 42
+  hidden slides, 167 reachable assets, 72 bounded source regions, 96 review slides, and 186 image
+  occurrences. A second private regeneration was byte-identical across 183 generated files.
+- One-time native acceptance passed: strict lint covered 8 decks, 336 visible slides, and 186 image
+  occurrences; `build_slides.sh genetics`, all three native E2Es, and eight sequential matching
+  PPTX/ODP/PDF exports passed. Text and direct images remained editable, and Lecture 02e retained its
+  native table.
 
-The candidate `@layout NAME` and `:: SLOT` surface is an illustration only. It can be evaluated
-against each possible foundation and has no special status until M1 approval.
+## Remaining gates
 
-## M2: parse contract
+1. On a licensed, attended PowerPoint host, perform the two-deck experiment in
+   [wp_a1_animation_fidelity.md](active_plans/reports/wp_a1_animation_fidelity.md).
+2. If the observed Impress result preserves the required behavior, derive minimal timing templates
+   from that PowerPoint evidence and verify first-advance playback. If it degrades or loses the
+   behavior, record and select the documented slide-multiplication fallback.
+3. Complete the remaining strict-Djot formatter/editor-rule suite selection before claiming full
+   compatibility-suite coverage.
 
-- Give every accepted directive and Djot block a typed native-model representation.
-- Reject unknown layouts, slots, directives, illegal placement, and unsupported combinations at the
-  source line.
-- Keep ordinary nested Markdown blocks unchanged inside slots.
-- Prove that directive recognition does not occur inside YAML, indented code, or fenced code.
-- Keep language parsing separate from geometry, which belongs to the native layout registry.
+## Verification lanes
 
-## M3 through M5: implementation
+| Lane | Permanent status | What it proves |
+| --- | --- | --- |
+| Fast pytest | Permanent, offline | Parser, grammar, layout, suffix, and source diagnostics |
+| Strict Jotdown and source lint | One-time/source acceptance | Raw-Djot syntax and project slide semantics |
+| Native E2E | Passed explicit E2E | The real editable PPTX -> ODP -> PDF chain |
+| Legacy corpus review | Passed one-time acceptance | Regenerated corpus, provenance, asset integrity, and reproducibility |
+| Native all-format output | Passed one-time acceptance | Editable PPTX, ODP, and PDF artifacts for every regenerated deck |
+| PowerPoint and Impress | Attended manual check | Repair behavior, first advance, and animation survival |
 
-No implementation milestone begins until the preceding design gate is approved. Each accepted
-feature requires parser, native PPTX, editable ODP, source diagnostic, canonical-deck, and guide
-evidence. Independent review follows implementation.
-
-## Non-goals
-
-- Use comment-based cell markers, HTML tags, or raw XML for normal layout structure.
-- Infer a layout, region, caption, or reveal from content shape or source order.
-- Promise Marp, Marpit, CSS, browser, or external-renderer compatibility for the successor.
-- Add a Node or browser runtime to production.
-- Use full-slide rasterization or raster fallback for accepted source.
-
-## Completion rule
-
-After M1 approval, give the language its own name, create its own syntax guide, and update this
-roadmap and [TODO.md](TODO.md). Keep [MARP_SYNTAX_GUIDE.md](MARP_SYNTAX_GUIDE.md) limited to
-classic Marp compatibility.
+Do not treat a fast test, native lint, or render as a substitute for the attended timing checks.

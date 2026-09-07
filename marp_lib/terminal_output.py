@@ -15,6 +15,7 @@ import rich.text
 # Local Modules
 from marp_lib import layouts
 from marp_lib import libreoffice
+from marp_lib import djot_errors
 from marp_lib import marp_parser
 import marp_lib.native_export
 
@@ -148,7 +149,7 @@ def run_build(input_value: str, output_format: str, allow_folder: bool = True,
 			try:
 				outputs = marp_lib.native_export.export_deck(str(deck_path), output_format, update_progress)
 			except (marp_lib.native_export.PresentationInputError, marp_parser.MarpParseError,
-				layouts.LayoutError, libreoffice.LibreOfficeError) as exc:
+				djot_errors.DjotParseError, layouts.LayoutError, libreoffice.LibreOfficeError) as exc:
 				failure = (deck_path, current_stage[0], exc)
 				break
 			results.append((deck_path, outputs))

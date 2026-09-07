@@ -15,10 +15,8 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
   code nor Marp CLI.
 - Use Marp Core v5 only as the upstream authoring and conformance baseline. Do not support Marp
   Core v4 or earlier behavior.
-- Keep classic Marp Markdown as the current migration baseline rather than replacing it with a YAML
-  or `md2pptx` dialect. Before committing to a successor language, assess whether a FOSS Markdown
-  presentation language should be adopted or a small extension should be defined. Clearly separate
-  standard Marp syntax from any later repository-owned language.
+- Keep classic Marp Markdown as the migration baseline while the successor language is defined.
+  Clearly separate standard Marp syntax from repository-owned language work.
 - Do not show slide numbers; they encourage the audience to track remaining time and watch the
   clock instead of the presenter.
 - `OTHER_REPOS/marp-core` and `OTHER_REPOS/marp-cli` are interpretation and conformance evidence,
@@ -31,12 +29,11 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
   limit, and PDF/A-3b output.
 - Implement every individual LibreOffice layout-grid pattern as native editable Python objects, plus
   the repository `gallery` layout. The grid is a visual catalog, not a rendering dependency.
-- Use layouts `blank`, `title-only`, `title-slide`, `title-content`, `centered-text`,
-  `title-two-content`, `title-content-and-two-content`, and
-  `title-two-content-and-content`.
-- Use layouts `title-content-over-content`, `title-two-content-over-content`,
-  `title-four-content`, `title-six-content`, `vertical-title-vertical-text`,
-  `vertical-title-text-chart`, `title-vertical-text`, `title-two-vertical-text-clipart`, and `gallery`.
+- Use layouts `blank`, `title-only`, `title-slide`, `one-panel`, `centered-text`, `two-panels`,
+  `one-plus-two-panels`, and `two-plus-one-panels`.
+- Use layouts `stacked-panels`, `two-over-one-panels`, `four-panels`, `six-panels`,
+  `vertical-panel`, `vertical-title-two-panels`, `vertical-text-panel`,
+  `two-panels-vertical-clipart`, `gallery`, and `multiple-choice`.
 - Give every slide exactly one explicit layout class. Keep `-` as ordinary list syntax and `>` as
   a standard Markdown blockquote; do not use comment-based cell markers for normal layout structure.
 - Use a bounded Marp `font-size-N` companion class when an H1 such as `THE END` should occupy the
@@ -61,7 +58,7 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 - Use OpenDyslexic for ordinary and inline-code runs. Apply PT Sans Narrow only to a displayed
   literal URL; keep ordinary linked labels in OpenDyslexic with their native hyperlink.
 - Treat `slide_*_source` raster names as retired full-slide fallback evidence, not component images.
-- For `title-vertical-text` and `vertical-title-vertical-text`, author one level-one title and one
+- For `vertical-text-panel` and `vertical-panel`, author one level-one title and one
   root body block: one paragraph, one list, or one component image.
 - Use lots of images and aim for a visual image on every slide.
 - Avoid raw HTML or XML in Markdown. Keep preview styling in the shared CSS theme.
@@ -107,12 +104,13 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 - Regardless of the chosen source language, the repository will own the parser, native editable
   PPTX/ODP builders, LibreOffice bridge, and validation. "Adopt a language" means adopt or adapt
   its source grammar and semantics, never its runtime or presentation pipeline.
-- No surveyed presentation format is a direct-adoption target. The successor language is an extended
-  Djot language; its spatial slide grammar remains to be specified.
-- This is the top requirement: inherit every construct supported by the pinned Djot revision, and
-  require every accepted source to remain strict Djot and pass every Djot parser, formatter, editor
-  rule, and linter in the project's pinned compatibility suite before the extension linter applies
-  slide semantics. No slide feature may waive a Djot failure.
+- No surveyed presentation format is a direct-adoption target. The successor language is extended
+  Djot; its implemented spatial grammar remains adaptable as new native owners gain evidence.
+- Require accepted source to remain strict Djot and pass the pinned compatibility suite before
+  extension lint applies slide semantics. No slide feature may waive a Djot failure.
+- Treat the pinned native Djot parser as a syntax-validation lane of that suite: in ordinary use, it
+  is a validator/linter for raw Djot structure. The extension linter adds only slide-specific
+  diagnostics after the parser validates the underlying document.
 - Hands-on Djot specimens confirm this choice: its visible, line-by-line parsing behavior, removal
   of indented code blocks, and simpler list-item indentation rule make authored source easy to read
   and reason about.
@@ -124,10 +122,10 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 - Avoid braces and other paired punctuation in normal slide authoring. Retain one-line Djot
   attributes for exceptional content or renderer overrides, never as the default layout, slot,
   gallery, reveal, size, or color vocabulary; never use multiline brace structures.
-- The provisional Djot slide surface uses `=== layout: <name>` to start a slide and choose its
-  layout, and `@<slot>` to select a predefined slot from that layout. These spellings remain
-  provisional working grammar, not parser adoption or a decision about the remaining layout catalog.
-- The future-language catalog will include every default LibreOffice layout plus the custom
+- The Djot slide surface uses `=== layout: <name>` to start a slide and choose its layout, and
+  `@<slot>` to select a predefined slot from that layout. The parser and layout catalog implement
+  these spellings while keeping new grammar decisions evidence-driven.
+- The Djot layout catalog includes every default LibreOffice layout plus the custom
   `multiple-choice` layout. Preserve familiar Marp content where compatible with Djot; `=== layout:`
   replaces Marp's `---` slide separator, and Marp-specific image modifiers are not adopted.
 - In title-bearing layouts, `#` supplies the title; in subtitle-bearing layouts, `##` supplies the
@@ -139,21 +137,15 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
   Keep one-sided `%% name` available for small parser examples; do not assume its scope or role yet.
 - Kova's `|||` split delimiter is notable prior art, but triple repeated characters are not ideal for
   ordinary authoring.
-- `multiple-choice` is an extra custom layout in addition to every default LibreOffice layout. It
-  requires `@question` and `@answer`. The question and choices show initially, while the answer
-  appears automatically on the first advance in a bottom-right popup. Open-ended questions use
-  another layout.
-- Make ordinary `![alt](path)` the official component-image form and reserve it from all extension
-  structure. Make `$inline$` and `$$display$$` the official mathematics forms and reserve them as
-  well. The repository-owned math adapter may configure MathJax or a similar plugin to accept that
-  surface; this does not adopt Marp image modifiers.
-- The future language supports normal Djot syntax. Use Djot tables for tabular source, inline
+- `multiple-choice` requires `@question` and `@answer`. The question and choices show initially;
+  the answer appears in a bottom-right popup. Use another layout for open-ended questions.
+- Reserve `![alt](path)`, `$inline$`, and `$$display$$` for component images and mathematics.
+  A repository-owned adapter may accept the math surface without adopting Marp image modifiers.
+- The Djot language supports normal Djot syntax. Use Djot tables for tabular source, inline
   verbatim for short fixed-width sequences, and fenced code blocks for aligned multiline sequence
   text; do not introduce special biological-sequence syntax.
-- Support ASCII source that projects to Unicode in the native final product. After strict Djot
-  validation, the pipeline maps a small documented character-reference vocabulary; for example,
-  `&prime;` becomes `′`. This is a project projection rather than native Djot entity parsing, and it
-  must not rewrite verbatim or raw content.
+- Support ASCII source that projects to Unicode after strict-Djot validation. The literal ASCII
+  token `&prime;` maps to Unicode code point U+2032 PRIME; never rewrite verbatim or raw content.
 - Use the upstream `.djot` suffix for extended-Djot presentation source. The extension's slide
   semantics come from its grammar, not a separate `.djp`, `.djs`, or `.djots` filename convention.
 - Do not add a successor-language presenter-note syntax. Djot footnotes are audience-facing
@@ -188,3 +180,8 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
   when it makes real changes; recurring `.gitignore` churn must not create one.
 - Classify one-time implementation checks separately from permanent tests. Apply the permanent
   pytest checklist, keep temporary proof out of the suite, and remove a test when in doubt.
+- Prompt positively: state the desired action directly and keep safety or correctness boundaries
+  explicit.
+- Use parallel, atomic delegation when it reduces wall time; subagents and tokens are cheap.
+- Favor adaptable, long-term designs that build on the existing ambition of the repository.
+- Treat this pre-production codebase as a place to keep only durable tests with meaningful behavior.

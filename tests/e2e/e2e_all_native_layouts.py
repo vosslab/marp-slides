@@ -29,16 +29,16 @@ NAMESPACES = {
 	"xlink": "http://www.w3.org/1999/xlink",
 }
 LAYOUTS = (
-	"blank", "title-only", "title-slide", "title-content", "centered-text",
-	"title-two-content", "title-content-and-two-content",
-	"title-two-content-and-content", "title-content-over-content",
-	"title-two-content-over-content", "title-four-content", "title-six-content",
-	"vertical-title-vertical-text", "vertical-title-text-chart", "title-vertical-text",
-	"title-two-vertical-text-clipart", "gallery",
+	"blank", "title-only", "title-slide", "one-panel", "centered-text",
+	"two-panels", "one-plus-two-panels",
+	"two-plus-one-panels", "stacked-panels",
+	"two-over-one-panels", "four-panels", "six-panels",
+	"vertical-panel", "vertical-title-two-panels", "vertical-text-panel",
+	"two-panels-vertical-clipart", "gallery",
 )
 VERTICAL_LAYOUTS = frozenset((
-	"vertical-title-vertical-text", "vertical-title-text-chart", "title-vertical-text",
-	"title-two-vertical-text-clipart",
+	"vertical-panel", "vertical-title-two-panels", "vertical-text-panel",
+	"two-panels-vertical-clipart",
 ))
 MAX_COMPONENT_PAGE_FRACTION = 0.98
 ODF_LENGTH_TO_CENTIMETERS = {
@@ -87,8 +87,8 @@ def image_cell(label: str, image_name: str) -> str:
 def multi_cell_slide(layout: str, count: int) -> str:
 	"""Return a valid grid-layout slide with reading-order blockquote cells."""
 	cells = [cell(f"{layout} cell {index}") for index in range(1, count + 1)]
-	if layout in ("title-two-content", "vertical-title-text-chart",
-		"title-two-vertical-text-clipart"):
+	if layout in ("two-panels", "vertical-title-two-panels",
+		"two-panels-vertical-clipart"):
 		cells[-1] = image_cell(f"{layout} image", "component_1.png")
 	return f"<!-- _class: {layout} -->\n# {layout} acceptance\n\n" + "\n".join(cells)
 
@@ -100,23 +100,23 @@ def write_deck(deck_path: pathlib.Path) -> None:
 		"<!-- _class: blank -->",
 		"<!-- _class: title-only -->\n# title-only acceptance",
 		"<!-- _class: title-slide -->\n# title-slide acceptance\n\n## Native object model",
-		"<!-- _class: title-content -->\n# title-content acceptance\n\n"
-		"- Editable [resource](https://example.edu/title-content)\n  - Nested editable detail\n"
-		"1. Ordered editable step\n\n<!-- notes: Present this native title-content slide. -->",
+		"<!-- _class: one-panel -->\n# one-panel acceptance\n\n"
+		"- Editable [resource](https://example.edu/one-panel)\n  - Nested editable detail\n"
+		"1. Ordered editable step\n\n<!-- notes: Present this native one-panel slide. -->",
 		"<!-- _class: centered-text font-size-200 -->\n# THE END\n\n## Editable interstitial",
-		multi_cell_slide("title-two-content", 2),
-		multi_cell_slide("title-content-and-two-content", 3),
-		multi_cell_slide("title-two-content-and-content", 3),
-		multi_cell_slide("title-content-over-content", 2),
-		multi_cell_slide("title-two-content-over-content", 3),
-		multi_cell_slide("title-four-content", 4),
-		multi_cell_slide("title-six-content", 6),
-		"<!-- _class: vertical-title-vertical-text -->\n# vertical-title-vertical-text acceptance\n\n"
-		"- Vertical editable [resource](https://example.edu/vertical-title-vertical-text)",
-		multi_cell_slide("vertical-title-text-chart", 2),
-		"<!-- _class: title-vertical-text -->\n# title-vertical-text acceptance\n\n"
-		"- Vertical body [resource](https://example.edu/title-vertical-text)",
-		multi_cell_slide("title-two-vertical-text-clipart", 3),
+		multi_cell_slide("two-panels", 2),
+		multi_cell_slide("one-plus-two-panels", 3),
+		multi_cell_slide("two-plus-one-panels", 3),
+		multi_cell_slide("stacked-panels", 2),
+		multi_cell_slide("two-over-one-panels", 3),
+		multi_cell_slide("four-panels", 4),
+		multi_cell_slide("six-panels", 6),
+		"<!-- _class: vertical-panel -->\n# vertical-panel acceptance\n\n"
+		"- Vertical editable [resource](https://example.edu/vertical-panel)",
+		multi_cell_slide("vertical-title-two-panels", 2),
+		"<!-- _class: vertical-text-panel -->\n# vertical-text-panel acceptance\n\n"
+		"- Vertical body [resource](https://example.edu/vertical-text-panel)",
+		multi_cell_slide("two-panels-vertical-clipart", 3),
 		"<!-- _class: gallery -->\n# gallery acceptance\n\n"
 		"![Native gallery component one](component_1.png)\n"
 		"![Native gallery component two](component_2.png)\n"
@@ -145,7 +145,7 @@ def inspect_pptx(pptx_path: pathlib.Path) -> None:
 	all_xml = "\n".join("".join(shape.element.xml for shape in slide.shapes)
 		for slide in presentation.slides)
 	all_text = "\n".join(slide_text(slide) for slide in presentation.slides)
-	require("title-content acceptance" in all_text and "THE END" in all_text and "gallery acceptance" in all_text,
+	require("one-panel acceptance" in all_text and "THE END" in all_text and "gallery acceptance" in all_text,
 		"PPTX preserves editable text across the layout catalog")
 	title_runs = [run for shape in presentation.slides[4].shapes if shape.has_text_frame
 		for paragraph in shape.text_frame.paragraphs for run in paragraph.runs if run.text == "THE END"]
@@ -155,7 +155,7 @@ def inspect_pptx(pptx_path: pathlib.Path) -> None:
 		"PPTX preserves native unordered and ordered list structures")
 	require("hlinkClick" in all_xml, "PPTX preserves native hyperlink relationships")
 	require(presentation.slides[3].notes_slide.notes_text_frame.text ==
-		"Present this native title-content slide.", "PPTX preserves presenter notes")
+		"Present this native one-panel slide.", "PPTX preserves presenter notes")
 	for layout in VERTICAL_LAYOUTS:
 		index = LAYOUTS.index(layout)
 		slide_xml = "".join(shape.element.xml for shape in presentation.slides[index].shapes)
@@ -215,16 +215,16 @@ def inspect_odp(odp_path: pathlib.Path) -> None:
 	require(len(pages) == len(LAYOUTS),
 		f"ODP has {len(pages)} pages; expected {len(LAYOUTS)} layouts")
 	all_text = "\n".join(text_content(page) for page in pages)
-	require("title-content acceptance" in all_text and "gallery acceptance" in all_text,
+	require("one-panel acceptance" in all_text and "gallery acceptance" in all_text,
 		"ODP preserves editable text across the layout catalog")
 	require(any(page.findall(".//text:list-item", NAMESPACES) for page in pages),
 		"ODP preserves editable list objects")
 	links = [link for page in pages for link in page.findall(".//text:a", NAMESPACES)]
 	require(any(link.get(f"{{{NAMESPACES['xlink']}}}href") ==
-		"https://example.edu/title-content" for link in links),
+		"https://example.edu/one-panel" for link in links),
 		"ODP preserves authored hyperlink targets")
 	notes_text = text_content(pages[3].find("presentation:notes", NAMESPACES))
-	require("Present this native title-content slide." in notes_text,
+	require("Present this native one-panel slide." in notes_text,
 		"ODP preserves presenter-note text")
 	image_frames = []
 	text_boxes = []

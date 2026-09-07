@@ -1,3 +1,96 @@
+## 2026-09-07
+
+### Additions and New Features
+
+- Added the geometry-first legacy-import architecture: semantic ODP/PPTX normalization now produces
+  `LegacySlidePlan` records for atomic editable components, true source tables, and bounded coupled
+  spatial regions.
+
+### Behavior or Interface Changes
+
+- An ODP import uses its original ODP and a direct PPTX import uses its trusted input PPTX as the
+  source-region raster authority. Poppler renders only title-excluded, bounded regions at fixed 144
+  DPI; validated digest-named assets retain source-slide provenance and publish with staged source
+  validation.
+- Ordinary panel layouts now describe optional global titles and one local H2 per cell, with
+  source-located capacity preflight before native shapes are created. Source tables remain editable
+  only when the source provides actual table metadata; merged or spanned cells require review.
+- Legacy source records now retain direct style, placeholder, z-order, rotation, and connector
+  evidence. A shared registry-topology matcher and bounded positive relation classes preserve
+  coupled visual teaching structures while retaining ordinary source content as editable objects.
+- Top/group z-paths now retain actual source order. Reusable coarse-body/picture-inset, caption,
+  and adaptive vertical-image relations preserve native objects through topology-first routing;
+  they use exact provenance and narrow permissions rather than global or crop exceptions.
+- Imported Djot assets now publish only when reachable from the parsed deck in its local asset tree;
+  unsafe, missing, and symlinked references fail staged publication.
+
+### Fixes and Maintenance
+
+- Refreshed install and usage guidance for Python 3.12 environment activation, Homebrew tools,
+  strict Jotdown acceptance, bounded Poppler source-region imports, and native export workflows.
+
+### Decisions and Failures
+
+- Exact full-slide rasterization remains outside the importer contract. Ambiguous geometry and
+  source-table spans stop for review so a later native owner can extend the model deliberately.
+- `multiple-choice` answers allow one or two short flat paragraphs and carry implicit reveal intent;
+  M5 playback remains blocked pending observed PowerPoint evidence.
+
+### Developer Tests and Notes
+
+- The one-time eight-deck legacy-corpus acceptance and reproducibility gates passed: 378 source
+  slides yielded 336 visible and 42 hidden slides, 167 reachable assets, 72 bounded source regions,
+  96 review slides, and 186 image occurrences. References resolved only to files with no missing or
+  extra assets, symlinks, or exact-full regions; a second private regeneration was byte-identical
+  across 183 Djot, report, and asset files.
+- One-time native acceptance passed: strict lint covered 8 decks, 336 visible slides, and 186 image
+  occurrences; `build_slides.sh genetics`, all three native E2Es, and sequential `--format all`
+  exports passed. Every deck retained matching PPTX, ODP, and PDF counts, editable text/direct images,
+  and Lecture 02e retained its native table.
+- The permanent suite separately passed 1,632 tests and 545 hygiene checks; it remains fast,
+  deterministic, and offline. M5 animation evidence remains blocked because PowerPoint and reference
+  timing XML are absent; this entry does not claim animation acceptance.
+
+## 2026-09-06
+
+### Additions and New Features
+
+- Added extended-Djot as a second source front end to the shared presentation-neutral IR and native
+  editable PPTX -> ODP -> PDF pipeline. `.md` and `.djot` now dispatch by suffix without changing
+  the Marp migration baseline.
+- Added the registry-derived Djot directive contract, named-cell normalization, short canonical
+  layout names, and the `multiple-choice` question/answer layout contract.
+- Added the source-side parser, grammar, inline/block handling, source-only semantic lint, and
+  regenerated eight-deck genetics Djot corpus on short layout names.
+
+### Behavior or Interface Changes
+
+- Replaced the long layout vocabulary with canonical short names and no alias layer. Named slots,
+  including asymmetric panel layouts, now bind by declared name rather than source order.
+- Made one-line attributes attach to the following element, complete image paragraphs component
+  images, and multiple H2 lines on `title-slide` one subtitle region. `$inline$` and `$$display$$`
+  are intentional local math syntax pending an editable native math owner.
+
+### Fixes and Maintenance
+
+- Updated pipeline, roadmap, TODO, grammar exploration, and corpus guidance to distinguish durable
+  parser tests, source-only Jotdown/lint checks, native E2E, and attended Office acceptance checks.
+- Recorded the passed Djot native-layout E2E through editable PPTX, LibreOffice ODP, and PDF,
+  including gallery images and distinct multiple-choice shapes.
+
+### Decisions and Failures
+
+- `<= blue overlay` is recognized but deliberately reports a source-located "not yet supported"
+  diagnostic; it has no silent approximation.
+- M5 animation timing remains unimplemented and unverified. PowerPoint is absent on the available
+  host, so timing XML, first-advance playback, and ODP animation survival await the attended
+  experiment in [wp_a1_animation_fidelity.md](active_plans/reports/wp_a1_animation_fidelity.md).
+
+### Developer Tests and Notes
+
+- The PowerPoint-dependent fidelity experiment is a one-time attended check, not a permanent test.
+  Fast tests remain offline and behavior-focused; the native chain remains explicit E2E evidence.
+
 ## 2026-09-05
 
 ### Documentation and Design Research
@@ -131,9 +224,9 @@
 - Made extended Djot the settled successor-language foundation. Elevated strict Djot compatibility
   to the top language requirement: source must pass every parser, formatter, editor rule, and linter
   in a future pinned compatibility suite before the extension linter evaluates slide semantics.
-- Defined an ASCII-to-Unicode native projection after strict Djot validation. The initial documented
-  mapping is ordinary Djot text `&prime;` to U+2032 PRIME (`′`); this is a narrow project vocabulary,
-  not a general HTML-entity parser, and does not rewrite verbatim or raw content.
+- Defined an ASCII-to-Unicode native projection after strict Djot validation. The literal ASCII token
+  `&prime;` maps to Unicode code point U+2032 PRIME; this is a narrow project vocabulary, not a
+  general HTML-entity parser, and does not rewrite verbatim or raw content.
 - Selected the upstream `.djot` suffix for extended-Djot presentation source, retaining standard
   Djot tooling association instead of inventing a slide-specific filename extension.
 - Added an experimental, ODP-derived extended-Djot corpus for all eight `genetics/lect0*` decks:
@@ -142,6 +235,8 @@
   linter. Pinned Jotdown 0.10.0 as its native-first parser and verified all eight sources through
   it; formatter, editor-rule, and linter-suite selection remain open. `source_me.sh` now exposes
   an installed Cargo-bin validator to repository commands. The Marp import commands remain unchanged.
+- Clarified that the pinned native parser is the compatibility suite's raw-Djot syntax-validation
+  lane; the extension linter supplies the separate slide-semantic diagnostics.
 
 ### Fixes and Maintenance
 
