@@ -16,6 +16,8 @@ from pptx.util import Emu, Pt
 # Local Modules
 import marp_lib.native_model
 import marp_lib.layout_validation
+import marp_lib.editable_text
+import marp_lib.pptx_animation
 
 
 PX = 9525
@@ -187,12 +189,9 @@ def add_inline_runs(paragraph: object, inlines: tuple[marp_lib.native_model.Inli
 #============================================
 def flatten_list(block: marp_lib.native_model.ListBlock, level: int = 0) -> list[tuple[tuple[marp_lib.native_model.Inline, ...], int, bool, bool, int]]:
 	"""Flatten nested lists into Office paragraphs, preserving ordered starts."""
-	items: list[tuple[tuple[marp_lib.native_model.Inline, ...], int, bool, bool, int]] = []
-	for offset, item in enumerate(block.items):
-		items.append((item.inlines, level, block.ordered, False, block.start + offset))
-		for child in item.children:
-			items.extend(flatten_list(child, level + 1))
-	return items
+	return [(paragraph.inlines, paragraph.level + level, paragraph.ordered,
+		paragraph.paragraph_only, paragraph.start) for paragraph in
+		marp_lib.editable_text.project_list(block)]
 
 
 #============================================
@@ -357,7 +356,7 @@ def resolve_image_path(deck: object, image: marp_lib.native_model.Image) -> path
 
 #============================================
 def add_picture(slide: object, image_path: pathlib.Path, image: marp_lib.native_model.Image,
-		left: float, top: float, width: float, height: float) -> None:
+		left: float, top: float, width: float, height: float) -> object:
 	"""Add one contained component picture with its authored description."""
 	with PIL.Image.open(image_path) as opened_image:
 		image_width, image_height = opened_image.size
@@ -368,14 +367,7 @@ def add_picture(slide: object, image_path: pathlib.Path, image: marp_lib.native_
 	picture = slide.shapes.add_picture(str(image_path), px(left + (width - display_width) / 2),
 		px(top + (height - display_height) / 2), px(display_width), px(display_height))
 	picture.element.nvPicPr.cNvPr.set("descr", image.alt_text)
-
-
-#============================================
-def flow_items(block: marp_lib.native_model.Paragraph | marp_lib.native_model.ListBlock) -> list[tuple[tuple[marp_lib.native_model.Inline, ...], int, bool, bool, int]]:
-	"""Project one source-ordered editable flow block into native paragraphs."""
-	if isinstance(block, marp_lib.native_model.Paragraph):
-		return [(block.inlines, 0, False, True, 1)]
-	return flatten_list(block)
+	return picture
 
 
 #============================================
@@ -404,7 +396,7 @@ def plan_cell_flow(deck: marp_lib.native_model.Deck, cell: marp_lib.native_model
 	gap_height = 12 * (len(blocks) - 1)
 	for quarter_points in range(int(preferred_size * 4), int(MIN_READABLE_BODY_SIZE * 4) - 1, -1):
 		size = quarter_points / 4
-		text_heights = {id(block): estimate_items_height(flow_items(block), size, width) for block in blocks
+		text_heights = {id(block): estimate_items_height(marp_lib.editable_text.flow_items(block), size, width) for block in blocks
 			if not isinstance(block, marp_lib.native_model.Image)}
 		remaining_image_height = height - gap_height - sum(text_heights.values())
 		if remaining_image_height > 0:
@@ -430,10 +422,12 @@ def render_cell_flow(slide: object, deck: marp_lib.native_model.Deck, plan: Cell
 	for step in plan.steps:
 		left, top, width, height = step.rectangle
 		if isinstance(step.block, marp_lib.native_model.Image):
-			add_picture(slide, resolve_image_path(deck, step.block), step.block, left, top, width, height)
+			picture = add_picture(slide, resolve_image_path(deck, step.block), step.block, left, top, width, height)
+			marp_lib.pptx_animation.register_reveal(slide, picture, step.block.reveal)
 		else:
 			frame = add_textbox(slide, left, top, width, height)
-			write_items(frame, flow_items(step.block), plan.text_size)
+			write_items(frame, marp_lib.editable_text.flow_items(step.block), plan.text_size)
+			marp_lib.pptx_animation.register_text_reveal(slide, frame, step.block)
 
 
 #============================================
@@ -470,6 +464,7 @@ def title_and_content_top(slide: object, source: marp_lib.native_model.Slide,
 		add_inline_runs(paragraph, title.inlines, size)
 		for run in paragraph.runs:
 			run.font.bold = True
+		marp_lib.pptx_animation.register_text_reveal(slide, frame, title)
 		return 178, 82, RIGHT - 178
 	size = title_size(source, 48)
 	title_height = require_title_capacity(source, title, size, RIGHT - LEFT, 170, source.layout_class)
@@ -478,6 +473,7 @@ def title_and_content_top(slide: object, source: marp_lib.native_model.Slide,
 	add_inline_runs(paragraph, title.inlines, size)
 	for run in paragraph.runs:
 		run.font.bold = True
+	marp_lib.pptx_animation.register_text_reveal(slide, frame, title)
 	return LEFT, TITLE_TOP + title_height + 24, RIGHT - LEFT
 
 
@@ -644,6 +640,7 @@ def write_planned_title(slide: object, title: marp_lib.native_model.Heading,
 	add_inline_runs(paragraph, title.inlines, plan.title_size)
 	for run in paragraph.runs:
 		run.font.bold = True
+	marp_lib.pptx_animation.register_text_reveal(slide, frame, title)
 
 
 #============================================
@@ -680,6 +677,7 @@ def render_cell(slide: object, deck: marp_lib.native_model.Deck, cell: marp_lib.
 		add_inline_runs(heading_paragraph, heading.inlines, heading_size)
 		for run in heading_paragraph.runs:
 			run.font.bold = True
+		marp_lib.pptx_animation.register_text_reveal(slide, head_frame, heading)
 	flow_plan = plan_cell_flow(deck, cell, body_plan.body_rectangle, preferred_body_size, context)
 	if flow_plan is not None:
 		render_cell_flow(slide, deck, flow_plan)
@@ -690,14 +688,26 @@ def render_cell(slide: object, deck: marp_lib.native_model.Deck, cell: marp_lib.
 		gap = 12
 		image_width = (body_width - gap * (len(images) - 1)) / len(images)
 		for index, image in enumerate(images):
-			add_picture(slide, resolve_image_path(deck, image), image,
+			picture = add_picture(slide, resolve_image_path(deck, image), image,
 				body_left + index * (image_width + gap), body_top, image_width, body_height)
+			marp_lib.pptx_animation.register_reveal(slide, picture, image.reveal)
 	elif items:
-		body_block = next(block for block in cell.blocks if not isinstance(block,
-			marp_lib.native_model.Heading))
-		size = fit_body_size([items], body_width, body_height, preferred_body_size, body_block.location, context)
-		frame = add_textbox(slide, body_left, body_top, body_width, body_height, vertical_text=vertical)
-		write_items(frame, items, size)
+		text_blocks = tuple(block for block in cell.blocks if isinstance(block,
+			(marp_lib.native_model.Paragraph, marp_lib.native_model.ListBlock)))
+		item_sets = [marp_lib.editable_text.flow_items(block) for block in text_blocks]
+		size = fit_body_size(item_sets if any(block.reveal is not None for block in text_blocks) else [items],
+			body_width, body_height, preferred_body_size, text_blocks[0].location, context)
+		if any(block.reveal is not None for block in text_blocks):
+			y = body_top
+			for block, block_items in zip(text_blocks, item_sets):
+				block_height = estimate_items_height(block_items, size, body_width)
+				frame = add_textbox(slide, body_left, y, body_width, block_height, vertical_text=vertical)
+				write_items(frame, block_items, size)
+				marp_lib.pptx_animation.register_text_reveal(slide, frame, block)
+				y += block_height
+		else:
+			frame = add_textbox(slide, body_left, body_top, body_width, body_height, vertical_text=vertical)
+			write_items(frame, items, size)
 
 
 #============================================
@@ -732,8 +742,7 @@ def build_title_slide(slide: object, source: marp_lib.native_model.Slide, deck: 
 			FOREGROUND if index == 0 else MUTED)
 		for run in paragraph.runs:
 			run.font.bold = index == 0
-
-
+		marp_lib.pptx_animation.register_text_reveal(slide, frame, heading)
 #============================================
 def build_title_only(slide: object, source: marp_lib.native_model.Slide, deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
 	"""Render only the native title region."""
@@ -749,14 +758,11 @@ def build_title_only(slide: object, source: marp_lib.native_model.Slide, deck: m
 	add_inline_runs(paragraph, title.inlines, size)
 	for run in paragraph.runs:
 		run.font.bold = True
-
-
+	marp_lib.pptx_animation.register_text_reveal(slide, frame, title)
 #============================================
 def build_centered_text(slide: object, source: marp_lib.native_model.Slide, deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
 	"""Render centered editable title and optional subtitle."""
 	build_title_slide(slide, source, deck, spec)
-
-
 #============================================
 def render_root_body(slide: object, source: marp_lib.native_model.Slide, deck: marp_lib.native_model.Deck,
 		spec: LayoutSpec) -> None:
@@ -767,29 +773,21 @@ def render_root_body(slide: object, source: marp_lib.native_model.Slide, deck: m
 	if headings:
 		write_planned_title(slide, headings[0], plan)
 	render_cell(slide, deck, body, plan.content_rectangle, bool(spec.vertical_cells), 26, spec.name)
-
-
 #============================================
 def build_title_content(slide: object, source: marp_lib.native_model.Slide,
 		deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
 	"""Render the ordinary title-and-content native layout."""
 	render_root_body(slide, source, deck, spec)
-
-
 #============================================
 def build_vertical_title_vertical_text(slide: object, source: marp_lib.native_model.Slide,
 		deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
 	"""Render one vertical body pane beside its vertical title strip."""
 	render_root_body(slide, source, deck, spec)
-
-
 #============================================
 def build_title_vertical_text(slide: object, source: marp_lib.native_model.Slide,
 		deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
 	"""Render one vertical body pane below its horizontal title."""
 	render_root_body(slide, source, deck, spec)
-
-
 #============================================
 def render_cells(slide: object, source: marp_lib.native_model.Slide,
 		deck: marp_lib.native_model.Deck, spec: LayoutSpec,
@@ -798,8 +796,6 @@ def render_cells(slide: object, source: marp_lib.native_model.Slide,
 	for index, (slot_name, rectangle) in enumerate(zip(spec.slot_names, rectangles)):
 		cell = next(cell for cell in source.cells if cell.name == slot_name)
 		render_cell(slide, deck, cell, rectangle, index in spec.vertical_cells)
-
-
 #============================================
 def content_rectangle(slide: object, source: marp_lib.native_model.Slide,
 		spec: LayoutSpec) -> tuple[float, float, float, float]:
@@ -892,6 +888,7 @@ def build_multiple_choice(slide: object, source: marp_lib.native_model.Slide,
 		for run in paragraph.runs:
 			run.font.color.rgb = WHITE
 			run.font.bold = True
+	marp_lib.pptx_animation.register_text_reveal(slide, frame, answer.blocks[0])
 
 
 #============================================
@@ -906,8 +903,9 @@ def build_gallery(slide: object, source: marp_lib.native_model.Slide, deck: marp
 		top = 82
 	width = (RIGHT - LEFT - 18 * (len(images) - 1)) / len(images)
 	for index, image in enumerate(images):
-		add_picture(slide, resolve_image_path(deck, image), image, LEFT + index * (width + 18),
+		picture = add_picture(slide, resolve_image_path(deck, image), image, LEFT + index * (width + 18),
 			top, width, CONTENT_BOTTOM - top)
+		marp_lib.pptx_animation.register_reveal(slide, picture, image.reveal)
 
 
 #============================================
@@ -983,9 +981,12 @@ LAYOUTS: dict[str, LayoutSpec] = {
 
 
 #============================================
-def render_layout(slide: object, source: marp_lib.native_model.Slide, deck: marp_lib.native_model.Deck) -> None:
+def render_layout(slide: object, source: marp_lib.native_model.Slide, deck: marp_lib.native_model.Deck,
+		writer: marp_lib.pptx_animation.PptxAnimationWriter | None = None) -> None:
 	"""Validate and render exactly one native layout on a blank slide."""
 	spec = validate_layout_source(source)
 	preflight_layout_capacity(source, spec, deck)
+	if writer is not None:
+		setattr(slide, "_marp_animation_writer", writer)
 	add_background(slide)
 	spec.builder(slide, source, deck, spec)

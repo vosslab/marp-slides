@@ -125,6 +125,9 @@ def reveal_block(path: pathlib.Path, line: int, block: marp_lib.native_model.Blo
 		fail(path, line, f"{type(block).__name__} blocks cannot receive Djot actions")
 	if block.reveal is not None:
 		fail(path, line, "Djot actions cannot attach more than one reveal to the same block")
+	if reveal.sequence is marp_lib.native_model.RevealSequence.PARAGRAPHS and not isinstance(block,
+			marp_lib.native_model.ListBlock):
+		fail(path, line, "cascade appear requires a following ListBlock")
 	result = dataclasses.replace(block, reveal=reveal)
 	return result
 
@@ -135,6 +138,8 @@ def reveal_item(path: pathlib.Path, line: int, item: marp_lib.native_model.ListI
 	"""Attach one terminal action to the final logical list item."""
 	if item.reveal is not None:
 		fail(path, line, "Djot actions cannot attach more than one reveal to the same list item")
+	if reveal.sequence is marp_lib.native_model.RevealSequence.PARAGRAPHS:
+		fail(path, line, "terminal cascade appear is not supported; use a prefix cascade on a ListBlock")
 	result = dataclasses.replace(item, reveal=reveal)
 	return result
 

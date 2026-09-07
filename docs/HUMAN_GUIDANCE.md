@@ -10,6 +10,8 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 
 ## Slide migration and presentation
 
+- I do not own any microsoft products, Powerpoint is not a blocker, we only use PPTX because 
+  python supports PPTX better than ODP
 - Legacy ODP is imported once; Marp Markdown and its local assets then become authoritative.
 - Use Marp because it has a mature language specification. The production build uses neither Marp
   code nor Marp CLI.
@@ -23,6 +25,8 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
   not production dependencies, runtimes, or renderers.
 - Build canonical Marp Markdown through repository-owned Python into native editable PPTX objects,
   then use LibreOffice to make editable ODP, then make PDF from that ODP.
+- I do not own any Microsoft products. PowerPoint is not a blocker. We only use PPTX because Python
+  supports PPTX better than ODP.
 - Run LibreOffice conversion with `--headless --norestore` through the established user profile.
   Keep LibreOffice closed during the batch build; use `--safe-mode` when repairing profile problems.
 - Export ODP to PDF with the Impress PDF filter, 70 percent JPEG quality, a documented 150 DPI image

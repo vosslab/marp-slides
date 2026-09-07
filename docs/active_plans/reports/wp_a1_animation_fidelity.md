@@ -1,63 +1,49 @@
-# WP-A1 animation fidelity experiment
+# WP-A1 animation fidelity evidence
 
-Date: 2026-09-06
+Date: 2026-09-07
 
-Status: blocked before the experiment; no fidelity result is claimed.
+Status: reopened. The earlier PowerPoint-authored-deck premise is superseded; it recorded a real
+host inventory but was not a project requirement.
 
-## Required experiment
+## Current contract
 
-WP-A1 requires two minimal decks authored by the actual Microsoft PowerPoint
-application:
+LibreOffice Impress and ODP are the editing and playback contract. PPTX is a convenient native
+builder and interchange artifact because Python support is stronger than ODP support. Microsoft
+PowerPoint is neither a compatibility oracle nor an acceptance gate.
 
-| Required deck | Required behavior | Evidence required |
-| --- | --- | --- |
-| `appear-click-object.pptx` | One textbox appears on click. | Its PowerPoint-generated `<p:timing>` tree. |
-| `appear-click-paragraphs.pptx` | One text shape builds paragraph by paragraph. | Its PowerPoint-generated `<p:timing>` tree. |
+WP-A1 establishes the smallest useful evidence for the supported animation surface:
 
-Each deck must then pass through the repository's LibreOffice bridge to ODP,
-be opened and observed in Impress, and be converted from ODP to PDF. The
-observation class must be `exact`, `survived`, `degraded`, or `lost`; the PDF
-must be checked for final-state flattening.
+- `appear` and `fade` effects;
+- `object` and `paragraphs` sequences;
+- `on-click` trigger;
+- a top-level list item and its descendants for a paragraph sequence.
 
-## Current evidence
+Use official OOXML documentation and LibreOffice importer/exporter behavior to guide the builder.
+`marp_lib/pptx_animation.py` will be the sole programmatic OOXML owner. It builds the required
+timing tree directly; no runtime XML templates or PowerPoint-authored reference decks are needed.
 
-Microsoft PowerPoint is unavailable on this host. The standard path
-`/Applications/Microsoft PowerPoint.app` does not exist, and a bounded search
-of `/Applications` and `/Users/vosslab/Applications` found no PowerPoint app.
-LibreOffice 26.2.5.2 is installed, and the existing bridge in
-[`marp_lib/libreoffice.py`](../../../marp_lib/libreoffice.py) can convert
-presentation files to ODP and PDF.
+## Historical evidence retained
 
-The host command evidence and bridge preflight constraint are recorded in
-[`devel/animation_reference/ENVIRONMENT.md`](../../../devel/animation_reference/ENVIRONMENT.md).
+The 2026-09-06 check found no PowerPoint app in the bounded macOS paths. LibreOffice 26.2.5.2 is
+installed. A direct UNO Python route was killed after its local dependency/process route proved
+unsuitable for this task; the existing headless LibreOffice bridge works. The command evidence is
+retained in [ENVIRONMENT.md](../../../devel/animation_reference/ENVIRONMENT.md).
 
-## Result
+## Acceptance evidence
 
-No timing tree was captured. No ODP animation-survival classification or PDF
-final-state result can be made. Generating substitute PPTX files from
-python-pptx or LibreOffice would not meet the plan's requirement that
-PowerPoint be the timing-XML and playback oracle, so no substitute artifact was
-created.
+After implementation, run these one-time checks on minimal generated decks:
 
-This leaves M5's fidelity gate unresolved. The animation backend must not use
-WP-A1 as positive evidence, and the slide-multiplication fallback cannot yet be
-adopted as an evidence-based decision because its trigger is an observed
-failure or degradation in Impress, not missing PowerPoint.
+1. Inspect the generated PPTX package for the intended, bounded OOXML timing semantics.
+2. Convert PPTX to ODP through the headless LibreOffice bridge and inspect ODP/package semantics.
+3. Attend an Impress slideshow and confirm object appearance and ordered top-level-list reveals.
+4. Export PDF from the ODP and confirm its final-state presentation.
 
-## Exact next run
+The attended Impress check is the only visual playback gate. Package inspection and conversion are
+one-time implementation evidence, not permanent pytest work. The permanent tests remain fast,
+offline structural checks of the builder's supported semantic model.
 
-On a host with licensed Microsoft PowerPoint and attended GUI access:
+## Follow-up placeholder
 
-1. Hand-create and save the two named PPTX decks in PowerPoint using the stated
-   click-appear behaviors.
-2. Unzip each PPTX and save its `ppt/slides/slide*.xml` `<p:timing>` subtree in
-   `devel/animation_reference/` with the corresponding source deck.
-3. Use [`marp_lib.libreoffice.convert_file()`](../../../marp_lib/libreoffice.py)
-   to convert each PPTX to ODP, then open each ODP in Impress and record the
-   observed survival class.
-4. Convert each ODP to PDF through the same bridge and inspect whether it shows
-   the final reveal state.
-
-The LibreOffice bridge preflight invokes `ps`; this host's sandbox denied that
-call, so the conversion commands require normal unsandboxed approval even after
-PowerPoint is available.
+Record command versions, generated-deck paths, observed Impress behavior, ODP/package findings, and
+PDF final-state findings here after WP-A2/A3 implementation. Do not claim animation acceptance until
+that record exists.

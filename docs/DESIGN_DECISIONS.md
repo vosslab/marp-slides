@@ -117,9 +117,9 @@ animation spelling while keeping open-ended questions out of a layout that would
 teaching structure.
 
 **Consequence.** The parser, linter, exporter, and native builder own its `@question` and `@answer`
-contract. The answer occupies an editable popup region; PowerPoint timing and first-advance playback
-remain blocked M5 acceptance questions. No generally available overlay slot follows from this bounded
-layout.
+contract. The answer occupies an editable popup region; OOXML timing and Impress first-advance
+playback remain M5 acceptance questions. No generally available overlay slot follows from this
+bounded layout.
 
 **Owner.** [djot_slide_extension_exploration.md](active_plans/decisions/djot_slide_extension_exploration.md)
 and a future approved language guide.
@@ -366,27 +366,30 @@ object-appear reveal intent and no explicit action directive.
 redundant answer action or turning a popup into a general overlay system.
 
 **Consequence.** The answer is placed in the fixed popup region and rejects explicit `<=` or `=>`
-actions. The intent is not an implemented PowerPoint timing tree: first-advance playback remains
-unverified until the attended M5 fidelity gate.
+actions. The intent becomes a bounded OOXML animation request only when M5 builds it; attended
+Impress playback remains the final visual acceptance evidence.
 
 **Owner.** `marp_lib/layouts.py`, `marp_lib/djot_parser.py`, and
 [wp_a1_animation_fidelity.md](active_plans/reports/wp_a1_animation_fidelity.md).
 
-### Animation work waits for observed PowerPoint evidence
+### Animation uses OOXML and Impress evidence
 
-**Decision.** Do not implement timing XML or claim first-advance behavior until PowerPoint-authored
-reference decks have supplied timing trees and an attended Impress conversion observation.
+**Decision.** Build the bounded `appear` and `fade`, `object` and `paragraphs`, `on-click` animation
+surface as OOXML in `marp_lib/pptx_animation.py`. LibreOffice Impress and ODP are the editing and
+playback contract; PPTX is the native-builder and interchange artifact.
 
-**Why.** PowerPoint is the playback oracle, and LibreOffice animation survival is an observed
-compatibility question rather than a property inferred from well-formed XML or a successful E2E
-conversion.
+**Why.** Python provides stronger practical PPTX construction support, while the instructor uses
+LibreOffice rather than Microsoft products. Official OOXML semantics plus observed LibreOffice
+importer/exporter and Impress behavior provide a stable, replaceable boundary without external deck
+templates.
 
-**Consequence.** M5 remains blocked because PowerPoint is absent on the available host. `blue
-overlay` stays recognized but explicitly deferred. The native-layout E2E proves editable object and
-PPTX -> ODP -> PDF flow, not timing playback or ODP animation survival.
+**Consequence.** M5 is in progress. `pptx_animation.py` is the sole timing-tree owner and builds
+OOXML directly; runtime XML templates and PowerPoint-authored decks are not contracts. Fast tests
+cover structural semantics. Headless PPTX-to-ODP/package inspection and PDF final state are one-time
+evidence; attended Impress playback is the only visual gate. `blue overlay` remains deferred.
 
-**Owner.** [wp_a1_animation_fidelity.md](active_plans/reports/wp_a1_animation_fidelity.md) and any
-future `marp_lib/pptx_animation.py` owner.
+**Owner.** `marp_lib/pptx_animation.py`, [PIPELINE.md](PIPELINE.md), and
+[wp_a1_animation_fidelity.md](active_plans/reports/wp_a1_animation_fidelity.md).
 
 ## Canonical source design
 

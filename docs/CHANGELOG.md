@@ -34,22 +34,26 @@
 - Exact full-slide rasterization remains outside the importer contract. Ambiguous geometry and
   source-table spans stop for review so a later native owner can extend the model deliberately.
 - `multiple-choice` answers allow one or two short flat paragraphs and carry implicit reveal intent;
-  M5 playback remains blocked pending observed PowerPoint evidence.
+  M5 is reopened around a bounded OOXML builder with LibreOffice Impress as the playback authority.
+- Corrected the animation architecture: PPTX is the Python-friendly native-builder and interchange
+  artifact, while LibreOffice Impress/ODP is the editing and playback contract. The builder will use
+  official OOXML and programmatic timing construction in `pptx_animation.py`, with no runtime XML
+  templates or Microsoft compatibility gate.
 
 ### Developer Tests and Notes
 
 - The one-time eight-deck legacy-corpus acceptance and reproducibility gates passed: 378 source
   slides yielded 336 visible and 42 hidden slides, 167 reachable assets, 72 bounded source regions,
   96 review slides, and 186 image occurrences. References resolved only to files with no missing or
-  extra assets, symlinks, or exact-full regions; a second private regeneration was byte-identical
-  across 183 Djot, report, and asset files.
+  extra assets, symlinks, or exact-full regions; an independent private regeneration reproduced the
+  Djot, report, and asset corpus.
 - One-time native acceptance passed: strict lint covered 8 decks, 336 visible slides, and 186 image
   occurrences; `build_slides.sh genetics`, all three native E2Es, and sequential `--format all`
   exports passed. Every deck retained matching PPTX, ODP, and PDF counts, editable text/direct images,
   and Lecture 02e retained its native table.
 - The permanent suite separately passed 1,632 tests and 545 hygiene checks; it remains fast,
-  deterministic, and offline. M5 animation evidence remains blocked because PowerPoint and reference
-  timing XML are absent; this entry does not claim animation acceptance.
+  deterministic, and offline. M5 animation acceptance remains unclaimed pending one-time headless
+  PPTX-to-ODP/package evidence, attended Impress playback, and ODP-derived PDF final-state evidence.
 
 ## 2026-09-06
 

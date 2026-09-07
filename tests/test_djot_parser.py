@@ -49,7 +49,6 @@ def test_parse_deck_retains_multiple_subtitles_in_one_global_region(tmp_path: pa
 @pytest.mark.parametrize(("directive", "effect", "sequence"), (
 	("=> appear", marp_lib.native_model.RevealEffect.APPEAR, marp_lib.native_model.RevealSequence.OBJECT),
 	("<= appear", marp_lib.native_model.RevealEffect.APPEAR, marp_lib.native_model.RevealSequence.OBJECT),
-	("=> cascade appear", marp_lib.native_model.RevealEffect.APPEAR, marp_lib.native_model.RevealSequence.PARAGRAPHS),
 ))
 def test_actions_attach_typed_reveals_to_neighboring_blocks(tmp_path: pathlib.Path, directive: str,
 		effect: marp_lib.native_model.RevealEffect, sequence: marp_lib.native_model.RevealSequence) -> None:
@@ -61,6 +60,14 @@ def test_actions_attach_typed_reveals_to_neighboring_blocks(tmp_path: pathlib.Pa
 	deck = parse_source(tmp_path, source)
 	reveal = deck.slides[0].cells[0].blocks[0].reveal
 	assert reveal is not None and (reveal.effect, reveal.sequence) == (effect, sequence)
+
+
+#============================================
+def test_prefix_cascade_attaches_to_a_list_block(tmp_path: pathlib.Path) -> None:
+	"""Cascade reveal intent stays on the editable list it advances through."""
+	deck = parse_source(tmp_path, "=== layout: one-panel\n@body\n=> cascade appear\n- Parent\n\n  - Child\n- Second\n")
+	reveal = deck.slides[0].cells[0].blocks[0].reveal
+	assert reveal is not None and reveal.sequence is marp_lib.native_model.RevealSequence.PARAGRAPHS
 
 
 #============================================
@@ -100,6 +107,9 @@ def test_multiple_choice_answer_rejects_outside_popup_contract(tmp_path: pathlib
 	("=== layout: one-panel\n@body\n<= appear\n", 3, "require a preceding block"),
 	("=== layout: one-panel\n@body\n=> appear\n=> appear\nText\n", 4, "require a block before"),
 	("=== layout: one-panel\n@body\n=> vanish\nText\n", 3, "unknown Djot action"),
+	("=== layout: one-panel\n@body\n=> cascade appear\nText\n", 3, "requires a following ListBlock"),
+	("=== layout: one-panel\n@body\nText\n<= cascade appear\n", 4, "requires a following ListBlock"),
+	("=== layout: one-panel\n@body\n- Item\n<= cascade appear\n", 4, "terminal cascade appear is not supported"),
 	("=== layout: unknown\n", 1, "unknown Djot layout"),
 	("=== layout: one-panel\n", 1, "missing required slot"),
 	("=== layout: one-panel\n@body\nText\n<= blue overlay\n", 4, "not yet supported"),

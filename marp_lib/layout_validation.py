@@ -201,6 +201,37 @@ def revealed_source(blocks: tuple[marp_lib.native_model.Block, ...]) -> marp_lib
 
 
 #============================================
+def invalid_cascade(blocks: tuple[marp_lib.native_model.Block, ...]) -> marp_lib.native_model.ListItem | marp_lib.native_model.Block | None:
+	"""Return a reveal whose paragraph sequence cannot map to editable text."""
+	for block in blocks:
+		if isinstance(block, (marp_lib.native_model.Heading, marp_lib.native_model.Paragraph,
+				marp_lib.native_model.Image, marp_lib.native_model.ListBlock, marp_lib.native_model.QuoteBlock)) and \
+				block.reveal is not None and (block.reveal.sequence is
+				marp_lib.native_model.RevealSequence.PARAGRAPHS and not isinstance(block,
+				marp_lib.native_model.ListBlock)):
+			return block
+		if isinstance(block, marp_lib.native_model.ListBlock):
+			for item in block.items:
+				revealed = invalid_cascade_items(item)
+				if revealed is not None:
+					return revealed
+	return None
+
+
+#============================================
+def invalid_cascade_items(item: marp_lib.native_model.ListItem) -> marp_lib.native_model.ListItem | None:
+	"""Return a terminal cascade from an item or any nested list descendant."""
+	if item.reveal is not None and item.reveal.sequence is marp_lib.native_model.RevealSequence.PARAGRAPHS:
+		return item
+	for child in item.children:
+		for nested_item in child.items:
+			revealed = invalid_cascade_items(nested_item)
+			if revealed is not None:
+				return revealed
+	return None
+
+
+#============================================
 def has_visible_items(items: list[tuple[tuple[marp_lib.native_model.Inline, ...], int, bool, bool, int]]) -> bool:
 	"""Return whether a text region has at least one visible authored item."""
 	return any(inline_text(inlines) for inlines, _, _, _, _ in items)
@@ -317,6 +348,12 @@ def validate_flow_region(blocks: tuple[marp_lib.native_model.Block, ...],
 #============================================
 def validate_layout_source(source: marp_lib.native_model.Slide, spec: object) -> None:
 	"""Prove every supported source block has a native destination in ``spec``."""
+	if spec.name != "multiple-choice":
+		for blocks in (source.blocks,) + tuple(cell.blocks for cell in source.cells):
+			cascade = invalid_cascade(blocks)
+			if cascade is not None:
+				raise source_error(cascade.location,
+					"paragraph cascade reveals require a prefix ListBlock and cannot be terminal")
 	for blocks, location in ((source.blocks, source.location),) + tuple(
 		(cell.blocks, cell.location) for cell in source.cells):
 		if any(isinstance(block, marp_lib.native_model.Table) for block in blocks):

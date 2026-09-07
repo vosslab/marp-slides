@@ -1,48 +1,31 @@
-# WP-A1 environment evidence
+# Animation environment evidence
 
-Recorded 2026-09-06 on the macOS build host.
+Recorded 2026-09-06 and corrected 2026-09-07.
 
-## Presentation applications
+## Historical host inventory
 
-The following host checks were run on 2026-09-06:
+The original bounded macOS check found no Microsoft PowerPoint application in `/Applications` or
+`/Users/vosslab/Applications`. LibreOffice reported version 26.2.5.2:
 
 ```text
-$ test ! -e '/Applications/Microsoft PowerPoint.app'; printf 'powerpoint_path_exit=%s\n' "$?"
-powerpoint_path_exit=0
-$ find /Applications /Users/vosslab/Applications -maxdepth 1 -type d -iname '*powerpoint*.app' -print; printf 'powerpoint_search_exit=%s\n' "$?"
-powerpoint_search_exit=0
-$ '/Applications/LibreOffice.app/Contents/MacOS/soffice' --version; printf 'soffice_version_exit=%s\n' "$?"
 LibreOffice 26.2.5.2 cd7284b4cbbfeb507e630c1aac019f4157393acb
-soffice_version_exit=0
 ```
 
-PowerPoint is therefore absent from the standard application path and the
-bounded application search; LibreOffice is installed at
-`/Applications/LibreOffice.app`.
+This is retained as host inventory only. It is not a project blocker: the instructor does not own
+Microsoft products, and PPTX is used because Python supports it more effectively than ODP.
 
-## Bridge availability
+## Current bridge evidence
 
-[`marp_lib/libreoffice.py`](../../marp_lib/libreoffice.py) provides the required
-conversion bridge through `convert_file(input_path, output_dir, output_format)`.
-It invokes the installed
-`soffice` binary in headless mode and supports both `odp` and `pdf` output.
+`marp_lib/libreoffice.py` provides the supported headless bridge for PPTX-to-ODP and ODP-to-PDF.
+A direct UNO Python experiment was killed after it did not provide a suitable local route. The
+headless bridge works and remains the programmatic conversion boundary.
 
-The bridge's preflight calls `ps -axo command=` to require LibreOffice to be
-closed. This host's sandbox denied that command:
+The bridge preflight calls `ps -axo command=` to require LibreOffice to be closed. The sandbox denied
+that command during the original observation, so attended or unsandboxed conversion evidence may
+need normal host approval.
 
-```text
-$ ps -axo command=; printf 'ps_exit=%s\n' "$?"
-/opt/homebrew/bin/bash: line 4: /bin/ps: Operation not permitted
-ps_exit=126
-```
+## Consequence
 
-Therefore, a conversion run needs normal unsandboxed command approval. No
-conversion was attempted because the required PowerPoint-authored input decks
-could not be made.
-
-## Consequence for WP-A1
-
-The two required source decks have not been fabricated with python-pptx or
-LibreOffice. Doing so would not establish the PowerPoint timing-tree oracle
-required by the plan. Consequently, no timing XML, ODP, or PDF artifact exists
-yet for this experiment.
+Animation evidence follows official OOXML plus actual LibreOffice importer/exporter and Impress
+behavior. No PowerPoint-authored decks, runtime XML templates, PowerPoint repair dialogs, or
+PowerPoint playback checks are required.

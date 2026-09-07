@@ -176,7 +176,7 @@ extensions after strict-Djot validation, but native math rendering is not implem
 
 `multiple-choice` requires exactly `@question` and `@answer`. The question includes a visible choice
 list; the answer is one or two short editable flat paragraphs with implicit object-appear intent.
-The intent does not yet establish a playable PowerPoint first advance. `<= blue overlay` is
+The intent does not yet establish a playable Impress first advance. `<= blue overlay` is
 recognized and rejected as not yet supported. Attributes, quotes, inline math, and other valid Djot
 constructs without an editable native mapping also fail source-located rather than disappearing.
 
@@ -190,7 +190,7 @@ constructs without an editable native mapping also fail source-located rather th
 | Strict Jotdown gate | Raw-Djot syntax before project slide semantics |
 | Legacy importer acceptance | Source conversion, full-corpus build, provenance, and visual comparisons |
 | Native all-format acceptance | Eight sequential editable PPTX, ODP, and PDF exports with matching counts |
-| Attended PowerPoint and Impress checks | Timing playback, repair behavior, and animation survival |
+| LibreOffice bridge and attended Impress checks | Timing package semantics, playback, and final PDF state |
 
 No one lane proves the complete product. Fast tests cannot prove LibreOffice conversion, and a
 rendered page cannot prove editability. The E2E build verifies the ordered PPTX-to-ODP-to-PDF path.
@@ -200,7 +200,7 @@ all-format output are likewise one-time acceptance evidence. The native gate pas
 lint for 8 decks/336 visible slides/186 image occurrences, `build_slides.sh genetics`, three native
 E2Es, and eight sequential matching PPTX/ODP/PDF exports with editable text/direct images and the
 Lecture 02e native table retained. Permanent pytest remains offline, fast, and deterministic.
-PowerPoint timing and ODP animation survival require attended evidence; see
+OOXML timing and LibreOffice/Impress behavior require one-time and attended evidence; see
 [wp_a1_animation_fidelity.md](active_plans/reports/wp_a1_animation_fidelity.md).
 
 ## Durable source boundary

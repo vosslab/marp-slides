@@ -19,7 +19,7 @@ math is not implemented yet. `<= blue overlay` is recognized and reports "not ye
 
 `multiple-choice` requires exactly `@question` and `@answer`. The question contains a visible choice
 list; the answer is one or two short flat paragraphs. The parser records implicit answer reveal
-intent, but PowerPoint timing, first advance, and ODP animation survival are not implemented or
+intent, but OOXML timing, Impress first advance, and ODP animation survival are not implemented or
 verified.
 
 | Deck | Source | Visible | Hidden | Assets | Regions | Reviews |
@@ -45,8 +45,8 @@ decks: 378 source slides, 336 visible slides, 42 hidden slides, 167 reachable as
 source regions, 96 review slides, and 186 image occurrences. Every Djot image reference resolved to
 a file; there were no missing or extra assets, symlinks, or exact-full source regions.
 
-A second private regeneration was byte-identical across all 183 generated Djot, import-report, and
-asset files. The one-time native acceptance also passed: strict lint covered 8 decks, 336 visible
+A second private regeneration independently reproduced the Djot, import-report, and asset corpus.
+The one-time native acceptance also passed: strict lint covered 8 decks, 336 visible
 slides, and 186 image occurrences; `build_slides.sh genetics` passed; and all three native E2Es
 passed. Sequential `--format all` exports for every deck retained matching PPTX, ODP, and PDF page
 counts (31, 23, 43, 49, 59, 43, 62, and 26), editable text and direct images, and the native table
@@ -76,6 +76,6 @@ decisions before this corpus can claim to pass every applicable Djot tool. See t
 for that governing requirement and the upstream Djot and Jotdown sources.
 
 Native acceptance is one-time evidence, not a permanent test. The permanent suite remains separately
-offline, fast, and deterministic. The attended PowerPoint and Impress animation checks remain
+offline, fast, and deterministic. The one-time LibreOffice bridge and attended Impress animation checks remain
 separate in
 [wp_a1_animation_fidelity.md](../../docs/active_plans/reports/wp_a1_animation_fidelity.md).

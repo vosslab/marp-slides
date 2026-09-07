@@ -17,6 +17,7 @@ from marp_lib import layouts
 from marp_lib import libreoffice
 from marp_lib import djot_parser
 from marp_lib import marp_parser
+from marp_lib import pptx_animation
 import marp_lib.native_model
 
 
@@ -116,13 +117,15 @@ def render_native_pptx(deck: marp_lib.native_model.Deck, output_path: pathlib.Pa
 	blank_layout = presentation.slide_layouts[6]
 	for number, source in enumerate(deck.slides, start=1):
 		slide = presentation.slides.add_slide(blank_layout)
-		layouts.render_layout(slide, source, deck)
+		writer = pptx_animation.PptxAnimationWriter(slide)
+		layouts.render_layout(slide, source, deck, writer)
 		if source.paginate:
 			text_frame = layouts.add_textbox(slide, 1190, 762, 62, 22)
 			text_frame.paragraphs[0].alignment = PP_ALIGN.RIGHT
 			layouts.write_run(text_frame.paragraphs[0].add_run(), str(number), 18, layouts.MUTED)
 		if source.notes:
 			slide.notes_slide.notes_text_frame.text = "\n\n".join(source.notes)
+		writer.finalize()
 	output_path.parent.mkdir(parents=True, exist_ok=True)
 	presentation.save(output_path)
 	return output_path

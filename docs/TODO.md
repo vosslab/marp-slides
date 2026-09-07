@@ -13,7 +13,7 @@ the source-to-native boundary is [PIPELINE.md](PIPELINE.md).
 - [x] Rename the layout vocabulary to canonical short names without aliases.
 - [x] Add `multiple-choice` with required `@question` and `@answer` slots.
 - [x] Generate and one-time accept the eight-deck Djot corpus on short layout names, including
-  strict validation, bounded-region review, asset integrity, and byte-identical private regeneration.
+  strict validation, bounded-region review, asset integrity, and independent private regeneration.
 - [x] Keep `<= blue overlay` recognized and source-located as deferred work.
 - [x] Run the native-layout Djot E2E through editable PPTX, ODP, and PDF.
 
@@ -22,12 +22,10 @@ the source-to-native boundary is [PIPELINE.md](PIPELINE.md).
 - [x] Complete one-time native acceptance: strict lint, `build_slides.sh genetics`, all three native
   E2Es, and eight sequential matching PPTX/ODP/PDF exports with editable text/direct images and the
   Lecture 02e native table.
-- [ ] Run the attended PowerPoint fidelity experiment described in
+- [ ] Build the bounded OOXML animation model described in
   [wp_a1_animation_fidelity.md](active_plans/reports/wp_a1_animation_fidelity.md).
-- [ ] Capture PowerPoint timing XML only from PowerPoint-authored reference decks.
-- [ ] Observe and record ODP animation survival in Impress and final-state PDF behavior.
-- [ ] Implement animation timing only after the fidelity gate provides that evidence or an observed
-  failure selects the documented fallback.
+- [ ] Record one-time headless PPTX-to-ODP/package semantics and ODP-derived PDF final-state evidence.
+- [ ] Attend and record Impress playback for object and top-level-list reveals.
 
 ## Compatibility and future language work
 
