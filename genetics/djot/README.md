@@ -19,8 +19,8 @@ math is not implemented yet. `<= blue overlay` is recognized and reports "not ye
 
 `multiple-choice` requires exactly `@question` and `@answer`. The question contains a visible choice
 list; the answer is one or two short flat paragraphs. The parser records implicit answer reveal
-intent, but OOXML timing, Impress first advance, and ODP animation survival are not implemented or
-verified.
+intent. The bounded OOXML builder and one-time LibreOffice bridge preserve it through editable ODP
+and the PDF final state; attended Impress first-advance playback remains unobserved.
 
 | Deck | Source | Visible | Hidden | Assets | Regions | Reviews |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -76,6 +76,6 @@ decisions before this corpus can claim to pass every applicable Djot tool. See t
 for that governing requirement and the upstream Djot and Jotdown sources.
 
 Native acceptance is one-time evidence, not a permanent test. The permanent suite remains separately
-offline, fast, and deterministic. The one-time LibreOffice bridge and attended Impress animation checks remain
-separate in
+offline, fast, and deterministic. M5 structural tests are permanent; its headless LibreOffice
+bridge/PDF evidence passed once, while attended Impress click playback remains open in
 [wp_a1_animation_fidelity.md](../../docs/active_plans/reports/wp_a1_animation_fidelity.md).

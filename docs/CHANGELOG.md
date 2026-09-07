@@ -5,6 +5,9 @@
 - Added the geometry-first legacy-import architecture: semantic ODP/PPTX normalization now produces
   `LegacySlidePlan` records for atomic editable components, true source tables, and bounded coupled
   spatial regions.
+- Added the bounded native OOXML animation backend: object APPEAR/FADE and top-level outline
+  paragraph APPEAR reveals are emitted through one programmatic timing-tree owner without widening
+  Djot's authoring syntax.
 
 ### Behavior or Interface Changes
 
@@ -28,6 +31,13 @@
 
 - Refreshed install and usage guidance for Python 3.12 environment activation, Homebrew tools,
   strict Jotdown acceptance, bounded Poppler source-region imports, and native export workflows.
+- Made missing animation-writer reveal intent fail loudly and corrected source/native-renderability
+  documentation.
+
+### Removals and Deprecations
+
+- Removed dead importer wrappers, enums, and re-exports instead of retaining compatibility facades.
+- Removed duplicate and brittle tests that did not meet the permanent pytest contract.
 
 ### Decisions and Failures
 
@@ -39,6 +49,10 @@
   artifact, while LibreOffice Impress/ODP is the editing and playback contract. The builder will use
   official OOXML and programmatic timing construction in `pptx_animation.py`, with no runtime XML
   templates or Microsoft compatibility gate.
+- M5 implementation and its permanent structural/parser tests are complete. One-time LibreOffice
+  bridge and ODP-derived PDF checks passed. The sole remaining M5/M7 evidence is attended Impress
+  click playback; macOS denied Screen Recording and Accessibility before slideshow control, so no
+  playback conclusion is claimed.
 
 ### Developer Tests and Notes
 
@@ -48,12 +62,15 @@
   extra assets, symlinks, or exact-full regions; an independent private regeneration reproduced the
   Djot, report, and asset corpus.
 - One-time native acceptance passed: strict lint covered 8 decks, 336 visible slides, and 186 image
-  occurrences; `build_slides.sh genetics`, all three native E2Es, and sequential `--format all`
+  occurrences; `build_slides.sh genetics`, both explicit native E2Es, and sequential `--format all`
   exports passed. Every deck retained matching PPTX, ODP, and PDF counts, editable text/direct images,
   and Lecture 02e retained its native table.
-- The permanent suite separately passed 1,632 tests and 545 hygiene checks; it remains fast,
-  deterministic, and offline. M5 animation acceptance remains unclaimed pending one-time headless
-  PPTX-to-ODP/package evidence, attended Impress playback, and ODP-derived PDF final-state evidence.
+- The permanence-audited suite contains 1,914 tests, including all hygiene checks; it remains fast,
+  deterministic, and offline. The two native PPTX-to-ODP-to-PDF E2Es also passed as one-time
+  evidence. M5 animation acceptance remains unclaimed only pending attended Impress playback.
+- The permanence audit removed static CSS, tunable geometry and catalog assertions, redundant broad
+  importer and topology proofs, and the duplicate native E2E. Focused behavior and safety tests
+  remain, alongside two explicit native-chain runners for one-time acceptance.
 
 ## 2026-09-06
 
@@ -333,7 +350,7 @@
 ### Developer Tests and Notes
 
 - Added the native semantic E2E gate. Run
-  `source source_me.sh && python3 tests/e2e/e2e_native_odp_semantics.py` from an ordinary macOS user
+  `source source_me.sh && python3 tests/e2e/e2e_all_native_layouts.py` from an ordinary macOS user
   session. It inspects native PPTX and editable ODP text, lists, links, notes, component images,
   slide count, and full-slide-image absence.
 - Hardened the ODP E2E gate with `defusedxml`, numeric page-relative full-slide-image detection,

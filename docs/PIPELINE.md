@@ -138,10 +138,10 @@ images; use `one-panel` for one image. Layout validation reports unsupported or 
 rather than emitting a raster fallback.
 
 Ordinary panel layouts accept zero or one global H1. Each ordinary cell may also carry one local H2
-followed by native text, images, or one source-derived table. Before any shape is created, the
-layout preflight gives a local heading its required height and fits body text from 28 down to 14 CSS
-px. A title, heading, table, or body that cannot fit reports its source location before a partial
-slide can exist.
+followed by native text, images, or one source-derived table. A validated table renders only in a
+layout region with a native table destination. Before any shape is created, the layout preflight
+gives a local heading its required height and fits body text from 28 down to 14 CSS px. A title,
+heading, table, or body that cannot fit reports its source location before a partial slide can exist.
 
 An `_class` directive may also contain one bounded title-size modifier: `font-size-64`,
 `font-size-80`, `font-size-96`, `font-size-120`, `font-size-160`, or `font-size-200`. The parser
@@ -171,14 +171,17 @@ subtitles where their layout permits them, `<= appear`, `=> appear`, and `=> cas
 Several H2 lines on a title slide remain one subtitle region; they are not separate title objects.
 Pre-element one-line Djot attributes attach to the next element. `![alt](path)` is a component image
 only when it is a complete paragraph; mixed text-and-image paragraphs receive a source-located
-unsupported-subset diagnostic. `$inline$` and `$$display$$` are intentional repository math
-extensions after strict-Djot validation, but native math rendering is not implemented yet.
+unsupported-subset diagnostic. Inline verbatim and validated tables with a native table destination
+render as editable objects. Fenced code, display math, quote blocks, and inline math remain
+source-located native-export rejections until their native owners exist; `$inline$` and
+`$$display$$` remain reserved mathematics forms after strict-Djot validation.
 
 `multiple-choice` requires exactly `@question` and `@answer`. The question includes a visible choice
 list; the answer is one or two short editable flat paragraphs with implicit object-appear intent.
-The intent does not yet establish a playable Impress first advance. `<= blue overlay` is
-recognized and rejected as not yet supported. Attributes, quotes, inline math, and other valid Djot
-constructs without an editable native mapping also fail source-located rather than disappearing.
+The native builder and headless LibreOffice bridge preserve that timing intent, but attended Impress
+first-advance observation remains open. `<= blue overlay` is recognized and rejected as not yet
+supported. Attributes and other valid Djot constructs without an editable native mapping also fail
+source-located rather than disappearing.
 
 ## Verification lanes
 
@@ -190,18 +193,21 @@ constructs without an editable native mapping also fail source-located rather th
 | Strict Jotdown gate | Raw-Djot syntax before project slide semantics |
 | Legacy importer acceptance | Source conversion, full-corpus build, provenance, and visual comparisons |
 | Native all-format acceptance | Eight sequential editable PPTX, ODP, and PDF exports with matching counts |
-| LibreOffice bridge and attended Impress checks | Timing package semantics, playback, and final PDF state |
+| M5 permanent structural tests | Bounded OOXML timing structure and parser attachment rules |
+| LibreOffice bridge and PDF | One-time timing package semantics, editable ODP objects, and final PDF state |
+| Attended Impress check | Click-by-click reveal playback |
 
 No one lane proves the complete product. Fast tests cannot prove LibreOffice conversion, and a
 rendered page cannot prove editability. The E2E build verifies the ordered PPTX-to-ODP-to-PDF path.
 The strict Jotdown gate is a one-time/source-acceptance check, not a replacement for permanent
 offline parser tests. Importer conversion, a full-corpus build, visual comparisons, and native
 all-format output are likewise one-time acceptance evidence. The native gate passed through strict
-lint for 8 decks/336 visible slides/186 image occurrences, `build_slides.sh genetics`, three native
+lint for 8 decks/336 visible slides/186 image occurrences, `build_slides.sh genetics`, two explicit native
 E2Es, and eight sequential matching PPTX/ODP/PDF exports with editable text/direct images and the
 Lecture 02e native table retained. Permanent pytest remains offline, fast, and deterministic.
-OOXML timing and LibreOffice/Impress behavior require one-time and attended evidence; see
-[wp_a1_animation_fidelity.md](active_plans/reports/wp_a1_animation_fidelity.md).
+M5 permanent tests passed separately from its one-time bridge/PDF evidence. The bridge/PDF evidence
+passed; attended Impress playback remains open because macOS permissions blocked slideshow control.
+See [wp_a1_animation_fidelity.md](active_plans/reports/wp_a1_animation_fidelity.md).
 
 ## Durable source boundary
 

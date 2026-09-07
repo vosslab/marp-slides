@@ -695,9 +695,9 @@ def render_cell(slide: object, deck: marp_lib.native_model.Deck, cell: marp_lib.
 		text_blocks = tuple(block for block in cell.blocks if isinstance(block,
 			(marp_lib.native_model.Paragraph, marp_lib.native_model.ListBlock)))
 		item_sets = [marp_lib.editable_text.flow_items(block) for block in text_blocks]
-		size = fit_body_size(item_sets if any(block.reveal is not None for block in text_blocks) else [items],
+		size = fit_body_size(item_sets if any(marp_lib.editable_text.has_reveal(block) for block in text_blocks) else [items],
 			body_width, body_height, preferred_body_size, text_blocks[0].location, context)
-		if any(block.reveal is not None for block in text_blocks):
+		if any(marp_lib.editable_text.has_reveal(block) for block in text_blocks):
 			y = body_top
 			for block, block_items in zip(text_blocks, item_sets):
 				block_height = estimate_items_height(block_items, size, body_width)
@@ -729,11 +729,27 @@ def build_blank(slide: object, source: object, deck: object, spec: LayoutSpec) -
 def build_title_slide(slide: object, source: marp_lib.native_model.Slide, deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
 	"""Render centered title and optional subtitle."""
 	headings, _, _, _ = body_parts(source.blocks)
-	frame = add_textbox(slide, 110, 180, 1060, 390, MSO_ANCHOR.MIDDLE)
 	title_size_value = title_size(source, 60)
 	subtitle_height = max(len(headings) - 1, 0) * 31 * 1.2
 	require_title_capacity(source, headings[0], title_size_value, 1060, 390 - subtitle_height,
 		source.layout_class)
+	if any(heading.reveal is not None for heading in headings):
+		title_heights = [wrapped_line_count(heading.inlines, title_size_value if index == 0 else 31, 1060) *
+			(title_size_value if index == 0 else 31) * 1.12 for index, heading in enumerate(headings)]
+		gutter = 18.6666666667
+		top = 180 + (390 - sum(title_heights) - gutter * (len(headings) - 1)) / 2
+		for index, (heading, height) in enumerate(zip(headings, title_heights)):
+			frame = add_textbox(slide, 110, top, 1060, height, MSO_ANCHOR.MIDDLE)
+			paragraph = frame.paragraphs[0]
+			paragraph.alignment = PP_ALIGN.CENTER
+			add_inline_runs(paragraph, heading.inlines, title_size_value if index == 0 else 31,
+				FOREGROUND if index == 0 else MUTED)
+			for run in paragraph.runs:
+				run.font.bold = index == 0
+			marp_lib.pptx_animation.register_text_reveal(slide, frame, heading)
+			top += height + gutter
+		return
+	frame = add_textbox(slide, 110, 180, 1060, 390, MSO_ANCHOR.MIDDLE)
 	for index, heading in enumerate(headings):
 		paragraph = frame.paragraphs[0] if index == 0 else frame.add_paragraph()
 		paragraph.alignment = PP_ALIGN.CENTER
@@ -805,8 +821,6 @@ def content_rectangle(slide: object, source: marp_lib.native_model.Slide,
 	if headings:
 		write_planned_title(slide, headings[0], plan)
 	return plan.content_rectangle
-
-
 #============================================
 def build_standard_cells(slide: object, source: marp_lib.native_model.Slide,
 		deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
@@ -836,24 +850,18 @@ def build_title_four_content(slide: object, source: marp_lib.native_model.Slide,
 def build_title_six_content(slide: object, source: marp_lib.native_model.Slide, deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
 	"""Render a three-by-two grid."""
 	build_standard_cells(slide, source, deck, spec)
-
-
 #============================================
 def build_vertical_title_text_chart(slide: object, source: marp_lib.native_model.Slide,
 		deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
 	"""Render two peer cells beside the fixed-width vertical title strip."""
 	content = content_rectangle(slide, source, spec)
 	render_cells(slide, source, deck, spec, cell_rectangles(spec, content))
-
-
 #============================================
 def build_title_two_vertical_text_clipart(slide: object, source: marp_lib.native_model.Slide,
 		deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
 	"""Render two stacked cells beside one vertical native pane."""
 	content = content_rectangle(slide, source, spec)
 	render_cells(slide, source, deck, spec, cell_rectangles(spec, content))
-
-
 #============================================
 def build_multiple_choice(slide: object, source: marp_lib.native_model.Slide,
 		deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
@@ -889,8 +897,6 @@ def build_multiple_choice(slide: object, source: marp_lib.native_model.Slide,
 			run.font.color.rgb = WHITE
 			run.font.bold = True
 	marp_lib.pptx_animation.register_text_reveal(slide, frame, answer.blocks[0])
-
-
 #============================================
 def build_gallery(slide: object, source: marp_lib.native_model.Slide, deck: marp_lib.native_model.Deck, spec: LayoutSpec) -> None:
 	"""Render a row of independently contained component images."""
@@ -906,8 +912,6 @@ def build_gallery(slide: object, source: marp_lib.native_model.Slide, deck: marp
 		picture = add_picture(slide, resolve_image_path(deck, image), image, LEFT + index * (width + 18),
 			top, width, CONTENT_BOTTOM - top)
 		marp_lib.pptx_animation.register_reveal(slide, picture, image.reveal)
-
-
 #============================================
 def preflight_layout_capacity(source: marp_lib.native_model.Slide, spec: LayoutSpec,
 		deck: marp_lib.native_model.Deck) -> None:
@@ -939,8 +943,6 @@ def preflight_layout_capacity(source: marp_lib.native_model.Slide, spec: LayoutS
 			if tables:
 				_, _, width, height = body_rectangle
 				fit_table_size(tables[0], width, height, f"{spec.name} {slot_name}")
-
-
 LAYOUTS: dict[str, LayoutSpec] = {
 	"blank": LayoutSpec("blank", 0, False, False, frozenset(), build_blank),
 	"title-only": LayoutSpec("title-only", 0, False, False, frozenset(), build_title_only,
@@ -978,8 +980,6 @@ LAYOUTS: dict[str, LayoutSpec] = {
 	"gallery": LayoutSpec("gallery", 1, False, False, frozenset(), build_gallery,
 		slot_names=("gallery",), allows_title=True),
 }
-
-
 #============================================
 def render_layout(slide: object, source: marp_lib.native_model.Slide, deck: marp_lib.native_model.Deck,
 		writer: marp_lib.pptx_animation.PptxAnimationWriter | None = None) -> None:

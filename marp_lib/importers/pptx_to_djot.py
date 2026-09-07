@@ -1,31 +1,31 @@
-"""Convert a trusted PPTX into experimental extended-Djot slide source."""
+"""Convert a trusted PPTX with the bounded native PPTX-to-Djot importer."""
 
 # Standard Library
-import os
-import re
-import json
-import pathlib
 import argparse
-import hashlib
-import tempfile
 import dataclasses
+import hashlib
+import json
+import math
+import os
+import pathlib
+import re
 import shutil
 import stat
-import math
+import tempfile
 
 # PIP3 modules
 from pptx import Presentation
 from pptx.enum.shapes import MSO_SHAPE_TYPE
 from pptx.oxml.ns import qn
 
-# local repo modules
-import marp_lib.importers.pptx_to_marp as pptx_common
-import marp_lib.importers.legacy_slide_plan as legacy_slide_plan
-import marp_lib.importers.legacy_geometry as legacy_geometry
-import marp_lib.importers.source_region_render as source_region_render
-import marp_lib.importers.legacy_djot_emitter as legacy_djot_emitter
-import marp_lib.djot_parser
+# Local modules
 import marp_lib.djot_lint as djot_lint
+import marp_lib.djot_parser
+import marp_lib.importers.legacy_geometry as legacy_geometry
+import marp_lib.importers.legacy_djot_emitter as legacy_djot_emitter
+import marp_lib.importers.legacy_slide_plan as legacy_slide_plan
+import marp_lib.importers.pptx_to_marp as pptx_common
+import marp_lib.importers.source_region_render as source_region_render
 
 
 WMF_HEADERS = (b"\xd7\xcd\xc6\x9a", b"\x01\x00\x09\x00\x00\x03", b"\x02\x00\x09\x00\x00\x03")
@@ -51,11 +51,6 @@ class ConversionSummary:
 	review_slides: int
 	output_path: pathlib.Path
 	report_path: pathlib.Path
-
-
-PlannedSlide = legacy_djot_emitter.PlannedSlide
-render_planned_slide = legacy_djot_emitter.render_planned_slide
-render_planned_djot = legacy_djot_emitter.render_planned_djot
 
 
 #============================================
@@ -207,7 +202,7 @@ def source_text_inventory(
 	has_positive_fill, has_positive_line = shape_style_evidence(shape)
 	placeholder_role = shape_placeholder_role(shape)
 	if getattr(shape, "has_table", False):
-		bounds = legacy_slide_plan.normalized_bounds(
+		bounds = legacy_geometry.normalized_bounds(
 			shape.left, shape.top, shape.width, shape.height, slide_width, slide_height,
 		)
 		row_count = len(shape.table.rows)
@@ -258,7 +253,7 @@ def source_text_inventory(
 			paragraphs.append((paragraph.level, text))
 	if not paragraphs:
 		return regions
-	bounds = legacy_slide_plan.normalized_bounds(
+	bounds = legacy_geometry.normalized_bounds(
 		shape.left,
 		shape.top,
 		shape.width,
@@ -350,7 +345,7 @@ def source_visual_inventory(
 			return regions
 		bounds = line.footprint
 	else:
-		bounds = legacy_slide_plan.normalized_bounds(
+		bounds = legacy_geometry.normalized_bounds(
 			shape.left, shape.top, shape.width, shape.height, slide_width, slide_height,
 		)
 	regions.append(
@@ -447,13 +442,13 @@ def plan_source_slide(
 	"""Expose a renderer-neutral import plan for one validated PPTX slide."""
 	text_regions = source_text_regions(slide, slide_width, slide_height)
 	visual_regions = source_visual_regions(slide, slide_width, slide_height)
-	picture_sources: dict[legacy_slide_plan.NormalizedBounds, list[legacy_slide_plan.SourceImageRegion]] = {}
+	picture_sources: dict[legacy_geometry.NormalizedBounds, list[legacy_slide_plan.SourceImageRegion]] = {}
 	for region in visual_regions:
 		if region.source_kind == "picture":
 			picture_sources.setdefault(region.bounds, []).append(region)
 	extracted_images: list[legacy_slide_plan.SourceImageRegion] = []
 	for image in images:
-		bounds = legacy_slide_plan.normalized_bounds(
+		bounds = legacy_geometry.normalized_bounds(
 			image.left, image.top, image.width, image.height, slide_width, slide_height,
 		)
 		sources = picture_sources.get(bounds, [])
@@ -493,7 +488,7 @@ def plan_text_blocks(
 		if region is not plan.title.region
 	]
 	for block in legacy_blocks:
-		# Tables are not text shapes and remain editable legacy text until C2 maps them.
+		# Unmatched table blocks remain editable until native-table planning selects them.
 		matches_region = any(
 			block.lines == region_block.lines
 			and abs(block.left - region_block.left) <= 1
@@ -523,10 +518,10 @@ def extract_slides(
 	assets_dir: pathlib.Path,
 	djot_root: pathlib.PurePosixPath,
 	expected_hidden: set[int] | None,
-) -> tuple[list[PlannedSlide], int]:
+) -> tuple[list[legacy_djot_emitter.PlannedSlide], int]:
 	"""Extract slides while preserving source order and authoritative visibility."""
 	known_images: dict[str, str] = {}
-	slides: list[PlannedSlide] = []
+	slides: list[legacy_djot_emitter.PlannedSlide] = []
 	visible_page_index = 0
 	for source_index, slide in enumerate(presentation.slides, start=1):
 		pptx_hidden = slide.element.get("show") == "0"
@@ -534,7 +529,7 @@ def extract_slides(
 		if expected_hidden is not None and pptx_hidden != hidden:
 			raise RuntimeError(f"ODP and PPTX visibility disagree on slide {source_index}")
 		if hidden:
-			slides.append(PlannedSlide(
+			slides.append(legacy_djot_emitter.PlannedSlide(
 			pptx_common.SlideData(source_index, True, (), (), (), (), ()), None,
 		))
 			continue
@@ -583,7 +578,7 @@ def extract_slides(
 				notes=slide_notes(slide),
 				review_reasons=tuple(sorted(set(review_reasons))),
 		)
-		slides.append(PlannedSlide(
+		slides.append(legacy_djot_emitter.PlannedSlide(
 			data, plan, regions, source_visual_regions(
 				slide, presentation.slide_width, presentation.slide_height,
 			), visible_page_index,
@@ -605,12 +600,6 @@ def body_lines(slide: pptx_common.SlideData) -> list[str]:
 
 
 #============================================
-def image_djot(image: pptx_common.ImageAsset) -> str:
-	"""Render one native Djot image, reserving Marp import syntax exactly."""
-	return legacy_djot_emitter.image_djot(image)
-
-
-#============================================
 def titled_slide(slide: pptx_common.SlideData) -> tuple[list[str], list[str]]:
 	"""Return source title lines and remaining body content."""
 	texts = body_lines(slide)
@@ -628,7 +617,7 @@ def render_slide(
 	slide_width: int,
 	is_first: bool,
 ) -> tuple[list[str], str]:
-	"""Map one semantic slide to experimental layout and named Djot slots."""
+	"""Map one semantic slide to supported native layouts and Djot slots."""
 	heading_lines, texts = titled_slide(slide)
 	images = list(slide.images)
 	if not images:
@@ -640,7 +629,7 @@ def render_slide(
 	if len(images) == 1 and not texts:
 		return [
 			"=== layout: one-panel", "", *heading_lines, "", "@body", "",
-			image_djot(images[0]),
+			legacy_djot_emitter.image_djot(images[0]),
 		], "one-panel"
 	if len(images) == 1:
 		image = images[0]
@@ -648,14 +637,14 @@ def render_slide(
 		if center >= 0.55:
 			return [
 				"=== layout: two-panels", "", *heading_lines, "", "@left", "", *texts,
-				"", "@right", "", image_djot(image),
+				"", "@right", "", legacy_djot_emitter.image_djot(image),
 			], "two-panels"
 		if center <= 0.45:
 			return [
 				"=== layout: two-panels", "", *heading_lines, "", "@left", "",
-				image_djot(image), "", "@right", "", *texts,
+				legacy_djot_emitter.image_djot(image), "", "@right", "", *texts,
 			], "two-panels"
-	image_lines = [image_djot(image) for image in images]
+	image_lines = [legacy_djot_emitter.image_djot(image) for image in images]
 	if not texts:
 		return ["=== layout: gallery", "", *heading_lines, "", "@gallery", "", *image_lines], "gallery"
 	return [
@@ -805,7 +794,7 @@ def convert_pptx(
 	source_name: str | None = None,
 	render_source_path: pathlib.Path | None = None,
 ) -> ConversionSummary:
-	"""Convert one trusted PPTX into new experimental extended-Djot source."""
+	"""Convert one trusted PPTX into supported bounded Djot source."""
 	input_path = input_path.resolve()
 	output_path = output_path.resolve()
 	# ASVS 1.5.2: validate the existing OOXML boundary before python-pptx reads it.
@@ -826,7 +815,7 @@ def convert_pptx(
 			raise ValueError("presentation contains no visible slides")
 		visible_indexes = tuple(slide.data.source_index for slide in visible_slides)
 		requests: list[source_region_render.SourceRegionRequest] = []
-		request_details: dict[str, tuple[PlannedSlide, str]] = {}
+		request_details: dict[str, tuple[legacy_djot_emitter.PlannedSlide, str]] = {}
 		for planned in visible_slides:
 			regions = [] if planned.plan is None else [planned.plan.content_region]
 			if planned.plan is not None and planned.plan.multiple_choice is not None:
@@ -867,7 +856,7 @@ def convert_pptx(
 						content.asset_key: assets.get((planned.data.source_index, content.asset_key), ""),
 					},
 				)
-		djot, records = render_planned_djot(slides, assets)
+		djot, records = legacy_djot_emitter.render_planned_djot(slides, assets)
 		for record, planned in zip(records, visible_slides, strict=True):
 			content = planned.plan.content_region if planned.plan else None
 			if planned.plan is not None:

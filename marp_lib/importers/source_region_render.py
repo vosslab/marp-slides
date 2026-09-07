@@ -346,15 +346,6 @@ def publish_staged_crops(crops: tuple[StagedCrop, ...], assets_dir: pathlib.Path
 
 
 #============================================
-def publish_crop(image: Image.Image, bounds: NormalizedRegion, staging_dir: pathlib.Path,
-		assets_dir: pathlib.Path) -> tuple[str, str, int, int, tuple[int, int, int, int]]:
-	"""Publish one crop through the same staged batch boundary used by the renderer."""
-	crop = stage_crop(image, bounds, staging_dir, 0)
-	publish_staged_crops((crop,), assets_dir)
-	return crop.asset_name, crop.digest, crop.width, crop.height, crop.pixel_bounds
-
-
-#============================================
 def render_presentation_pages(source_path: pathlib.Path, visible_slide_count: int,
 		staging_dir: pathlib.Path) -> list[pathlib.Path]:
 	"""Convert and rasterize one validated presentation once inside private staging."""

@@ -8,6 +8,10 @@ import marp_lib.native_model
 import marp_lib.editable_text
 
 
+_APPEAR_DURATION_MS = "1"
+_FADE_DURATION_MS = "1000"
+
+
 class AnimationError(ValueError):
 	"""Report an unsupported or unsafe timing-tree operation."""
 
@@ -81,10 +85,10 @@ class PptxAnimationWriter:
 
 	#============================================
 	def behavior(self, shape: object, paragraph_range: tuple[int, int] | None,
-			visibility: bool = False) -> object:
+			duration_ms: str, visibility: bool = False) -> object:
 		"""Build the common behavior target for a click effect."""
 		behavior = self.element("p:cBhvr", override="childStyle")
-		behavior.append(self.element("p:cTn", id=self.timing_id(), dur="1", fill="hold"))
+		behavior.append(self.element("p:cTn", id=self.timing_id(), dur=duration_ms, fill="hold"))
 		behavior.append(self.target(shape, paragraph_range))
 		if visibility:
 			attributes = self.element("p:attrNameLst")
@@ -105,13 +109,13 @@ class PptxAnimationWriter:
 		children = self.element("p:childTnLst")
 		if reveal.effect is marp_lib.native_model.RevealEffect.APPEAR:
 			effect = self.element("p:set")
-			effect.append(self.behavior(shape, paragraph_range, True))
+			effect.append(self.behavior(shape, paragraph_range, _APPEAR_DURATION_MS, True))
 			to = self.element("p:to")
 			to.append(self.element("p:strVal", val="visible"))
 			effect.append(to)
 		elif reveal.effect is marp_lib.native_model.RevealEffect.FADE:
 			effect = self.element("p:animEffect", transition="in", filter="fade")
-			effect.append(self.behavior(shape, paragraph_range))
+			effect.append(self.behavior(shape, paragraph_range, _FADE_DURATION_MS))
 		else:
 			raise AnimationError(f"unsupported native reveal effect: {reveal.effect.value}")
 		children.append(effect)
@@ -129,6 +133,7 @@ class PptxAnimationWriter:
 	#============================================
 	def finalize(self) -> None:
 		"""Write exactly one source-ordered timing tree after all layout shapes exist."""
+		self.ensure_no_timing()
 		if not self.registrations:
 			return
 		timing = self.element("p:timing")
@@ -159,13 +164,15 @@ def register_reveal(slide: object, shape: object, reveal: marp_lib.native_model.
 		paragraph_ranges: tuple[marp_lib.editable_text.ParagraphRevealRange, ...] = ()) -> None:
 	"""Transfer typed source intent to the slide's native-export timing writer."""
 	writer = getattr(slide, "_marp_animation_writer", None)
-	if writer is None or reveal is None:
+	if writer is None:
+		if reveal is not None or paragraph_ranges:
+			raise AnimationError("native reveal registration requires an animation writer")
 		return
 	if paragraph_ranges:
 		for paragraph_range in paragraph_ranges:
 			writer.register(shape, paragraph_range.reveal,
 				(paragraph_range.first_index, paragraph_range.last_index))
-	if reveal.sequence is marp_lib.native_model.RevealSequence.OBJECT:
+	if reveal is not None and reveal.sequence is marp_lib.native_model.RevealSequence.OBJECT:
 		writer.register(shape, reveal)
 
 

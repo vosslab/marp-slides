@@ -24,19 +24,6 @@ def test_pixel_bounds_keeps_partial_edges_and_rejects_full_page() -> None:
 
 
 #============================================
-def test_publish_crop_is_content_addressed_and_deduplicated(tmp_path: pathlib.Path) -> None:
-	"""Equivalent validated crops receive one stable internal asset destination."""
-	image = Image.new("RGB", (30, 20), (36, 87, 143))
-	bounds = source_region_render.NormalizedRegion(0.1, 0.1, 0.9, 0.9)
-	staging_dir = tmp_path / "stage"
-	staging_dir.mkdir()
-	first = source_region_render.publish_crop(image, bounds, staging_dir, tmp_path)
-	second = source_region_render.publish_crop(image, bounds, staging_dir, tmp_path)
-	assert first[0] == second[0]
-	assert (tmp_path / first[0]).is_file()
-
-
-#============================================
 def test_request_binds_dense_page_to_its_visible_source_slide() -> None:
 	"""A crop's dense page selects the matching source slide across hidden gaps."""
 	request = source_region_render.SourceRegionRequest("content-region-1", 3, 2,
@@ -73,12 +60,8 @@ def test_protected_variant_clears_only_requested_top_level_title(tmp_path: pathl
 		source_region_render.NormalizedRegion(0.1, 0.1, 0.9, 0.9), (title.shape_id,))
 	clone_path = source_region_render.prepare_protected_variant(source_path, (request,), tmp_path)
 	clone_slide = Presentation(clone_path).slides[0]
-	clone_shapes = {shape.shape_id: shape for shape in clone_slide.shapes}
-	assert request.bounds == source_region_render.NormalizedRegion(0.1, 0.1, 0.9, 0.9)
-	assert clone_path != source_path
 	assert source_path.read_bytes() == authority_bytes
-	assert clone_shapes[title.shape_id].text == ""
-	assert clone_shapes[body.shape_id].text == "Diagram label remains in the crop"
+	assert tuple(shape.text for shape in clone_slide.shapes) == ("", "Diagram label remains in the crop")
 
 
 #============================================

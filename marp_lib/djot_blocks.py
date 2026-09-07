@@ -16,7 +16,7 @@ _ATTRIBUTE_LINE = re.compile(r"^\{(?P<body>[^{}]*)\}$")
 _FENCE = re.compile(r"^(?P<mark>`{3,}|~{3,})(?P<info>.*)$")
 _HEADING = re.compile(r"^(?P<marks>#{1,6})[ \t]+(?P<text>.+?)\s*$")
 _LIST_ITEM = re.compile(r"^(?P<indent> *)"
-	 r"(?:(?P<bullet>[-+*])|(?P<number>[0-9]+)(?P<delimiter>[.)]))[ \t]+(?P<text>.*)$")
+	r"(?:(?P<bullet>[-+*])|(?P<number>[0-9]+)(?P<delimiter>[.)]))[ \t]+(?P<text>.*)$")
 _QUOTE = re.compile(r"^>[ ]?(?P<text>.*)$")
 _IMAGE = re.compile(r'^!\[(?P<alt>[^\]]+)\]\((?P<source>[^\s)]+)(?:\s+"(?P<title>[^"]*)")?\)$')
 _KNOWN_UNSUPPORTED = (

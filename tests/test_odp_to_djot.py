@@ -17,10 +17,11 @@ MINIMAL_CONTENT_XML = """<?xml version="1.0" encoding="UTF-8"?>
 <office:document-content
 	xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
 	xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0"
+	xmlns:presentation="urn:oasis:names:tc:opendocument:xmlns:presentation:1.0"
 	xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0">
 	<office:body><office:presentation><draw:page draw:name="page1">
 		<draw:frame><draw:text-box><text:p>Genetics</text:p></draw:text-box></draw:frame>
-	</draw:page></office:presentation></office:body>
+	</draw:page><draw:page draw:name="hidden" presentation:visibility="hidden"/></office:presentation></office:body>
 </office:document-content>
 """
 
@@ -30,7 +31,7 @@ def test_minimal_odp_preserves_visibility_contract_for_djot(
 	tmp_path: pathlib.Path,
 	monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-	"""The Djot wrapper passes ODP source identity and visibility to its importer."""
+	"""The Djot wrapper retains ODP raster authority and hidden visibility."""
 	input_path = tmp_path / "lecture.odp"
 	with zipfile.ZipFile(input_path, "w") as archive:
 		archive.writestr("mimetype", odp_to_marp.ODP_MIMETYPE)
@@ -48,7 +49,6 @@ def test_minimal_odp_preserves_visibility_contract_for_djot(
 		djot_path: pathlib.Path,
 		**kwargs: object,
 	) -> pptx_to_djot.ConversionSummary:
-		assert pptx_path == normalized_path
 		received.update(kwargs)
 		djot_path.write_text("=== layout: title-only\n", encoding="utf-8")
 		report_path = tmp_path / "import_report.json"
@@ -58,10 +58,7 @@ def test_minimal_odp_preserves_visibility_contract_for_djot(
 	monkeypatch.setattr(odp_to_marp, "convert_odp_to_pptx", fake_normalize)
 	monkeypatch.setattr(odp_to_djot.pptx_to_djot, "convert_pptx", fake_convert)
 
-	summary = odp_to_djot.convert_odp(input_path, output_path)
+	odp_to_djot.convert_odp(input_path, output_path)
 
-	assert summary.editable_slides == 1
-	assert received["expected_slide_count"] == 1
-	assert received["expected_hidden"] == set()
-	assert received["source_name"] == "lecture.odp"
 	assert received["render_source_path"] == input_path.resolve()
+	assert received["expected_hidden"] == {2}

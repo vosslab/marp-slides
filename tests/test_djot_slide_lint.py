@@ -10,10 +10,11 @@ import marp_lib.djot_lint
 #============================================
 def write_source(tmp_path: pathlib.Path, content: str) -> pathlib.Path:
 	"""Write one small source deck with its referenced local component image."""
-	assets = tmp_path / "assets"
-	assets.mkdir()
+	deck = tmp_path / "deck"
+	assets = deck / "assets"
+	assets.mkdir(parents=True)
 	(assets / "gene.png").write_bytes(b"source asset")
-	path = tmp_path / "lecture.djot"
+	path = deck / "lecture.djot"
 	path.write_text(content, encoding="utf-8")
 	return path
 
@@ -98,9 +99,9 @@ def test_linter_rejects_component_image_symlink_outside_deck_root(tmp_path: path
 ![Chromosome](assets/escape.png)
 """,
 	)
-	outside = tmp_path.parent / "outside.png"
+	outside = tmp_path / "outside.png"
 	outside.write_bytes(b"outside asset")
-	(tmp_path / "assets" / "escape.png").symlink_to(outside)
+	(path.parent / "assets" / "escape.png").symlink_to(outside)
 
 	problems, _summary = marp_lib.djot_lint.lint_paths([path])
 

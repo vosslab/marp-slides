@@ -6,6 +6,7 @@ import zipfile
 import xml.etree.ElementTree
 
 # PIP3 Modules
+import defusedxml.ElementTree
 import pytest
 from pptx import Presentation
 from pptx.oxml.xmlchemy import OxmlElement
@@ -31,7 +32,7 @@ def render_djot(tmp_path: pathlib.Path, source: str) -> xml.etree.ElementTree.El
 	deck = marp_lib.native_export.parse_deck(input_path)
 	marp_lib.native_export.render_native_pptx(deck, output_path)
 	with zipfile.ZipFile(output_path) as archive:
-		root = xml.etree.ElementTree.fromstring(archive.read("ppt/slides/slide1.xml"))
+		root = defusedxml.ElementTree.fromstring(archive.read("ppt/slides/slide1.xml"))
 	return root
 
 
@@ -86,7 +87,7 @@ def test_appear_and_backend_fade_write_their_distinct_native_effects(tmp_path: p
 	output_path = tmp_path / "effects.pptx"
 	marp_lib.native_export.render_native_pptx(direct_reveal_deck(tmp_path), output_path)
 	with zipfile.ZipFile(output_path) as archive:
-		root = xml.etree.ElementTree.fromstring(archive.read("ppt/slides/slide1.xml"))
+		root = defusedxml.ElementTree.fromstring(archive.read("ppt/slides/slide1.xml"))
 	appear = root.findall(".//p:set/p:to/p:strVal", PRESENTATION_NAMESPACES)
 	visibility = root.findall(".//p:set/p:cBhvr/p:attrNameLst/p:attrName", PRESENTATION_NAMESPACES)
 	fade = root.findall(".//p:animEffect", PRESENTATION_NAMESPACES)
@@ -96,10 +97,11 @@ def test_appear_and_backend_fade_write_their_distinct_native_effects(tmp_path: p
 
 #============================================
 def test_writer_rejects_preexisting_timing_in_plain_or_compatibility_content() -> None:
-	"""A writer never merges timing into a plain or compatibility slide tree."""
+	"""Finalization never merges timing into a plain or compatibility slide tree."""
 	for compatibility_wrapped in (False, True):
 		presentation = Presentation()
 		slide = presentation.slides.add_slide(presentation.slide_layouts[6])
+		writer = marp_lib.pptx_animation.PptxAnimationWriter(slide)
 		existing = OxmlElement("p:timing")
 		if compatibility_wrapped:
 			compatibility = slide._element.makeelement(
@@ -110,4 +112,16 @@ def test_writer_rejects_preexisting_timing_in_plain_or_compatibility_content() -
 			slide._element.append(existing)
 		with pytest.raises(marp_lib.pptx_animation.AnimationError,
 				match="without existing timing"):
-			marp_lib.pptx_animation.PptxAnimationWriter(slide)
+			writer.finalize()
+
+
+#============================================
+def test_register_reveal_requires_a_writer_for_actual_reveal_intent() -> None:
+	"""Source reveal intent cannot silently disappear from native output."""
+	presentation = Presentation()
+	slide = presentation.slides.add_slide(presentation.slide_layouts[6])
+	reveal = marp_lib.native_model.Reveal(marp_lib.native_model.RevealEffect.APPEAR,
+		marp_lib.native_model.RevealSequence.OBJECT)
+	with pytest.raises(marp_lib.pptx_animation.AnimationError,
+			match="requires an animation writer"):
+		marp_lib.pptx_animation.register_reveal(slide, object(), reveal)

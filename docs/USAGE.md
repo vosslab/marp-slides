@@ -76,8 +76,9 @@ source source_me.sh && python3 tools/djot_slide_lint.py \
 
 Fast lint is a permanent, offline behavior check. Strict Jotdown validation, real native export,
 and visual/Office review are one-time acceptance evidence, not replacements for each other. The
-PowerPoint animation experiment remains a separate attended gate; do not infer animation playback
-from a successful export. See [ROADMAP.md](ROADMAP.md).
+LibreOffice Impress animation implementation, structural tests, headless PPTX-to-ODP package
+inspection, and PDF final-state export have passed. Attended click playback in Impress remains the
+sole open visual gate; do not infer it from a successful export. See [ROADMAP.md](ROADMAP.md).
 
 ## Authoring boundaries
 
@@ -92,5 +93,5 @@ bounded-image ownership; raw HTML and raw XML are not authoring inputs.
 
 ## Known gaps
 
-- [ ] Record the attended PowerPoint timing and Impress-survival experiment before claiming native
-  animation playback support.
+- [ ] Record attended LibreOffice Impress click playback before claiming native animation playback
+  support.

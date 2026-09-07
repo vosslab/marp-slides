@@ -4,7 +4,7 @@
 import itertools
 
 # Local modules
-import marp_lib.importers.legacy_geometry as geometry
+import marp_lib.importers.legacy_geometry as legacy_geometry
 import marp_lib.layouts
 
 
@@ -14,14 +14,14 @@ MATERIAL_AXIS_OVERLAP_RATIO = .60
 
 
 #============================================
-def ordinary_layout_viable(bounds: tuple[geometry.NormalizedBounds, ...]) -> bool:
+def ordinary_layout_viable(bounds: tuple[legacy_geometry.NormalizedBounds, ...]) -> bool:
 	"""Return whether live registry topology accepts ordinary direct components."""
 	return ordinary_layout_match(bounds) is not None
 
 
 #============================================
 def ordinary_layout_match(
-		bounds: tuple[geometry.NormalizedBounds, ...],
+		bounds: tuple[legacy_geometry.NormalizedBounds, ...],
 		preserve_axis_overlap: bool = True,
 ) -> tuple[str, tuple[int, ...]] | None:
 	"""Return one unique live-registry topology match within shared thresholds."""
@@ -53,7 +53,7 @@ def ordinary_layout_match(
 
 #============================================
 def normalized_boxes(
-		bounds: tuple[geometry.NormalizedBounds, ...],
+		bounds: tuple[legacy_geometry.NormalizedBounds, ...],
 ) -> tuple[tuple[float, float, float, float], ...]:
 	"""Normalize source boxes against their shared envelope."""
 	envelope = bounds[0]

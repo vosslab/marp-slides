@@ -10,7 +10,7 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 
 ## Slide migration and presentation
 
-- I do not own any microsoft products, Powerpoint is not a blocker, we only use PPTX because 
+- I do not own any microsoft products, Powerpoint is not a blocker, we only use PPTX because
   python supports PPTX better than ODP
 - Legacy ODP is imported once; Marp Markdown and its local assets then become authoritative.
 - Use Marp because it has a mature language specification. The production build uses neither Marp
@@ -25,8 +25,7 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
   not production dependencies, runtimes, or renderers.
 - Build canonical Marp Markdown through repository-owned Python into native editable PPTX objects,
   then use LibreOffice to make editable ODP, then make PDF from that ODP.
-- I do not own any Microsoft products. PowerPoint is not a blocker. We only use PPTX because Python
-  supports PPTX better than ODP.
+- git is out of scope; I saw something messing with staging
 - Run LibreOffice conversion with `--headless --norestore` through the established user profile.
   Keep LibreOffice closed during the batch build; use `--safe-mode` when repairing profile problems.
 - Export ODP to PDF with the Impress PDF filter, 70 percent JPEG quality, a documented 150 DPI image
@@ -68,6 +67,8 @@ origin belongs there too. Rules: [REPO_STYLE.md](REPO_STYLE.md).
 - Avoid raw HTML or XML in Markdown. Keep preview styling in the shared CSS theme.
 - A normal instructor workflow must not require VS Code, npm, TypeScript, Node, or a Marp server.
 - This pre-production repository uses direct replacements when terminology or architecture changes.
+  Improve foundational schemas, contracts, abstractions, and ownership boundaries directly; do not
+  preserve compatibility shims or legacy support.
 
 - Keep a separate Markdown review for every repository in `OTHER_REPOS/` that identifies its
   content and whether its ideas, code, functions, themes, or assets fit this project.

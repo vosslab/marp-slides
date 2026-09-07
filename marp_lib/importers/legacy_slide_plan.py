@@ -1,21 +1,16 @@
 """Geometry-first planning for importing legacy presentation slides."""
-import dataclasses; import math
-from itertools import combinations; from collections.abc import Mapping
+import collections.abc
+import dataclasses
+import itertools
+import math
+
 import marp_lib.importers.legacy_geometry as legacy_geometry
-import marp_lib.layouts
-from marp_lib.importers.legacy_heading_relation import local_figure_heading
-from marp_lib.importers.legacy_rotated_vector_label import rotated_vector_label_members
+import marp_lib.importers.legacy_heading_relation as legacy_heading_relation
 import marp_lib.importers.legacy_new_visual_relations as visual_relations
+import marp_lib.importers.legacy_rotated_vector_label as rotated_vector_label
 import marp_lib.importers.legacy_topology as legacy_topology
-from marp_lib.importers.legacy_geometry import (
-	FLOW_BORDER_CONTACT_RATIO,
-	center_is_within,
-	overlaps_or_contains,
-	strictly_overlaps,
-	substantially_overlaps,
-)
-NormalizedBounds = legacy_geometry.NormalizedBounds
-normalized_bounds = legacy_geometry.normalized_bounds
+import marp_lib.layouts
+
 TITLE_TOP_RATIO = 0.24
 TITLE_BOTTOM_RATIO = 0.28
 TITLE_MIN_WIDTH_RATIO = 0.34
@@ -54,7 +49,7 @@ MULTIPLE_CHOICE_FIGURE_TOP_CENTER_RATIO = 0.35
 class SourceTextRegion:
 	"""One source text shape, retaining paragraph structure and geometry."""
 	paragraphs: tuple[tuple[int, str], ...]
-	bounds: NormalizedBounds
+	bounds: legacy_geometry.NormalizedBounds
 	is_subtitle: bool
 	placeholder_confidence: float
 	title_identity: bool = False
@@ -89,7 +84,7 @@ class SourceTextRegion:
 class SourceImageRegion:
 	"""One source image and its geometry, before any renderer conversion."""
 	asset_reference: str
-	bounds: NormalizedBounds
+	bounds: legacy_geometry.NormalizedBounds
 	source_kind: str = "picture"
 	source_ordinal: int = 0
 	source_line: legacy_geometry.DegenerateConnectorFootprint | None = None
@@ -97,7 +92,7 @@ class SourceImageRegion:
 @dataclasses.dataclass(frozen=True)
 class TablePlan:
 	"""A source table retained as editable structured content."""
-	bounds: NormalizedBounds
+	bounds: legacy_geometry.NormalizedBounds
 	text_regions: tuple[SourceTextRegion, ...]
 	rows: tuple[tuple["TableCellPlan", ...], ...]
 	row_count: int
@@ -129,7 +124,7 @@ class SlotPlan:
 class ContentRegionPlan:
 	"""A diagram and annotations that must remain spatially coupled."""
 	asset_key: str
-	bounds: NormalizedBounds
+	bounds: legacy_geometry.NormalizedBounds
 	text_regions: tuple[SourceTextRegion, ...]
 	image_regions: tuple[SourceImageRegion, ...]
 	protected_text_shape_ids: tuple[int, ...] = ()
@@ -212,7 +207,8 @@ def select_solitary_title(
 	):
 		return None
 	return TitleDecision(region, "solitary title identity")
-def center_is_near_image(inner: NormalizedBounds, image: NormalizedBounds) -> bool:
+def center_is_near_image(inner: legacy_geometry.NormalizedBounds,
+		image: legacy_geometry.NormalizedBounds) -> bool:
 	"""Keep nearby diagram labels in a bounded envelope scaled to its anchor."""
 	center_x = (inner.left + inner.right) / 2
 	center_y = (inner.top + inner.bottom) / 2
@@ -233,12 +229,12 @@ def annotation_centers_are_distributed(
 		or max(centers_y) - min(centers_y) >= ANNOTATION_CENTER_SPAN_RATIO
 	)
 def title_excluded_content_bounds(
-	bounds: NormalizedBounds,
+	bounds: legacy_geometry.NormalizedBounds,
 	annotations: tuple[SourceTextRegion, ...],
 	title: TitleDecision,
-) -> tuple[NormalizedBounds, tuple[int, ...]]:
+) -> tuple[legacy_geometry.NormalizedBounds, tuple[int, ...]]:
 	"""Either crop a clear title strip or protect its source shape during rendering."""
-	if title.region is None or not overlaps_or_contains(bounds, title.region.bounds):
+	if title.region is None or not legacy_geometry.overlaps_or_contains(bounds, title.region.bounds):
 		return bounds, ()
 	top = max(bounds.top, title.region.bounds.bottom)
 	if top >= bounds.bottom:
@@ -247,7 +243,7 @@ def title_excluded_content_bounds(
 		if title.region.source_ordinal <= 0:
 			raise ValueError("protected title source shape requires review")
 		return bounds, (title.region.source_ordinal,)
-	return NormalizedBounds(bounds.left, top, bounds.right, bounds.bottom), ()
+	return legacy_geometry.NormalizedBounds(bounds.left, top, bounds.right, bounds.bottom), ()
 def regular_text_grid(text_regions: tuple[SourceTextRegion, ...]) -> bool:
 	"""Recognize a dense row-and-column lattice as an editable table candidate."""
 	if len(text_regions) < 8:
@@ -333,9 +329,10 @@ def is_multiple_choice_answer(region: SourceTextRegion, question: SourceTextRegi
 		and (bounds_contains(question.bounds, region.bounds, 0.0)
 			or answer_below_question(region.bounds, question.bounds))
 	)
-def answer_below_question(answer: NormalizedBounds, question: NormalizedBounds) -> bool:
+def answer_below_question(answer: legacy_geometry.NormalizedBounds,
+		question: legacy_geometry.NormalizedBounds) -> bool:
 	"""Allow a compact lower-right callout directly beneath its primary prompt."""
-	return (answer.top >= question.bottom - FLOW_BORDER_CONTACT_RATIO
+	return (answer.top >= question.bottom - legacy_geometry.FLOW_BORDER_CONTACT_RATIO
 		and answer.top - question.bottom <= MC_ANSWER_BELOW_GAP_RATIO
 		and min(answer.right, question.right) > max(answer.left, question.left))
 def is_multiple_choice_figure(
@@ -386,12 +383,12 @@ def multiple_choice_plan(
 		is_multiple_choice_figure(visuals[0], question):
 		return MultipleChoicePlan(question, answer, visuals[0],
 			"complete question-list-answer structure with top figure")
-	if any(not overlaps_or_contains(region.bounds, question.bounds) or
-			overlaps_or_contains(region.bounds, answer.bounds) for region in overlay_text) or \
+	if any(not legacy_geometry.overlaps_or_contains(region.bounds, question.bounds) or
+			legacy_geometry.overlaps_or_contains(region.bounds, answer.bounds) for region in overlay_text) or \
 		any(not is_multiple_choice_figure(image, question) for image in visuals):
 		return None
 	members = (*overlay_text, *visuals)
-	if not members or any(not any(overlaps_or_contains(connector.bounds, member.bounds)
+	if not members or any(not any(legacy_geometry.overlaps_or_contains(connector.bounds, member.bounds)
 		for member in members) for connector in connectors):
 		return None
 	bounds = question.bounds
@@ -421,14 +418,14 @@ def content_region(
 			region for region in available_text
 			if (
 				(center_is_near_image(region.bounds, image.bounds)
-				or overlaps_or_contains(region.bounds, image.bounds))
+				or legacy_geometry.overlaps_or_contains(region.bounds, image.bounds))
 				and region.placeholder_confidence == 0.0
 			)
 		)
 		single_interior = tuple(region for region in available_text if (
 			region.source_kind == "auto-shape"
 			and region.placeholder_confidence == 0.0
-			and center_is_within(region.bounds, image.bounds)
+			and legacy_geometry.center_is_within(region.bounds, image.bounds)
 		))
 		single_caption_qualified = (
 			image.bounds.width * image.bounds.height >= SINGLE_ANNOTATION_IMAGE_MIN_AREA_RATIO
@@ -439,7 +436,7 @@ def content_region(
 					region.source_kind == "auto-shape"
 					and region.placeholder_confidence == 0.0
 					and not center_is_near_image(region.bounds, image.bounds)
-					and not overlaps_or_contains(region.bounds, image.bounds)
+					and not legacy_geometry.overlaps_or_contains(region.bounds, image.bounds)
 				)
 				for region in available_text
 			)
@@ -454,7 +451,7 @@ def content_region(
 					other for other in image_regions
 					if other.source_kind != "connector"
 					if any(
-						overlaps_or_contains(other.bounds, member.bounds)
+						legacy_geometry.overlaps_or_contains(other.bounds, member.bounds)
 						or bounds_are_near(other.bounds, member.bounds)
 						for member in component_images
 					)
@@ -468,7 +465,7 @@ def content_region(
 					region.placeholder_confidence == 0.0
 					and (
 						any(center_is_near_image(region.bounds, member.bounds)
-							or overlaps_or_contains(region.bounds, member.bounds)
+							or legacy_geometry.overlaps_or_contains(region.bounds, member.bounds)
 							for member in component_images)
 					)
 				)
@@ -489,7 +486,7 @@ def content_region(
 				kind="diagram",
 				classification_reason="distributed pictorial annotations",
 			)
-	rotated = rotated_vector_label_members(available_text, image_regions)
+	rotated = rotated_vector_label.rotated_vector_label_members(available_text, image_regions)
 	if rotated is not None:
 		bounds, protected = title_excluded_content_bounds(rotated.bounds, rotated.text_regions, title)
 		return ContentRegionPlan(
@@ -522,7 +519,7 @@ def vector_scaffold_region(
 					continue
 				first = nodes[index].bounds
 				second = other.bounds
-				if overlaps_or_contains(first, second) or bounds_are_near(first, second):
+				if legacy_geometry.overlaps_or_contains(first, second) or bounds_are_near(first, second):
 					updated.add(other_index)
 		if updated == connected:
 			break
@@ -538,7 +535,8 @@ def vector_scaffold_region(
 		tuple(sorted(vectors, key=lambda item: item.source_ordinal)), protected_text_shape_ids,
 		"vector-scaffold", "connected vector scaffold with distributed annotations",
 	)
-def bounds_are_near(first: NormalizedBounds, second: NormalizedBounds) -> bool:
+def bounds_are_near(first: legacy_geometry.NormalizedBounds,
+		second: legacy_geometry.NormalizedBounds) -> bool:
 	"""Connect source scaffolds only across a bounded slide-relative gap."""
 	return not (
 		first.right + VECTOR_COMPONENT_PROXIMITY_RATIO < second.left
@@ -564,7 +562,7 @@ def mixed_visual_region(
 		(index, other_index)
 		for index, node in enumerate(nodes)
 		for other_index, other in enumerate(nodes[index + 1:], start=index + 1)
-		if overlaps_or_contains(node.bounds, other.bounds) or bounds_are_near(node.bounds, other.bounds)
+		if legacy_geometry.overlaps_or_contains(node.bounds, other.bounds) or bounds_are_near(node.bounds, other.bounds)
 	}
 	if not edges:
 		return None
@@ -587,7 +585,7 @@ def mixed_visual_region(
 	candidates = tuple(component for component in components if (
 		any(isinstance(nodes[index], SourceImageRegion) for index in component)
 		and any(
-			strictly_overlaps(anchor.bounds, other.bounds)
+			legacy_geometry.strictly_overlaps(anchor.bounds, other.bounds)
 			for anchor in (nodes[index] for index in component
 				if isinstance(nodes[index], SourceImageRegion))
 			for other in (nodes[index] for index in component)
@@ -629,7 +627,7 @@ def shared_figure_row_region(
 	available = tuple(region for region in text_regions if region is not title.region)
 	candidates: list[tuple[tuple[SourceImageRegion, ...], SourceTextRegion]] = []
 	for count in (2, 3):
-		for row in combinations(images, count):
+		for row in itertools.combinations(images, count):
 			if not coherent_figure_row(row):
 				continue
 			bounds = union_bounds(tuple(item.bounds for item in row))
@@ -651,18 +649,19 @@ def shared_figure_row_region(
 	)
 def coherent_figure_row(row: tuple[SourceImageRegion, ...]) -> bool:
 	"""Recognize two or three separated, similarly sized figures in one row."""
-	if len(row) not in {2, 3} or any(substantially_overlaps(first.bounds, second.bounds)
+	if len(row) not in {2, 3} or any(legacy_geometry.substantially_overlaps(first.bounds, second.bounds)
 		for index, first in enumerate(row) for second in row[index + 1:]):
 		return False
 	centers = tuple((item.bounds.top + item.bounds.bottom) / 2 for item in row)
 	return max(centers) - min(centers) <= SHARED_FIGURE_ROW_ALIGNMENT_RATIO
-def shared_row_caption(region: SourceTextRegion, row: NormalizedBounds) -> bool:
+def shared_row_caption(region: SourceTextRegion,
+		row: legacy_geometry.NormalizedBounds) -> bool:
 	"""Require a non-placeholder caption immediately beneath the full figure row."""
 	center = (region.bounds.left + region.bounds.right) / 2
 	row_center = (row.left + row.right) / 2
 	return (
 		region.placeholder_confidence == 0.0
-		and region.bounds.top >= row.bottom - FLOW_BORDER_CONTACT_RATIO
+		and region.bounds.top >= row.bottom - legacy_geometry.FLOW_BORDER_CONTACT_RATIO
 		and region.bounds.top - row.bottom <= min(0.10, row.height * 0.25)
 		and region.bounds.width >= row.width * SHARED_FIGURE_CAPTION_MIN_SPAN_RATIO
 		and (abs(center - row_center) <= SHARED_FIGURE_ROW_ALIGNMENT_RATIO
@@ -675,7 +674,7 @@ def repeated_labeled_figure_region(
 	"""Reserve two same-band figures only when their side labels are mutual."""
 	pictures = tuple(item for item in image_regions if item.source_kind == "picture")
 	available = tuple(item for item in text_regions if item is not title.region)
-	if len(image_regions) != 2 or len(pictures) != 2 or len(available) != 2 or any(overlaps_or_contains(first.bounds, second.bounds)
+	if len(image_regions) != 2 or len(pictures) != 2 or len(available) != 2 or any(legacy_geometry.overlaps_or_contains(first.bounds, second.bounds)
 		for first, second in ((pictures[0], pictures[1]),)):
 		return None
 	if abs((pictures[0].bounds.top + pictures[0].bounds.bottom - pictures[1].bounds.top - pictures[1].bounds.bottom) / 2) > SHARED_FIGURE_ROW_ALIGNMENT_RATIO:
@@ -704,7 +703,8 @@ def nearest_side_label(picture: SourceImageRegion, labels: tuple[SourceTextRegio
 	minimum = min(distance for distance, _label in candidates)
 	nearest = tuple(label for distance, label in candidates if abs(distance - minimum) <= 1e-9)
 	return nearest[0] if len(nearest) == 1 else None
-def side_gap(label: NormalizedBounds, picture: NormalizedBounds) -> float:
+def side_gap(label: legacy_geometry.NormalizedBounds,
+		picture: legacy_geometry.NormalizedBounds) -> float:
 	"""Return horizontal separation for a disjoint side label."""
 	return max(picture.left - label.right, label.left - picture.right, 0.0)
 def nearest_side_picture(label: SourceTextRegion, pictures: tuple[SourceImageRegion, ...]) -> SourceImageRegion | None:
@@ -715,15 +715,17 @@ def nearest_side_picture(label: SourceTextRegion, pictures: tuple[SourceImageReg
 	minimum = min(distance for distance, _picture in candidates)
 	nearest = tuple(picture for distance, picture in candidates if abs(distance - minimum) <= 1e-9)
 	return nearest[0] if len(nearest) == 1 else None
-def side_of(label: NormalizedBounds, picture: NormalizedBounds) -> str:
+def side_of(label: legacy_geometry.NormalizedBounds,
+		picture: legacy_geometry.NormalizedBounds) -> str:
 	"""Classify a side label relative to one picture."""
 	return "left" if (label.left + label.right) / 2 < (picture.left + picture.right) / 2 else "right"
-def is_side_label(label: NormalizedBounds, picture: NormalizedBounds) -> bool:
+def is_side_label(label: legacy_geometry.NormalizedBounds,
+		picture: legacy_geometry.NormalizedBounds) -> bool:
 	"""Allow only a tiny border overlap when a label center remains lateral."""
 	return (label.right <= picture.left + SIDE_LABEL_BORDER_OVERLAP
 		if side_of(label, picture) == "left"
 		else label.left >= picture.right - SIDE_LABEL_BORDER_OVERLAP)
-def union_bounds(bounds: tuple[NormalizedBounds, ...]) -> NormalizedBounds:
+def union_bounds(bounds: tuple[legacy_geometry.NormalizedBounds, ...]) -> legacy_geometry.NormalizedBounds:
 	"""Return the bounded union for a nonempty set of source rectangles."""
 	result = bounds[0]
 	for item in bounds[1:]:
@@ -738,7 +740,8 @@ def title_is_component_member(
 		return False
 	if title.region.placeholder_confidence > 0.0:
 		return False
-	return any(center_is_within(title.region.bounds, image.bounds) for image in content.image_regions)
+	return any(legacy_geometry.center_is_within(title.region.bounds, image.bounds)
+		for image in content.image_regions)
 def absorb_connected_connectors(
 	content: ContentRegionPlan | None,
 	image_regions: tuple[SourceImageRegion, ...],
@@ -797,12 +800,14 @@ def absorb_contained_vector_label(
 	return dataclasses.replace(content,
 		text_regions=tuple(sorted((*content.text_regions, region), key=lambda item: item.source_ordinal)),
 		classification_reason=f"{content.classification_reason}; contained vector label")
-def bounds_contains(outer: NormalizedBounds, inner: NormalizedBounds, padding: float) -> bool:
+def bounds_contains(outer: legacy_geometry.NormalizedBounds,
+		inner: legacy_geometry.NormalizedBounds, padding: float) -> bool:
 	"""Require center and every edge within a bounded crop padding envelope."""
 	return (outer.left - padding <= inner.left and inner.right <= outer.right + padding
 		and outer.top - padding <= inner.top and inner.bottom <= outer.bottom + padding
-		and center_is_within(inner, outer))
-def connector_belongs_to(connector: NormalizedBounds, content: NormalizedBounds) -> bool:
+		and legacy_geometry.center_is_within(inner, outer))
+def connector_belongs_to(connector: legacy_geometry.NormalizedBounds,
+		content: legacy_geometry.NormalizedBounds) -> bool:
 	"""Require a long-axis projection and close cross-axis relation to one component."""
 	horizontal = connector.width >= connector.height
 	axis_start, axis_end = (connector.left, connector.right) if horizontal else (connector.top, connector.bottom)
@@ -888,6 +893,9 @@ def slot_plans(
 			ordinary_images,
 		),
 	)
+
+
+#============================================
 def plan_slide(
 	text_regions: tuple[SourceTextRegion, ...],
 	image_regions: tuple[SourceImageRegion, ...],
@@ -949,7 +957,8 @@ def plan_slide(
 				"styled-inset-key", "styled inset key paired with coarse object body")
 		content = absorb_contained_vector_label(content, text_regions, title)
 		content = absorb_coarse_crop_text(content, text_regions, title)
-		heading = local_figure_heading(content, text_regions, planning_images, title, tables)
+		heading = legacy_heading_relation.local_figure_heading(content, text_regions,
+			planning_images, title, tables)
 		if heading is not None:
 			content = dataclasses.replace(content, local_heading=heading,
 				classification_reason=f"{content.classification_reason}; local figure heading")
@@ -967,9 +976,12 @@ def plan_slide(
 	slots = slot_plans(text_regions, emittable_images, content, tables, title, picture_inset)
 	plan = LegacySlidePlan(title, slots, content, tables, review_reason, None, omitted_vectors, review_vectors)
 	return plan
+
+
+#============================================
 def require_region_asset(
 	content: ContentRegionPlan | None,
-	assets: Mapping[str, str] | None,
+	assets: collections.abc.Mapping[str, str] | None,
 ) -> str | None:
 	"""Resolve a renderer-produced region asset without inventing a fallback.
 	ASVS 5.3.2: region assets use internally generated keys, never archive names.

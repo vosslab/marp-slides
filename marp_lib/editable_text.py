@@ -88,6 +88,12 @@ def project_block(block: marp_lib.native_model.Heading | marp_lib.native_model.P
 
 
 #============================================
+def has_reveal(block: marp_lib.native_model.Paragraph | marp_lib.native_model.ListBlock) -> bool:
+	"""Return whether a text block or one of its editable paragraphs reveals."""
+	return block.reveal is not None or bool(project_block(block).reveal_ranges)
+
+
+#============================================
 def flow_items(block: marp_lib.native_model.Paragraph | marp_lib.native_model.ListBlock) -> list[tuple[tuple[marp_lib.native_model.Inline, ...], int, bool, bool, int]]:
 	"""Return a renderer-neutral tuple form for one editable flow block."""
 	return [(paragraph.inlines, paragraph.level, paragraph.ordered, paragraph.paragraph_only,

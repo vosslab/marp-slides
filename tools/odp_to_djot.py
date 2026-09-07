@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Convert a trusted legacy ODP into experimental extended-Djot slide source."""
+"""Convert a trusted legacy ODP into supported extended-Djot slide source."""
 
 import sys
 import pathlib

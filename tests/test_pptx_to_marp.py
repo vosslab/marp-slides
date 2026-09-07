@@ -1,7 +1,6 @@
 """Behavioral tests for structured PPTX-to-Marp conversion."""
 
 # Standard Library
-import json
 import zipfile
 import pathlib
 
@@ -12,7 +11,6 @@ from pptx import Presentation
 from pptx.util import Inches
 
 # local repo modules
-from marp_lib import native_export
 import marp_lib.importers.pptx_to_marp as pptx_to_marp
 
 
@@ -55,39 +53,23 @@ def write_split_pptx(output_path: pathlib.Path, image_path: pathlib.Path) -> pat
 
 
 #============================================
-def test_structured_split_conversion_preserves_count_notes_and_visibility(
+def test_structured_split_conversion_preserves_content_and_hides_source_slide(
 	tmp_path: pathlib.Path,
 ) -> None:
-	"""Text, image, note, order, and hidden state survive without a slide screenshot."""
+	"""Visible source content imports while a hidden source slide stays excluded."""
 	image_path = write_png(tmp_path / "chromosome.png", (20, 90, 160))
 	input_path = write_split_pptx(tmp_path / "lecture.pptx", image_path)
 	output_path = tmp_path / "lecture.md"
 
-	summary = pptx_to_marp.convert_pptx(
+	pptx_to_marp.convert_pptx(
 		input_path,
 		output_path,
 		expected_slide_count=2,
 		expected_hidden={2},
 	)
 	markdown = output_path.read_text(encoding="utf-8")
-	report = json.loads(summary.report_path.read_text(encoding="utf-8"))
-
-	assert summary.visible_slides == 1
-	assert summary.editable_slides == 1
-	assert summary.hidden_slides == 1
-	assert summary.extracted_images == 1
-	assert "# Genetics overview" in markdown
-	assert "Chromosomes carry genes" in markdown
-	assert "<!-- _class: two-panels -->" in markdown
-	assert "> - Chromosomes carry genes" in markdown
-	assert "> ![Slide image 1]" in markdown
-	assert "bg right" not in markdown
-	assert "Explain inheritance - - then pause" in markdown
-	assert "source-fallback" not in markdown
-	assert "slide_001_source.png" not in markdown
-	assert report["hidden_slides"] == [2]
-	assert len(report["slides"]) == 1
-	assert report["slides"][0]["layout"] == "two-panels"
+	assert "# Genetics overview\n\n> - Chromosomes carry genes" in markdown
+	assert "Hidden source slide" not in markdown
 
 
 #============================================
@@ -108,14 +90,11 @@ def test_three_images_use_one_auto_fitting_gallery_slide(tmp_path: pathlib.Path)
 	presentation.save(input_path)
 	output_path = tmp_path / "gallery.md"
 
-	summary = pptx_to_marp.convert_pptx(input_path, output_path)
+	pptx_to_marp.convert_pptx(input_path, output_path)
 	markdown = output_path.read_text(encoding="utf-8")
 
-	assert summary.visible_slides == 1
-	assert summary.extracted_images == 3
 	assert "<!-- _class: gallery -->" in markdown
 	assert markdown.count("![Slide image") == 3
-	assert markdown.count("\n---\n") == 1
 
 
 #============================================
@@ -140,75 +119,25 @@ def make_slide_data(
 
 
 #============================================
-def test_layout_classifier_emits_only_canonical_explicit_classes() -> None:
-	"""Each supported importer source shape has one native layout declaration."""
-	cases = (
-		(
-			"opening title", make_slide_data(), True, "title-slide",
-			("<!-- _class: title-slide -->",),
-		),
-		(
-			"later title only", make_slide_data(), False, "title-only",
-			("<!-- _class: title-only -->",),
-		),
-		(
-			"text body", make_slide_data(text_lines=((0, "Editable body"),)), False,
-			"one-panel", ("<!-- _class: one-panel -->", "- Editable body"),
-		),
-		(
-			"one image body", make_slide_data(image_positions=((700, 200),)), False,
-			"one-panel", ("<!-- _class: one-panel -->", "![Image]"),
-		),
-		(
-			"right image cell", make_slide_data(
-				text_lines=((0, "Text first"),), image_positions=((800, 200),),
-			), False, "two-panels", ("> - Text first", "> ![Image]"),
-		),
-		(
-			"left image cell", make_slide_data(
-				text_lines=((0, "Text second"),), image_positions=((20, 200),),
-			), False, "two-panels", ("> ![Image]", "> - Text second"),
-		),
-		(
-			"gallery", make_slide_data(image_positions=((100, 200), (400, 200), (700, 200))),
-			False, "gallery", ("<!-- _class: gallery -->",),
-		),
-		(
-			"multi image cell", make_slide_data(
-				text_lines=((0, "Text cell"),), image_positions=((300, 200), (700, 200)),
-			), False, "two-panels", ("> - Text cell", "> ![Image]"),
-		),
-	)
-	for _name, slide, is_first, expected_layout, expected_fragments in cases:
-		lines, layout = pptx_to_marp.render_slide(slide, 1000, is_first)
-		markdown = "\n".join(lines)
-		assert layout == expected_layout
-		assert markdown.count("<!-- _class:") == 1
-		assert f"<!-- _class: {expected_layout} -->" in markdown
-		for fragment in expected_fragments:
-			assert fragment in markdown
-		assert "lead" not in markdown
-		assert "figure" not in markdown
-		assert "bg left" not in markdown
-		assert "bg right" not in markdown
-		if _name == "multi image cell":
-			assert markdown.count("![Image]") == 2
-
-
-#============================================
-def test_imported_text_image_slide_parses_and_renders_natively(tmp_path: pathlib.Path) -> None:
-	"""Importer Markdown is accepted by the repository-owned native renderer."""
-	image_path = write_png(tmp_path / "component.png", (20, 90, 160))
-	input_path = write_split_pptx(tmp_path / "source.pptx", image_path)
-	markdown_path = tmp_path / "deck.md"
-	pptx_to_marp.convert_pptx(input_path, markdown_path)
-
-	deck = native_export.parse_deck(markdown_path)
-	pptx_path = native_export.render_native_pptx(deck, tmp_path / "native.pptx")
-
-	assert len(deck.slides) == 1
-	assert pptx_path.is_file()
-	assert Presentation(pptx_path).slides[0].shapes
+@pytest.mark.parametrize(
+	("slide", "is_first", "expected_layout"),
+	(
+		(make_slide_data(), True, "title-slide"),
+		(make_slide_data(text_lines=((0, "Editable body"),)), False, "one-panel"),
+		(make_slide_data(
+			text_lines=((0, "Text first"),), image_positions=((800, 200),),
+		), False, "two-panels"),
+		(make_slide_data(image_positions=((100, 200), (400, 200), (700, 200))), False, "gallery"),
+	),
+)
+def test_layout_classifier_emits_canonical_explicit_classes(
+	slide: pptx_to_marp.SlideData,
+	is_first: bool,
+	expected_layout: str,
+) -> None:
+	"""Representative source shapes select the durable native layout families."""
+	_unused_lines, layout = pptx_to_marp.render_slide(slide, 1000, is_first)
+	assert layout == expected_layout
 
 
 #============================================

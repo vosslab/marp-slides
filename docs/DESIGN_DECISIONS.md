@@ -142,16 +142,18 @@ short inputs inline, as required by the pytest policy.
 
 ### Standard Djot content covers tables and sequences
 
-**Decision.** The implemented language extends Djot and supports its normal content syntax: tables,
-inline verbatim, and fenced code blocks. Use `$inline$` and `$$display$$` through MathJax or a
-similar plugin for mathematics.
+**Decision.** The implemented language accepts Djot tables and inline verbatim for native rendering
+where their selected layout has an editable destination. Fenced code and `$inline$` or
+`$$display$$` mathematics remain parse-valid/reserved source forms until dedicated native owners
+exist.
 
 **Why.** The Lecture 02 survey shows all four forms in normal teaching content. They are ordinary
 content needs, not evidence for a custom biological notation or another slide-extension marker.
 
-**Consequence.** Editable tables have a native owner; inline verbatim, monospace blocks, and math
-continue to require their explicit supported-output owners. The language does not introduce custom
-table, DNA-sequence, or math delimiters.
+**Consequence.** Inline verbatim renders as editable fixed-width text. A validated table renders
+only in a layout with a native table destination. Fenced code and mathematics receive
+source-located native-export rejections until their owners are implemented. The language does not
+introduce custom table, DNA-sequence, or math delimiters.
 
 **Owner.** [djot_slide_extension_exploration.md](active_plans/decisions/djot_slide_extension_exploration.md)
 and [lect02_genetics_syntax_gap_survey.md](active_plans/decisions/lect02_genetics_syntax_gap_survey.md).
@@ -230,7 +232,7 @@ represent the editable classroom artifact.
 rendering remains evidence only and never becomes slide content.
 
 **Owner.** `marp_lib/native_export.py`, `build_slides.sh`, and
-`tests/e2e/e2e_native_odp_semantics.py`.
+`tests/e2e/e2e_all_native_layouts.py`.
 
 ### LibreOffice conversion uses its established profile
 
@@ -349,9 +351,10 @@ raise source-located errors for valid Djot constructs that have no editable nati
 explicit subset can expand safely when a native owner and acceptance evidence exist.
 
 **Consequence.** One-line attributes precede their element, standalone image paragraphs become
-components, and mixed image paragraphs are unsupported. `$inline$` and `$$display$$` are intentional
-local math extensions after strict-Djot validation, but math is rejected until rendered natively.
-Quotes, attributes, and unsupported inline forms receive the same source-located treatment.
+components, and mixed image paragraphs are unsupported. Inline verbatim and validated tables with a
+native table destination render as editable objects. Fenced code, `$inline$`, `$$display$$`, quote
+blocks, attributes, and unsupported inline forms receive source-located native-export rejections
+until their native owners exist.
 
 **Owner.** `marp_lib/djot_blocks.py`, `marp_lib/djot_inline.py`, `marp_lib/djot_parser.py`, and
 `marp_lib/layouts.py`.
@@ -383,10 +386,12 @@ LibreOffice rather than Microsoft products. Official OOXML semantics plus observ
 importer/exporter and Impress behavior provide a stable, replaceable boundary without external deck
 templates.
 
-**Consequence.** M5 is in progress. `pptx_animation.py` is the sole timing-tree owner and builds
-OOXML directly; runtime XML templates and PowerPoint-authored decks are not contracts. Fast tests
-cover structural semantics. Headless PPTX-to-ODP/package inspection and PDF final state are one-time
-evidence; attended Impress playback is the only visual gate. `blue overlay` remains deferred.
+**Consequence.** M5 implementation is complete. `pptx_animation.py` is the sole timing-tree owner
+and builds OOXML directly; runtime XML templates and PowerPoint-authored decks are not contracts.
+The permanent offline tests cover structural semantics. One-time headless PPTX-to-ODP/package and
+PDF final-state evidence passed. Attended Impress playback remains the only open visual gate because
+macOS denied Screen Recording and Accessibility before slideshow clicks could be observed. `blue
+overlay` remains deferred.
 
 **Owner.** `marp_lib/pptx_animation.py`, [PIPELINE.md](PIPELINE.md), and
 [wp_a1_animation_fidelity.md](active_plans/reports/wp_a1_animation_fidelity.md).
@@ -465,6 +470,9 @@ reusing the existing `two-plus-one` and footer permission. Adaptive vertical ima
 at 28 through 14 CSS px, then scales every image uniformly. A private source crop must remain
 bounded, protect a selected title, and retain only coupled source members; global or crop exceptions
 are not a routing mechanism. Ambiguous arrangements remain editable components or stop for review.
+Geometry, heading relations, topology, and Djot emission symbols are imported from their owning
+modules. Slide planning and conversion consume those owners directly and do not re-export
+compatibility facades.
 
 **Owner.** `marp_lib/importers/legacy_geometry.py`,
 `marp_lib/importers/legacy_topology.py`, `marp_lib/importers/legacy_new_visual_relations.py`, and

@@ -1,11 +1,18 @@
-"""Pure geometry-plan projection for experimental extended-Djot imports."""
+"""Pure geometry-plan projection for supported bounded Djot imports."""
+
+# Standard Library
 import dataclasses
 import itertools
-import marp_lib.importers.legacy_slide_plan as legacy_slide_plan
-import marp_lib.importers.legacy_topology as legacy_topology
-import marp_lib.importers.legacy_new_visual_relations as visual_relations
-import marp_lib.importers.pptx_to_marp as pptx_common
+
+# local repo modules
 import marp_lib.layouts
+import marp_lib.importers.pptx_to_marp as pptx_to_marp
+import marp_lib.importers.legacy_geometry as legacy_geometry
+import marp_lib.importers.legacy_topology as legacy_topology
+import marp_lib.importers.legacy_slide_plan as legacy_slide_plan
+import marp_lib.importers.legacy_new_visual_relations as legacy_new_visual_relations
+
+
 GALLERY_AREA_VARIATION_RATIO = 1.30
 GALLERY_ASPECT_VARIATION_RATIO = 1.30
 GALLERY_LINE_CENTER_TOLERANCE = 0.12
@@ -26,11 +33,10 @@ ASYMMETRIC_EXPLANATORY_PAIR_MAX_SCORE = 0.33
 ASYMMETRIC_EXPLANATORY_COMPACT_AREA_RATIO = 0.75
 SHALLOW_FLOW_MAX_VERTICAL_OVERLAP = 0.03
 SHALLOW_FLOW_MAX_SMALLER_HEIGHT_RATIO = 0.25
-TOPOLOGY_MAX_SCORE = legacy_topology.TOPOLOGY_MAX_SCORE
 @dataclasses.dataclass(frozen=True)
 class PlannedSlide:
 	"""Djot-private semantic evidence and its geometry-first projection."""
-	data: pptx_common.SlideData
+	data: pptx_to_marp.SlideData
 	plan: legacy_slide_plan.LegacySlidePlan | None
 	text_regions: tuple[legacy_slide_plan.SourceTextRegion, ...] = ()
 	image_regions: tuple[legacy_slide_plan.SourceImageRegion, ...] = ()
@@ -38,7 +44,7 @@ class PlannedSlide:
 @dataclasses.dataclass(frozen=True)
 class EmissionComponent:
 	"""One bounded, single-kind source component assigned to one Djot Cell."""
-	bounds: legacy_slide_plan.NormalizedBounds
+	bounds: legacy_geometry.NormalizedBounds
 	lines: tuple[str, ...]
 	kind: str
 	image_references: tuple[str, ...] = ()
@@ -46,7 +52,7 @@ class EmissionComponent:
 	coarse_text_container: bool = False
 	source_kind: str = ""
 	source_ordinals: tuple[int, ...] = ()
-	member_footprints: tuple[legacy_slide_plan.NormalizedBounds, ...] = ()
+	member_footprints: tuple[legacy_geometry.NormalizedBounds, ...] = ()
 	classification_reason: str = ""
 	placeholder_confidence: float = 0.0
 	rotation_degrees: float = 0.0
@@ -56,13 +62,13 @@ class OverlapPermission:
 	first_index: int
 	second_index: int
 	relation: str
-	first_footprints: tuple[legacy_slide_plan.NormalizedBounds, ...]
-	second_footprints: tuple[legacy_slide_plan.NormalizedBounds, ...]
+	first_footprints: tuple[legacy_geometry.NormalizedBounds, ...]
+	second_footprints: tuple[legacy_geometry.NormalizedBounds, ...]
 	vertical_overlap: float
 	layout: str
 	order: tuple[int, ...]
 #============================================
-def image_djot(image: pptx_common.ImageAsset) -> str:
+def image_djot(image: pptx_to_marp.ImageAsset) -> str:
 	"""Render one native Djot image, reserving Marp import syntax exactly."""
 	return f"![{image.alt_text}]({image.markdown_path})"
 
@@ -148,7 +154,7 @@ def table_lines(tables: tuple[legacy_slide_plan.TablePlan, ...]) -> list[str]:
 #============================================
 def slot_image_lines(
 	regions: tuple[legacy_slide_plan.SourceImageRegion, ...],
-	images: tuple[pptx_common.ImageAsset, ...],
+	images: tuple[pptx_to_marp.ImageAsset, ...],
 ) -> tuple[list[str], list[str]]:
 	"""Resolve extracted image references; retain an explicit review lane otherwise."""
 	by_reference = {image.markdown_path: image for image in images}
@@ -164,16 +170,12 @@ def slot_image_lines(
 
 
 #============================================
-def region_bounds(regions: tuple[object, ...]) -> legacy_slide_plan.NormalizedBounds:
+def region_bounds(regions: tuple[object, ...]) -> legacy_geometry.NormalizedBounds:
 	"""Return the geometry union of one nonempty homogeneous source component."""
 	bounds = regions[0].bounds
 	for region in regions[1:]:
 		bounds = bounds.union(region.bounds)
 	return bounds
-
-
-#============================================
-caption_pairings = visual_relations.caption_pairings
 
 
 #============================================
@@ -210,7 +212,7 @@ def emit_components(
 	reasons: list[str] = []
 	for slot in planned.plan.slots:
 		if slot.flows_in_source_order:
-			flow_items: list[tuple[legacy_slide_plan.NormalizedBounds, int, str, object]] = []
+			flow_items: list[tuple[legacy_geometry.NormalizedBounds, int, str, object]] = []
 			for region in slot.text_regions:
 				flow_items.append((region.bounds, region.source_ordinal, "text", region))
 			for region in slot.image_regions:
@@ -240,7 +242,10 @@ def emit_components(
 			))
 			continue
 		shared_footer = set(shared_footer_sources(slot.text_regions, slot.image_regions))
-		pairs = caption_pairings(tuple(text for text in slot.text_regions if text not in shared_footer), slot.image_regions)
+		pairs = legacy_new_visual_relations.caption_pairings(
+			tuple(text for text in slot.text_regions if text not in shared_footer),
+			slot.image_regions,
+		)
 		paired_text = set(pairs.values())
 		for text in slot.text_regions:
 			if text not in paired_text:
@@ -331,7 +336,7 @@ def component_read_key(component: EmissionComponent) -> tuple[float, float, int]
 
 
 #============================================
-def component_footprints(component: EmissionComponent) -> tuple[legacy_slide_plan.NormalizedBounds, ...]:
+def component_footprints(component: EmissionComponent) -> tuple[legacy_geometry.NormalizedBounds, ...]:
 	"""Return immutable component members, with direct bounds for synthetic callers."""
 	return component.member_footprints or (component.bounds,)
 
@@ -458,7 +463,7 @@ def components_overlap(components: list[EmissionComponent]) -> bool:
 				continue
 			for first_footprint in component_footprints(first):
 				for second_footprint in component_footprints(second):
-					if legacy_slide_plan.substantially_overlaps(first_footprint, second_footprint):
+					if legacy_geometry.substantially_overlaps(first_footprint, second_footprint):
 						return True
 	return False
 
@@ -468,7 +473,7 @@ def raw_components_overlap(components: list[EmissionComponent]) -> bool:
 	"""Check member collisions without treating any composition as an allowed relation."""
 	for index, first in enumerate(components):
 		for second in components[index + 1:]:
-			if any(legacy_slide_plan.substantially_overlaps(left, right) for left in component_footprints(first)
+			if any(legacy_geometry.substantially_overlaps(left, right) for left in component_footprints(first)
 				for right in component_footprints(second)):
 				return True
 	return False
@@ -516,7 +521,7 @@ def overlap_permissions(components: list[EmissionComponent]) -> tuple[OverlapPer
 			footer, image = components[footer_index], components[image_index]
 			overlap = vertical_overlap(component_footprints(image)[-1], footer.bounds)
 			if shallow_broad_footer(components, footer) and 0.0 < overlap <= FOOTER_IMAGE_PADDING_RATIO and \
-				not legacy_slide_plan.substantially_overlaps(component_footprints(image)[0], footer.bounds):
+				not legacy_geometry.substantially_overlaps(component_footprints(image)[0], footer.bounds):
 				record = pair_permission(components, footer_index, image_index, "caption-footer-padding", "two-plus-one-panels")
 				if record is not None:
 					records.append(record)
@@ -542,7 +547,7 @@ def pair_permission(components: list[EmissionComponent], first_index: int, secon
 
 
 #============================================
-def vertical_overlap(first: legacy_slide_plan.NormalizedBounds, second: legacy_slide_plan.NormalizedBounds) -> float:
+def vertical_overlap(first: legacy_geometry.NormalizedBounds, second: legacy_geometry.NormalizedBounds) -> float:
 	"""Measure signed vertical intersection for a recorded source-padding relation."""
 	return min(first.bottom, second.bottom) - max(first.top, second.top)
 
@@ -675,12 +680,12 @@ def bottom_footer_layout(components: list[EmissionComponent]) -> tuple[float, tu
 	if len(components) != 3 or len(footer_indexes) != 1 or not bottom_footer_structure(components, footer_indexes[0]):
 		return None
 	peers = [item for index, item in enumerate(components) if index != footer_indexes[0]]
-	if not material_axis_overlap(peers[0].bounds.top, peers[0].bounds.height, peers[1].bounds.top, peers[1].bounds.height):
+	if not legacy_topology.material(peers[0].bounds.top, peers[0].bounds.height, peers[1].bounds.top, peers[1].bounds.height):
 		return None
-	source = normalized_component_boxes(components)
+	source = legacy_topology.normalized_boxes(tuple(component.bounds for component in components))
 	slots = marp_lib.layouts.normalized_topology_slots(marp_lib.layouts.LAYOUTS["two-over-one-panels"])
-	matches = [(topology_score(source, slots, order), order) for order in itertools.permutations(range(3))
-		if order[2] == footer_indexes[0] and relations_match(source, slots, order)]
+	matches = [(legacy_topology.score(source, slots, order), order) for order in itertools.permutations(range(3))
+		if order[2] == footer_indexes[0] and legacy_topology.relations_match(source, slots, order)]
 	if not matches:
 		return None
 	score = min(item[0] for item in matches)
@@ -695,14 +700,14 @@ def asymmetric_explanatory_pair_layout(components: list[EmissionComponent]) -> t
 	"""Accept one aligned, disjoint coarse-plus-compact text pair at a local ceiling."""
 	if not asymmetric_explanatory_pair(components):
 		return None
-	source = normalized_component_boxes(components)
+	source = legacy_topology.normalized_boxes(tuple(component.bounds for component in components))
 	candidates: list[tuple[str, list[tuple[float, tuple[int, ...]]]]] = []
 	for spec in marp_lib.layouts.LAYOUTS.values():
 		if not spec.topology_matchable or spec.cell_count != 2:
 			continue
 		slots = marp_lib.layouts.normalized_topology_slots(spec)
-		matches = [(topology_score(source, slots, order), order) for order in itertools.permutations(range(2))
-			if relations_match(source, slots, order)]
+		matches = [(legacy_topology.score(source, slots, order), order) for order in itertools.permutations(range(2))
+			if legacy_topology.relations_match(source, slots, order)]
 		if matches:
 			candidates.append((spec.name, matches))
 	if [name for name, _matches in candidates] != ["two-panels"]:
@@ -736,39 +741,12 @@ def asymmetric_explanatory_pair(components: list[EmissionComponent]) -> bool:
 
 
 #============================================
-def normalized_component_boxes(components: list[EmissionComponent]) -> tuple[tuple[float, float, float, float], ...]:
-	"""Normalize source component rectangles against their shared content envelope."""
-	return legacy_topology.normalized_boxes(tuple(component.bounds for component in components))
-
-
-#============================================
-def union_bounds(bounds: tuple[legacy_slide_plan.NormalizedBounds, ...]) -> legacy_slide_plan.NormalizedBounds:
+def union_bounds(bounds: tuple[legacy_geometry.NormalizedBounds, ...]) -> legacy_geometry.NormalizedBounds:
 	"""Return the geometric union of already-normalized source rectangles."""
 	result = bounds[0]
 	for item in bounds[1:]:
 		result = result.union(item)
 	return result
-
-
-#============================================
-def relations_match(source: tuple[tuple[float, float, float, float], ...],
-		slots: tuple[tuple[float, float, float, float, float, float], ...], order: tuple[int, ...],
-		preserve_axis_overlap: bool = True) -> bool:
-	"""Preserve material axis overlaps and each source separation relation."""
-	return legacy_topology.relations_match(source, slots, order, preserve_axis_overlap)
-
-
-#============================================
-def material_axis_overlap(start: float, span: float, other_start: float, other_span: float) -> bool:
-	"""Return whether two projections share a substantial common axis span."""
-	return legacy_topology.material(start, span, other_start, other_span)
-
-
-#============================================
-def topology_score(source: tuple[tuple[float, float, float, float], ...],
-		slots: tuple[tuple[float, float, float, float, float, float], ...], order: tuple[int, ...]) -> float:
-	"""Measure center agreement with a low-weight relative span difference."""
-	return legacy_topology.score(source, slots, order)
 
 
 #============================================

@@ -7,21 +7,20 @@ Unassigned forms such as `%%` remain ordinary Djot text, not aliases.
 
 ## Governing requirement: strict Djot compatibility
 
-The future language is an extended Djot language. It inherits every construct supported by the
-pinned Djot syntax revision, rather than defining a smaller Djot subset. This is its top-level
-requirement: every accepted source document must first be valid Djot and pass every Djot parser,
-formatter, editor rule, and linter in the project's pinned compatibility suite. The extension linter
-adds slide semantics after that gate; it can never waive a Djot failure or accept syntax that strict
-Djot rejects.
+The implemented extended-Djot front end inherits every construct supported by the pinned Djot
+syntax revision rather than defining a smaller Djot subset. Strict Djot validity is its top-level
+compatibility requirement: the parser and source-only extension linter run only after the pinned
+native parser accepts the unmodified source. The extension adds slide semantics after that gate; it
+can never waive a Djot failure or accept syntax that strict Djot rejects.
 
-Jotdown 0.10.0 is the first pinned native parser in the compatibility suite. It was installed with
-the optional CLI and is invoked once per source before the local extension check; its zero exit
-status is the suite's raw-Djot parser-validation result. Djot does not advertise an official
-standalone linter. Before the language accepts source, the project must still record the exact Djot
-syntax revision and every applicable formatter, editor rule, and lint tool.
-"Passes all Djot linters" then means a clean result from every applicable tool in that recorded
-suite, rather than an untestable claim about an unnamed future tool. Any newly discovered applicable
-Djot lint tool joins the suite or receives a documented compatibility decision before acceptance.
+Jotdown 0.10.0 is the pinned native parser currently exercised by the compatibility suite. It was
+installed with the optional CLI and is invoked once per source before the local extension check; its
+zero exit status is the suite's raw-Djot parser-validation result. Djot does not advertise an
+official standalone linter. The exact syntax revision and any applicable formatter, editor-rule,
+and lint tools remain open compatibility evidence to record as they are selected.
+"Passes all Djot linters" can only mean a clean result from every applicable tool in that recorded
+suite, rather than an untestable claim about an unnamed tool. A newly discovered applicable Djot
+lint tool requires a documented compatibility decision before it is included in that claim.
 
 ## ASCII source and Unicode projection
 
@@ -108,11 +107,11 @@ without title placement rejects headings rather than silently drawing them somew
 ## Djot content boundary
 
 The front end recognizes headings, ordinary lists, links, quotes, inline verbatim, fenced code
-blocks, tables, and component-image syntax. It renders only forms with an editable native mapping;
-quotes, attributes, inline math, and other unsupported forms receive source-located diagnostics.
-Use inline verbatim for short fixed-width content and fenced code blocks for aligned multiline
-content. `=== layout:` replaces Marp's `---` slide separator, and Marp-specific image modifiers are
-not adopted.
+blocks, tables, component-image syntax, and the reserved `$inline$` and `$$display$$` mathematics
+forms. Inline verbatim renders as editable fixed-width text. A validated table renders only in a
+layout with a native table destination. Fenced code, display math, quote blocks, and inline math
+remain source-located native-export rejections until their native owners exist. `=== layout:`
+replaces Marp's `---` slide separator, and Marp-specific image modifiers are not adopted.
 
 ## Linter boundary
 
@@ -124,17 +123,18 @@ animation export, and visual quality remain separate checks.
 
 ## Official layout: multiple-choice
 
-`multiple-choice` is the first official future-language layout. It has exactly these predefined
+`multiple-choice` is the first official extended-Djot layout. It has exactly these predefined
 slots:
 
 - `@question` contains the question prompt and its visible choice list. It is visible
   when the slide opens.
-- `@answer` contains the short answer in the layout's fixed bottom-right popup region. Its implicit
-  object-appear intent awaits PowerPoint timing evidence before it can claim first-advance playback.
+- `@answer` contains one or two short, flat editable paragraphs in the layout's fixed bottom-right
+  popup region. The popup has one implicit object reveal.
 
-`@question` and `@answer` are each required once. The answer is one editable paragraph with implicit
-object-appear intent, so `<= appear` and `=> appear` are invalid on its content. This intent is not
-yet verified PowerPoint timing or first-advance behavior. Open-ended questions use another layout.
+`@question` and `@answer` are each required once. The answer has one implicit object reveal, so
+`<= appear` and `=> appear` are invalid on its content. Implementation, structural tests, headless
+PPTX-to-ODP package evidence, and PDF final-state export have passed; attended click playback in
+LibreOffice Impress remains the sole open visual gate. Open-ended questions use another layout.
 
 Examples:
 
@@ -186,8 +186,8 @@ semantics do not transfer to Djot merely because their raw lines parse. In parti
   reveal, or other extension syntax. This reservation covers the ordinary Marp and Djot image
   surface only; it does not adopt Marp-specific background, sizing, positioning, or filter modifiers.
 - `$inline$` and `$$display$$` are the official inline and display mathematics forms. They are
-  unavailable for extension structure, even though they are ordinary text under native Djot math
-  rules. The repository math adapter will interpret them with MathJax or a similar plugin.
+  unavailable for extension structure and remain parse-valid/reserved source forms until a native
+  math owner exists.
 
 ## Attribute scope
 
@@ -205,8 +205,8 @@ fences. Djot permits multiline attributes; that capability is outside the curren
 
 ## Parse-validity boundaries
 
-- Native Djot accepts all provisional and free forms above as ordinary paragraphs. The future slide
-  parser, not Djot itself, gives the provisional forms their roles.
+- Native Djot accepts all provisional and free forms above as ordinary paragraphs. The
+  extended-Djot slide parser, not Djot itself, gives the provisional forms their roles.
 - The same is true of `=== layout: name` and `===== layout: name`: even an equals-only line has no
   Djot block meaning.
   Djot thematic breaks use three or more `*` or `-` characters with no other content; it has no
@@ -216,12 +216,14 @@ fences. Djot permits multiline attributes; that capability is outside the curren
   a useful visual-boundary candidate.
 - An ordinary Djot renderer displays those lines as content. Parse validity is not native slide
   support.
-- Code fences and raw blocks remain opaque: a marker-looking line inside them is code, not a future
-  language construct.
-- Djot's syntax reference is not completely stable. Before implementation, pin its reference
-  revision and the complete strict-compatibility suite; run every applicable tool in that suite.
-- Djot does not advertise an official standalone linter. This is not an exemption: the project must
-  name and test its parser, formatter, editor-rule, and linter suite before claiming compatibility.
+- Code fences and raw blocks remain opaque: a marker-looking line inside them is code, not an
+  extended-Djot language construct.
+- Djot's syntax reference is not completely stable. Jotdown 0.10.0 supplies the current native
+  parser evidence; pinning formatter, editor-rule, and lint lanes remains open compatibility work,
+  not a prerequisite for the implemented front end.
+- Djot does not advertise an official standalone linter. This is not an exemption: any eventual
+  broad compatibility claim must name the parser, formatter, editor-rule, and linter evidence that
+  supports it.
 
 ## Deliberately unassigned questions
 
@@ -233,10 +235,12 @@ fences. Djot permits multiline attributes; that capability is outside the curren
 ## Evidence still needed
 
 1. Pin the remaining formatter/editor-rule lanes of the strict-Djot suite.
-2. Run the attended PowerPoint and Impress experiment in
-   [wp_a1_animation_fidelity.md](../reports/wp_a1_animation_fidelity.md) before implementing timing.
-3. Add a native mapping only with a focused source diagnostic, editable-object design, and acceptance
-   evidence.
+2. Record attended LibreOffice Impress click playback in
+   [wp_a1_animation_fidelity.md](../reports/wp_a1_animation_fidelity.md). This is the sole remaining
+   animation acceptance gate; implementation, structural tests, headless PPTX-to-ODP package
+   inspection, and PDF final-state export have passed.
+3. Keep future native mappings behind a focused source diagnostic, editable-object design, and
+   acceptance evidence.
 
 ## Primary sources
 

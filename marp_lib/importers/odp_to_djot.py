@@ -1,4 +1,4 @@
-"""Convert a trusted legacy ODP into experimental extended-Djot slide source."""
+"""Convert a trusted legacy ODP into supported extended-Djot slide source."""
 
 # Standard Library
 import pathlib

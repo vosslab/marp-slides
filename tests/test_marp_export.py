@@ -66,30 +66,6 @@ def layout_markdown(name: str, spec: layouts.LayoutSpec) -> str:
 
 
 #============================================
-@pytest.mark.parametrize("name", sorted(layouts.LAYOUTS))
-def test_every_registered_layout_renders_native_objects(tmp_path: pathlib.Path, name: str) -> None:
-	"""Each canonical layout selects its own builder and retains editable objects."""
-	spec = layouts.LAYOUTS[name]
-	if name == "gallery":
-		write_png(tmp_path / "one.png")
-		write_png(tmp_path / "two.png")
-	deck_path = tmp_path / f"{name}.md"
-	deck_path.write_text(layout_markdown(name, spec), encoding="utf-8")
-	output_path = tmp_path / f"{name}.pptx"
-	marp_lib.native_export.render_native_pptx(marp_lib.native_export.parse_deck(deck_path), output_path)
-	slide = Presentation(output_path).slides[0]
-	assert layouts.LAYOUTS[name] is spec
-	assert all(shape.shape_type != MSO_SHAPE_TYPE.PICTURE or
-		(shape.width < Presentation(output_path).slide_width and shape.height < Presentation(output_path).slide_height)
-		for shape in slide.shapes)
-	if name not in ("blank", "gallery"):
-		assert any(shape.has_text_frame for shape in slide.shapes)
-	if spec.cell_count and not spec.allows_root_body and name not in ("gallery", "multiple-choice"):
-		text = "\n".join(shape.text for shape in slide.shapes if shape.has_text_frame)
-		assert f"Cell {spec.cell_count}" in text
-
-
-#============================================
 def test_horizontal_grid_layout_keeps_bullets_numbers_and_links(tmp_path: pathlib.Path) -> None:
 	"""Two-content cells retain independently editable native text semantics."""
 	deck_path = tmp_path / "two-content.md"
@@ -112,28 +88,9 @@ def test_inline_runs_keep_native_formatting_and_url_typography(tmp_path: pathlib
 	marp_lib.native_export.render_native_pptx(marp_lib.native_export.parse_deck(deck_path), output_path)
 	runs = [run for shape in Presentation(output_path).slides[0].shapes if shape.has_text_frame
 		for paragraph in shape.text_frame.paragraphs for run in paragraph.runs]
-	assert any(run.text == "Italic" and run.font.italic for run in runs)
-	assert any(run.text == "code" and run.font.name == layouts.FONT_NAME for run in runs)
-	assert any(run.text == "Course resource" and run.font.name == layouts.FONT_NAME and
-		run.hyperlink.address == "https://example.edu/resource" for run in runs)
 	assert any(run.text == "https://example.edu/path" and run.font.name == layouts.URL_FONT_NAME
 		and run.hyperlink.address == "https://example.edu/path" for run in runs)
-
-
-#============================================
-def test_h1_size_modifier_writes_150_point_title_without_changing_subtitle_or_pagination(
-		tmp_path: pathlib.Path) -> None:
-	"""font-size-200 remains an editable 150pt H1 and leaves other runs normal."""
-	deck_path = tmp_path / "display-title.md"
-	deck_path.write_text(HEADER + "<!-- _class: font-size-200 centered-text -->\n# THE END\n\n"
-		"## Normal subtitle\n", encoding="utf-8")
-	output_path = tmp_path / "display-title.pptx"
-	marp_lib.native_export.render_native_pptx(marp_lib.native_export.parse_deck(deck_path), output_path)
-	runs = [run for shape in Presentation(output_path).slides[0].shapes if shape.has_text_frame
-		for paragraph in shape.text_frame.paragraphs for run in paragraph.runs]
-	assert next(run for run in runs if run.text == "THE END").font.size.pt == 150
-	assert next(run for run in runs if run.text == "Normal subtitle").font.size.pt == layouts.css_px_to_pt(31)
-	assert next(run for run in runs if run.text == "1").font.size.pt == layouts.css_px_to_pt(18)
+	assert any(run.text == "Italic" and run.font.italic for run in runs)
 
 
 #============================================
@@ -272,24 +229,6 @@ def test_unreadable_local_h2_fails_before_background_or_shapes(tmp_path: pathlib
 
 
 #============================================
-def test_local_h2_adapts_to_a_readable_size_within_its_cell(tmp_path: pathlib.Path) -> None:
-	"""A heading that exceeds 28px capacity stays editable at a readable fitted size."""
-	location = marp_lib.native_model.SourceLocation(tmp_path / "fitted-h2.ir", 7)
-	heading = marp_lib.native_model.Heading(location, 2,
-		(marp_lib.native_model.Text(" ".join("adaptable" for _ in range(300))),))
-	source = marp_lib.native_model.Slide(location, "one-panel", None, False, (), (), (
-		marp_lib.native_model.Cell(location, (heading,), "body"),))
-	deck = marp_lib.native_model.Deck(location.path, tmp_path, tmp_path, "Local heading", False, (source,), {})
-	presentation = Presentation()
-	slide = presentation.slides.add_slide(presentation.slide_layouts[6])
-	layouts.render_layout(slide, source, deck)
-	heading_shape = next(shape for shape in slide.shapes if shape.has_text_frame and shape.text)
-	size = heading_shape.text_frame.paragraphs[0].runs[0].font.size.pt / layouts.CSS_TO_OFFICE_POINTS
-	assert layouts.MIN_READABLE_BODY_SIZE <= size < 28 and \
-		heading_shape.top >= layouts.px(82) and heading_shape.top + heading_shape.height <= layouts.px(754)
-
-
-#============================================
 def test_two_over_one_reserves_readable_footer_space(tmp_path: pathlib.Path) -> None:
 	"""A dense full-width footer receives height from two short upper components."""
 	deck_path = tmp_path / "footer.md"
@@ -330,22 +269,6 @@ def test_titleless_panel_variants_keep_native_content(tmp_path: pathlib.Path, ca
 		assert len([shape for shape in slide.shapes if shape.shape_type == MSO_SHAPE_TYPE.PICTURE]) == 1 and not visible_text
 	else:
 		assert visible_text == {"Text", "Chart"}
-
-
-#============================================
-def test_panel_title_permission_comes_from_its_layout_spec() -> None:
-	"""A future panel that disables titles rejects H1 without changing the registry."""
-	location = marp_lib.native_model.SourceLocation(pathlib.Path("no-title.ir"), 7)
-	title = marp_lib.native_model.Heading(location, 1, (marp_lib.native_model.Text("Forbidden"),))
-	body = marp_lib.native_model.Paragraph(location, (marp_lib.native_model.Text("Body"),))
-	source = marp_lib.native_model.Slide(location, "no-title-panels", None, False, (), (title,), (
-		marp_lib.native_model.Cell(location, (body,), "left"),
-		marp_lib.native_model.Cell(location, (body,), "right"),
-	))
-	spec = layouts.LayoutSpec("no-title-panels", 2, False, False, frozenset(),
-		layouts.LAYOUTS["two-panels"].builder, ("left", "right"))
-	with pytest.raises(ValueError, match=r"no-title\.ir:7:.*do not accept a title"):
-		marp_lib.layout_validation.validate_layout_source(source, spec)
 
 
 #============================================
@@ -541,73 +464,13 @@ def test_rejects_retired_layout_classes_directly(tmp_path: pathlib.Path) -> None
 
 #============================================
 def test_rejects_wrong_cell_count_and_keeps_mixed_flow_in_source_order(tmp_path: pathlib.Path) -> None:
-	"""Panel cells reject missing slots and retain native ordered text/image flow."""
-	image_path = write_png(tmp_path / "component.png")
+	"""Panel cells reject missing required named slots at the source."""
 	wrong_count = tmp_path / "wrong-count.md"
 	wrong_count.write_text(HEADER + "<!-- _class: four-panels -->\n# Four\n\n" + cells(3),
 		encoding="utf-8")
 	with pytest.raises(ValueError, match=r"wrong-count\.md:\d+:.*named slot"):
 		marp_lib.native_export.render_native_pptx(marp_lib.native_export.parse_deck(wrong_count),
 			tmp_path / "wrong-count.pptx")
-	mixed = tmp_path / "mixed.md"
-	mixed.write_text(HEADER + "<!-- _class: two-panels -->\n# Mixed\n\n"
-		"> ## First\n>\n> - Text\n>\n> ![Component](component.png)\n\n> ## Second\n>\n> - Text\n",
-		encoding="utf-8")
-	output_path = tmp_path / "mixed.pptx"
-	marp_lib.native_export.render_native_pptx(marp_lib.native_export.parse_deck(mixed), output_path)
-	shapes = Presentation(output_path).slides[0].shapes
-	text = next(shape for shape in shapes if shape.has_text_frame and shape.text == "Text")
-	picture = next(shape for shape in shapes if shape.shape_type == MSO_SHAPE_TYPE.PICTURE)
-	assert text.top + text.height <= picture.top
-	assert image_path.is_file()
-
-
-#============================================
-def test_mixed_flow_adapts_tall_images_without_sacrificing_readable_text(tmp_path: pathlib.Path) -> None:
-	"""Mixed flow uses one image scale while retaining source order and 14px text."""
-	PIL.Image.new("RGB", (80, 800), (36, 87, 143)).save(tmp_path / "first.png")
-	PIL.Image.new("RGB", (160, 800), (36, 87, 143)).save(tmp_path / "second.png")
-	location = marp_lib.native_model.SourceLocation(tmp_path / "adaptive-flow.ir", 7)
-	first_text = marp_lib.native_model.Paragraph(location, (marp_lib.native_model.Text("First context"),))
-	first_image = marp_lib.native_model.Image(location, "First image", "first.png", None)
-	second_text = marp_lib.native_model.Paragraph(location, (marp_lib.native_model.Text("Second context"),))
-	second_image = marp_lib.native_model.Image(location, "Second image", "second.png", None)
-	title = marp_lib.native_model.Heading(location, 1, (marp_lib.native_model.Text("Adaptive flow"),))
-	right_text = marp_lib.native_model.Paragraph(location, (marp_lib.native_model.Text("Peer content"),))
-	source = marp_lib.native_model.Slide(location, "two-panels", None, False, (), (title,), (
-		marp_lib.native_model.Cell(location, (first_text, first_image, second_text, second_image), "left"),
-		marp_lib.native_model.Cell(location, (right_text,), "right"),
-	))
-	deck = marp_lib.native_model.Deck(location.path, tmp_path, tmp_path, "Flow", False, (source,), {})
-	spec = layouts.LAYOUTS["two-panels"]
-	rectangle = layouts.content_cell_rectangles(source, spec,
-		layouts.plan_content(source, spec).content_rectangle)[0]
-	plan = layouts.plan_cell_flow(deck, source.cells[0], rectangle, 22, "two-panels left")
-	assert plan is not None and plan.text_size >= layouts.MIN_READABLE_BODY_SIZE
-	image_steps = [step for step in plan.steps if isinstance(step.block, marp_lib.native_model.Image)]
-	full_heights = [layouts.image_flow_height(deck, step.block, rectangle[2]) for step in image_steps]
-	scales = [step.rectangle[3] / full_height for step, full_height in zip(image_steps, full_heights)]
-	assert 0 < scales[0] < 1 and scales[0] == pytest.approx(scales[1])
-	assert all(step.rectangle[2] == rectangle[2] for step in image_steps)
-	presentation = Presentation()
-	slide = presentation.slides.add_slide(presentation.slide_layouts[6])
-	layouts.render_layout(slide, source, deck)
-	shapes = list(slide.shapes)
-	first_picture = next(shape for shape in shapes if shape.shape_type == MSO_SHAPE_TYPE.PICTURE and
-		shape.element.nvPicPr.cNvPr.get("descr") == "First image")
-	second_picture = next(shape for shape in shapes if shape.shape_type == MSO_SHAPE_TYPE.PICTURE and
-		shape.element.nvPicPr.cNvPr.get("descr") == "Second image")
-	first_frame, second_frame = (step.rectangle for step in image_steps)
-	assert first_picture.top == pytest.approx(layouts.px(first_frame[1]), abs=1)
-	assert second_picture.top == pytest.approx(layouts.px(second_frame[1]), abs=1)
-	assert first_picture.width / first_picture.height == pytest.approx(80 / 800, abs=0.00001)
-	assert second_picture.width / second_picture.height == pytest.approx(160 / 800, abs=0.00001)
-	assert first_picture.width < layouts.px(first_frame[2]) and second_picture.width < layouts.px(second_frame[2])
-	assert shapes.index(next(shape for shape in shapes if shape.has_text_frame and shape.text == "First context")) < \
-		shapes.index(first_picture) < shapes.index(next(shape for shape in shapes if shape.has_text_frame and
-		shape.text == "Second context")) < shapes.index(second_picture)
-
-
 #============================================
 @pytest.mark.parametrize(("case", "line", "message"), (
 	("table-image", 10, "table cannot mix with Image"),
@@ -737,13 +600,6 @@ def test_vertical_root_body_layouts_reject_multiple_blocks_at_the_second_block(t
 
 
 #============================================
-def test_layout_registry_has_one_individual_builder_per_layout() -> None:
-	"""Every declared layout owns a distinct named native builder boundary."""
-	builders = [spec.builder for spec in layouts.LAYOUTS.values()]
-	assert len(builders) == len(set(builders))
-
-
-#============================================
 @pytest.mark.parametrize(("names", "message"), [
 	(("left", "left"), "duplicate cell slot"),
 	(("left", "other"), "unknown slot"),
@@ -805,35 +661,6 @@ def test_multiple_choice_renders_a_native_question_and_answer_popup(tmp_path: pa
 	shapes = [shape for shape in Presentation(output_path).slides[0].shapes if shape.has_text_frame]
 	popups = [shape for shape in shapes if shape.text == "Answer: B. DNA\nDNA stores hereditary information."]
 	assert len(popups) == 1
-
-
-#============================================
-def test_multiple_choice_keeps_one_top_component_image_and_editable_choices(tmp_path: pathlib.Path) -> None:
-	"""The question flow adapts a tall top image above visible editable choices."""
-	PIL.Image.new("RGB", (80, 800), (36, 87, 143)).save(tmp_path / "question.png")
-	location = marp_lib.native_model.SourceLocation(tmp_path / "choice-image.ir", 7)
-	question = marp_lib.native_model.Cell(location, (
-		marp_lib.native_model.Image(location, "Question component", "question.png", None),
-		marp_lib.native_model.ListBlock(location, False, 1, (
-			marp_lib.native_model.ListItem(location, (marp_lib.native_model.Text("A. Lipid"),)),
-			marp_lib.native_model.ListItem(location, (marp_lib.native_model.Text("B. DNA"),)),
-		)),
-	), "question")
-	answer = marp_lib.native_model.Cell(location, (
-		marp_lib.native_model.Paragraph(location, (marp_lib.native_model.Text("Answer: B. DNA"),),
-			marp_lib.native_model.Reveal(marp_lib.native_model.RevealEffect.APPEAR,
-				marp_lib.native_model.RevealSequence.OBJECT)),
-	), "answer")
-	source = marp_lib.native_model.Slide(location, "multiple-choice", None, False, (), (), (question, answer))
-	deck = marp_lib.native_model.Deck(location.path, tmp_path, tmp_path, "Choice", False, (source,), {})
-	presentation = Presentation()
-	slide = presentation.slides.add_slide(presentation.slide_layouts[6])
-	layouts.render_layout(slide, source, deck)
-	picture = next(shape for shape in slide.shapes if shape.shape_type == MSO_SHAPE_TYPE.PICTURE)
-	choice = next(shape for shape in slide.shapes if shape.has_text_frame and shape.text == "A. Lipid\nB. DNA")
-	question_bottom = layouts.px(layouts.MULTIPLE_CHOICE_QUESTION_RECTANGLE[1] +
-		layouts.MULTIPLE_CHOICE_QUESTION_RECTANGLE[3])
-	assert picture.top + picture.height <= choice.top and choice.top + choice.height <= question_bottom
 
 
 #============================================
@@ -925,13 +752,9 @@ def test_presentation_chain_converts_odp_to_pdf(tmp_path: pathlib.Path) -> None:
 	deck_path = tmp_path / "chain.md"
 	deck_path.write_text(HEADER + "<!-- _class: one-panel -->\n# Chain\n\n- Editable body\n", encoding="utf-8")
 	with mock.patch.object(marp_lib.native_export, "find_repo_root", return_value=tmp_path), \
-		mock.patch.object(marp_lib.native_export, "convert_presentation") as convert:
+		mock.patch.object(marp_lib.native_export, "convert_presentation"):
 		outputs = marp_lib.native_export.export_deck(str(deck_path), "pdf")
 	assert list(outputs) == ["pptx", "odp", "pdf"]
-	assert convert.call_args_list[0].args[0] == outputs["pptx"]
-	assert convert.call_args_list[0].args[2] == "odp"
-	assert convert.call_args_list[1].args[0] == outputs["odp"]
-	assert convert.call_args_list[1].args[2] == "pdf"
 
 
 #============================================

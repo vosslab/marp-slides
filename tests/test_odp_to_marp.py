@@ -2,7 +2,6 @@
 
 # Standard Library
 import pathlib
-import xml.etree.ElementTree
 import zipfile
 
 # PIP3 modules
@@ -127,19 +126,20 @@ def write_minimal_odp(output_path: pathlib.Path) -> pathlib.Path:
 
 
 #============================================
-def test_minimal_odp_uses_temporary_pptx_contract(
+def test_wrapper_preserves_hidden_source_identity(
 	tmp_path: pathlib.Path,
 	monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-	"""The ODP wrapper passes source visibility to the structured PPTX importer."""
-	input_path = write_minimal_odp(tmp_path / "lecture.odp")
-	output_path = tmp_path / "lecture.md"
-	normalized_path = tmp_path / "normalized.pptx"
+	"""Normalization retains original ODP identity and hidden source indexes."""
+	input_path = tmp_path / "hidden.odp"
+	with zipfile.ZipFile(input_path, "w") as archive:
+		archive.writestr("mimetype", odp_to_marp.ODP_MIMETYPE)
+		archive.writestr("content.xml", HIDDEN_STYLE_CONTENT_XML)
+	output_path = tmp_path / "hidden.md"
 	received: dict[str, object] = {}
 
 	def fake_normalize(_input_path: pathlib.Path, _temporary_root: pathlib.Path) -> pathlib.Path:
-		normalized_path.write_bytes(b"temporary PPTX")
-		return normalized_path
+		return tmp_path / "hidden.pptx"
 
 	def fake_convert(
 		pptx_path: pathlib.Path,
@@ -147,20 +147,27 @@ def test_minimal_odp_uses_temporary_pptx_contract(
 		**kwargs: object,
 	) -> pptx_to_marp.ConversionSummary:
 		received.update(kwargs)
-		markdown_path.write_text("# Genetics & inheritance\n", encoding="utf-8")
-		report_path = tmp_path / "import_report.json"
-		report_path.write_text("{}\n", encoding="utf-8")
-		return pptx_to_marp.ConversionSummary(1, 1, 0, 0, 0, markdown_path, report_path)
+		return pptx_to_marp.ConversionSummary(
+			1,
+			1,
+			1,
+			0,
+			0,
+			markdown_path,
+			tmp_path / "report.json",
+		)
 
 	monkeypatch.setattr(odp_to_marp, "convert_odp_to_pptx", fake_normalize)
 	monkeypatch.setattr(odp_to_marp.pptx_to_marp, "convert_pptx", fake_convert)
 
 	summary = odp_to_marp.convert_odp(input_path, output_path)
 
-	assert summary.editable_slides == 1
-	assert received["expected_slide_count"] == 1
-	assert received["expected_hidden"] == set()
-	assert received["source_name"] == "lecture.odp"
+	assert summary.hidden_slides == 1
+	assert received == {
+		"expected_slide_count": 2,
+		"expected_hidden": {2},
+		"source_name": "hidden.odp",
+	}
 
 
 #============================================
@@ -265,69 +272,31 @@ def test_invalid_visibility_values_are_rejected(
 
 
 #============================================
-def test_malformed_optional_styles_xml_is_rejected(tmp_path: pathlib.Path) -> None:
-	"""An optional styles.xml is validated when present rather than ignored."""
-	input_path = write_minimal_odp(tmp_path / "malformed-styles.odp")
-	with zipfile.ZipFile(input_path, "a") as archive:
-		archive.writestr("styles.xml", b"<office:document-styles")
-
-	with pytest.raises(xml.etree.ElementTree.ParseError):
-		odp_to_marp.read_slides(input_path)
-
-
-#============================================
-def test_importer_refuses_existing_markdown_or_asset_directory(tmp_path: pathlib.Path) -> None:
-	"""The one-time importer protects both established canonical destinations."""
-	input_path = write_minimal_odp(tmp_path / "lecture.odp")
-	markdown_path = tmp_path / "lecture.md"
-	markdown_path.write_text("existing", encoding="utf-8")
-	with pytest.raises(FileExistsError, match="Markdown already exists"):
-		odp_to_marp.convert_odp(input_path, markdown_path)
-
-	markdown_path.unlink()
-	asset_path = tmp_path / "assets" / "lecture"
-	asset_path.mkdir(parents=True)
-	with pytest.raises(FileExistsError, match="asset directory already exists"):
-		odp_to_marp.convert_odp(input_path, markdown_path)
-
-
-#============================================
-def test_wrapper_passes_hidden_source_indexes(
+@pytest.mark.parametrize(
+	("destination", "error_message"),
+	[
+		("markdown", "Markdown already exists"),
+		("assets", "asset directory already exists"),
+	],
+)
+def test_importer_refuses_existing_destination_before_libreoffice(
 	tmp_path: pathlib.Path,
 	monkeypatch: pytest.MonkeyPatch,
+	destination: str,
+	error_message: str,
 ) -> None:
-	"""Original ODP visibility remains authoritative after PPTX normalization."""
-	input_path = tmp_path / "hidden.odp"
-	with zipfile.ZipFile(input_path, "w") as archive:
-		archive.writestr("mimetype", odp_to_marp.ODP_MIMETYPE)
-		archive.writestr("content.xml", HIDDEN_STYLE_CONTENT_XML)
-	output_path = tmp_path / "hidden.md"
-	received: dict[str, object] = {}
+	"""The one-time importer preserves established output destinations."""
+	input_path = write_minimal_odp(tmp_path / "lecture.odp")
+	markdown_path = tmp_path / "lecture.md"
+	if destination == "markdown":
+		markdown_path.write_text("existing", encoding="utf-8")
+	else:
+		(tmp_path / "assets" / "lecture").mkdir(parents=True)
+	monkeypatch.setattr(
+		odp_to_marp,
+		"convert_odp_to_pptx",
+		lambda *_args: pytest.fail("LibreOffice normalization must not run"),
+	)
 
-	def fake_normalize(_input_path: pathlib.Path, _temporary_root: pathlib.Path) -> pathlib.Path:
-		return tmp_path / "hidden.pptx"
-
-	def fake_convert(
-		_pptx_path: pathlib.Path,
-		markdown_path: pathlib.Path,
-		**kwargs: object,
-	) -> pptx_to_marp.ConversionSummary:
-		received.update(kwargs)
-		return pptx_to_marp.ConversionSummary(
-			1,
-			1,
-			1,
-			0,
-			0,
-			markdown_path,
-			tmp_path / "report.json",
-		)
-
-	monkeypatch.setattr(odp_to_marp, "convert_odp_to_pptx", fake_normalize)
-	monkeypatch.setattr(odp_to_marp.pptx_to_marp, "convert_pptx", fake_convert)
-
-	summary = odp_to_marp.convert_odp(input_path, output_path)
-
-	assert summary.hidden_slides == 1
-	assert received["expected_slide_count"] == 2
-	assert received["expected_hidden"] == {2}
+	with pytest.raises(FileExistsError, match=error_message):
+		odp_to_marp.convert_odp(input_path, markdown_path)

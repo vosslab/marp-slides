@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Exercise every Djot native layout through PPTX, ODP, and PDF export.
 
-This E2E verifies the source-to-editable-artifact chain.  PowerPoint timing and
-first-advance behavior remain an attended M5 fidelity gate.
+This E2E verifies the source-to-editable-artifact chain.  LibreOffice Impress
+click-playback remains the attended presentation-fidelity gate.
 """
 
 # Standard Library

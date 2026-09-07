@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Convert a trusted PPTX into experimental extended-Djot slide source."""
+"""Convert a trusted PPTX into supported extended-Djot slide source."""
 
 import sys
 import pathlib

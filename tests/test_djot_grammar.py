@@ -44,8 +44,6 @@ def test_grammar_derives_layout_and_slot_names_from_registry() -> None:
 
 
 #============================================
-def test_action_vocabulary_and_text_projection_are_typed() -> None:
-	"""Accepted actions and normal-text entities project through stable IR types."""
-	cascade = marp_lib.djot_grammar.ACTION_REVEALS["cascade appear"]
-	assert (cascade.sequence is marp_lib.native_model.RevealSequence.PARAGRAPHS and
-		marp_lib.djot_grammar.project_text("5&prime;") == "5\u2032")
+def test_text_projection_decodes_author_visible_entities() -> None:
+	"""Author-visible Djot text is projected into the text that will be shown."""
+	assert marp_lib.djot_grammar.project_text("5&prime;") == "5\u2032"

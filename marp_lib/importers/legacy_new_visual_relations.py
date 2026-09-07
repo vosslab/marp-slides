@@ -6,7 +6,6 @@ Planning owns classification and emission; this module does not import it.
 
 # Standard Library
 import dataclasses
-import enum
 from collections.abc import Callable
 
 # Local modules
@@ -86,13 +85,6 @@ def nearest_caption_pair(candidates: tuple[tuple[float, object, object], ...]) -
 	distance = min(item[0] for item in candidates)
 	nearest = tuple(item for item in candidates if abs(item[0] - distance) <= 1e-9)
 	return nearest[0] if len(nearest) == 1 else None
-
-
-class RepeatedLabelDirection(enum.IntEnum):
-	"""The non-text axis along which repeated labels should be read."""
-
-	HORIZONTAL = 0
-	VERTICAL = 1
 
 
 def styled_callout_extension(
@@ -271,22 +263,6 @@ def coupled_visual_sequence(
 	if not relation_is_safe(result, title):
 		return None
 	return result if viable_callback is None or not viable_callback(result) else None
-
-
-def repeated_label_direction_suggestion(
-	regions: tuple[object, ...],
-) -> RepeatedLabelDirection | None:
-	"""Suggest the dominant repetition axis only when it is geometrically clear."""
-	if len(regions) < 2:
-		return None
-	centers_x = tuple((region.bounds.left + region.bounds.right) / 2 for region in regions)
-	centers_y = tuple((region.bounds.top + region.bounds.bottom) / 2 for region in regions)
-	span_x, span_y = max(centers_x) - min(centers_x), max(centers_y) - min(centers_y)
-	if max(span_x, span_y) <= SEQUENCE_CENTER_SPAN_RATIO:
-		return None
-	if abs(span_x - span_y) <= SEQUENCE_CENTER_SPAN_RATIO:
-		return None
-	return RepeatedLabelDirection.HORIZONTAL if span_x > span_y else RepeatedLabelDirection.VERTICAL
 
 
 def styled_callout_candidate(region: object, content: legacy_geometry.NormalizedBounds) -> bool:

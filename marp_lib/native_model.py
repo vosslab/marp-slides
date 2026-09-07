@@ -1,4 +1,4 @@
-"""Typed, presentation-neutral semantic objects for canonical Marp Markdown."""
+"""Typed presentation-neutral semantic slide objects for supported front ends."""
 
 # Standard Library
 import enum
@@ -160,7 +160,7 @@ class ListBlock:
 
 @dataclass(frozen=True)
 class CodeBlock:
-	"""One editable fixed-width block, optionally annotated with its language."""
+	"""One typed fenced-code representation pending a native export owner."""
 	location: SourceLocation
 	value: str
 	language: str | None = None
@@ -198,7 +198,7 @@ Block = Heading | Paragraph | Image | ListBlock | CodeBlock | Table | DisplayMat
 
 @dataclass(frozen=True)
 class Cell:
-	"""One top-level blockquote component cell in source reading order."""
+	"""One content cell in source reading order."""
 	location: SourceLocation
 	blocks: tuple[Block, ...]
 	name: str | None = None

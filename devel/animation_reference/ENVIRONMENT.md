@@ -24,6 +24,18 @@ The bridge preflight calls `ps -axo command=` to require LibreOffice to be close
 that command during the original observation, so attended or unsandboxed conversion evidence may
 need normal host approval.
 
+## 2026-09-07 implementation evidence
+
+The bounded builder was generated into disposable PPTX fixtures and LibreOffice 26.2.5.2 converted
+them headlessly to ODP and then PDF with an isolated profile. Package inspection retained timing
+roots, shape and paragraph targets, visible-set APPEAR behavior, and the direct-IR FADE transition.
+The ODP retained editable text and drawing objects, and the PDFs showed final reveal state. This is
+one-time bridge/PDF evidence, not a permanent test or click-playback claim.
+
+An attended launch attempt reached `soffice` but macOS denied Screen Recording and Accessibility
+before F5 or any slideshow click could be sent. No attended behavior conclusion follows. Grant those
+permissions to the automation process before repeating the minimal ODP observation.
+
 ## Consequence
 
 Animation evidence follows official OOXML plus actual LibreOffice importer/exporter and Impress

@@ -1,14 +1,15 @@
 # marp-slides
 
-Build editable classroom presentations from instructor-authored Markdown and native objects.
+Build editable classroom presentations from canonical Marp Markdown or extended-Djot and native
+objects.
 
 ## One source, native outputs
 
 The repeatable production chain is:
 
 ```text
-canonical Marp Markdown
-  -> repository-owned Python Marp-subset parser
+canonical Marp Markdown or extended-Djot
+  -> repository-owned Python source parser
   -> typed native slide-object model
   -> marp_lib.layouts native layout builders
   -> python-pptx editable PPTX
@@ -21,9 +22,9 @@ notes. `marp_lib.layouts` implements all sixteen LibreOffice layout-grid pattern
 repository `gallery` layout. The LibreOffice grid is a catalog and visual target; Python builds the
 objects.
 
-Marp Core v5 supplies the mature authoring-language specification only. The production graph
-contains no Marp CLI, Marp Core runtime, Node, browser, rendered-slide stage, or full-slide raster
-fallback.
+Marp Core v5 supplies the mature migration-baseline authoring-language specification. Extended-Djot
+is a parallel, explicit source form for new native decks. The production graph contains no Marp CLI,
+Marp Core runtime, Node, browser, rendered-slide stage, or full-slide raster fallback.
 
 ## Quick start
 
@@ -44,18 +45,20 @@ ODP-derived PDF, for every deck directly in a folder:
 
 See [docs/INSTALL.md](docs/INSTALL.md) for setup,
 [docs/MARP_SYNTAX_GUIDE.md](docs/MARP_SYNTAX_GUIDE.md) for source syntax, and
-[docs/USAGE.md](docs/USAGE.md) for imports and commands.
+[docs/USAGE.md](docs/USAGE.md) for Marp and extended-Djot authoring, imports, and commands.
 
 ## One-time migration
 
-Import an instructor-owned legacy ODP once, then edit the resulting Markdown and assets:
+Import an instructor-owned legacy ODP once, then select either the Marp migration route or the
+extended-Djot authoring/import route documented in [docs/USAGE.md](docs/USAGE.md). For the Marp
+route:
 
 ```bash
 source source_me.sh && python3 tools/odp_to_marp.py genetics/lecture.odp
 source source_me.sh && python3 tools/marp_to_odp.py genetics/lecture.md
 ```
 
-The importer preserves structured content for human cleanup. It does not make legacy ODP a second
+Each importer preserves structured content for human cleanup. It does not make legacy ODP a second
 authoring source.
 
 ## Documentation
